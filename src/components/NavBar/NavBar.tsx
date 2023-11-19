@@ -123,10 +123,13 @@ const NavBar = () => {
 
                 <MenuList>
                   <MenuOptionGroup title="Profile">
-                    {session.isAdmin && <MenuItem>My Dashboard</MenuItem>}
-                    <MenuItem>Payments</MenuItem>
+                    {session.isAdmin && (
+                      <MenuItem onClick={() => navigate("/dashboard")}>
+                        My Dashboard
+                      </MenuItem>
+                    )}
                   </MenuOptionGroup>
-                  <MenuDivider />
+                  {session.isAdmin && <MenuDivider />}
                   <MenuItem
                     onClick={() => {
                       queryClient.clear();

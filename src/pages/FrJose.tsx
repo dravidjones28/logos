@@ -34,8 +34,8 @@ const FrJose = () => {
           <SimpleGrid
             columns={{ base: 1, lg: 2 }}
             spacing={5}
-            gap={10}
-            mx={{ base: "10px", lg: "90px" }}
+            gap={{ base: 0, lg: 10 }}
+            mx={{ base: "0px", lg: "90px" }}
             my={{ base: "20px", lg: "60px" }}
           >
             <Box>

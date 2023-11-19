@@ -56,6 +56,7 @@ interface SideBar {
 const LinkItems: Array<LinkItemProps> = [{ name: "Dashboard", icon: FiHome }];
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+  const navigate = useNavigate();
   return (
     <Box
       transition="3s ease"
@@ -67,7 +68,14 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       h="full"
       {...rest}
     >
-      <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
+      <Flex
+        h="20"
+        alignItems="center"
+        mx="8"
+        justifyContent="space-between"
+        onClick={() => navigate("/")}
+        cursor="pointer"
+      >
         <Image src={Logo} width={34} />
         <Text ml={{ lg: "15px" }} fontSize="17px" fontWeight={700}>
           Logos Retreat Center
@@ -159,6 +167,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         display={{ base: "block", md: "none" }}
         src={LogoLight}
         width={34}
+        onClick={() => navigate("/")}
       />
 
       <HStack spacing={{ base: "0", md: "6" }}>
@@ -205,7 +214,6 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                   query.clear();
 
                   navigate("/login");
-                  console.log("what's happening");
                 }}
               >
                 Sign out

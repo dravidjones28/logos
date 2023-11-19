@@ -16,7 +16,6 @@ interface Blog {
   blogImage: String;
   blogType: String;
   title: String;
-  // des: String;
   authorImage?: String;
   authorName: String;
   posted: String;
@@ -27,7 +26,6 @@ export default function blogPostWithImage({
   blogImage,
   blogType,
   title,
-  // des,
   authorImage,
   authorName,
   posted,

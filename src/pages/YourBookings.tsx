@@ -71,25 +71,6 @@ const YourBookings = () => {
       {yourBookings?.length === 0 && (
         <Box display="flex" justifyContent="center">
           <Text fontWeight={500}>Sorry, no bookings </Text>
-          <Button
-            fontSize="15px"
-            fontWeight={500}
-            marginLeft="20px"
-            marginRight="10px"
-            height="20px"
-            borderRadius="7px"
-            bg="#348ded"
-            padding="20px"
-            color="#fff"
-            cursor="pointer"
-            _hover={{ bg: "#70b7ff" }}
-            onClick={() => {
-              // onOpen();
-              window.location.reload();
-            }}
-          >
-            Refresh
-          </Button>
         </Box>
       )}
       <SimpleGrid

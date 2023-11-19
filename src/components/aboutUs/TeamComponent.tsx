@@ -10,7 +10,11 @@ interface Props3 {
 const TeamComponent = ({ image, title, subtitle, desc }: Props3) => {
   return (
     <Card px={6} py={4} my={5}>
-      <Flex justifyContent="space-between" gap={7}>
+      <Flex
+        direction={{ base: "column", lg: "row" }}
+        justifyContent={{ base: "none", lg: "space-between" }}
+        gap={{ base: 0, lg: 7 }}
+      >
         <Image
           position="relative"
           top="-50px"
@@ -23,7 +27,7 @@ const TeamComponent = ({ image, title, subtitle, desc }: Props3) => {
           <Text fontWeight={700} fontSize="20px">
             {title}
           </Text>
-          <Text color="blue" fontWeight={500} fontSize="18px">
+          <Text color="#348ded" fontWeight={500} fontSize="18px">
             {subtitle}
           </Text>
           <Text fontWeight={400} fontSize="17px">

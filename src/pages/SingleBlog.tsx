@@ -85,7 +85,7 @@ const SingleBlog = () => {
               justifyContent="center"
               flexDirection="column"
               my={10}
-              mx="130px"
+              mx={{ base: "40px", lg: "130px" }}
             >
               <Box>
                 <Text
@@ -96,7 +96,7 @@ const SingleBlog = () => {
                 >
                   {blog.blogType}
                 </Text>
-                <Heading fontSize="5xl" mb={10}>
+                <Heading fontSize={{ base: "3xl", lg: "5xl" }} mb={10}>
                   {blog.blogTitle}
                 </Heading>
                 <Box

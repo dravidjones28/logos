@@ -1,5 +1,6 @@
 import { Center, Box, Text } from "@chakra-ui/react";
 import CountUp from "react-countup";
+import VisibilitySensor from "react-visibility-sensor";
 
 interface Props {
   decimals: number;
@@ -7,6 +8,7 @@ interface Props {
   title: string;
   subTitle: string;
 }
+
 const CountUpComponent = ({ decimals, end, title, subTitle }: Props) => {
   return (
     <CountUp

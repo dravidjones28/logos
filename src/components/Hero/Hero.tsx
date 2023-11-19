@@ -12,10 +12,9 @@ const Hero = () => {
         style={{
           backgroundImage: `url(${bgImage})`,
           backgroundSize: "cover",
-          // backgroundPosition: "center",
         }}
         width="100%"
-        minHeight="90vh"
+        minHeight={{ base: "75vh", lg: "90vh" }}
       >
         <Box
           mx={{ lg: "100px", base: "20px" }}

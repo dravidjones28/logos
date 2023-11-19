@@ -14,6 +14,7 @@ import {
 import { ReactNode } from "react";
 import LogoDark from "../../assets/logo-dark.svg";
 import { FaTwitter, FaYoutube, FaInstagram } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const ListHeader = ({ children }: { children: ReactNode }) => {
   return (
@@ -55,19 +56,28 @@ const SocialButton = ({
   );
 };
 
+interface Props {
+  label: string;
+  url: string;
+}
 interface FooterList {
   title: String;
-  listItems: String[];
+  listItems: Props[];
 }
 
 const FooterList = ({ title, listItems }: FooterList) => {
+  const navigate = useNavigate();
   return (
     <Stack align={"flex-start"}>
       <ListHeader>{title}</ListHeader>
       <List>
         {listItems.map((item, index) => (
-          <ListItem style={{ cursor: "pointer", fontSize: "15px" }} key={index}>
-            {item}
+          <ListItem
+            onClick={() => navigate(`${item.url}`)}
+            style={{ cursor: "pointer", fontSize: "15px" }}
+            key={index}
+          >
+            {item.label}
           </ListItem>
         ))}
       </List>
@@ -123,22 +133,32 @@ const Footer = () => {
 
           <FooterList
             title="Retreats"
-            listItems={["Book A Retreat", "Facilities"]}
+            listItems={[
+              { label: "Book A Retreat", url: "bookRetreat" },
+              { label: "Facilities", url: "facilities" },
+            ]}
           />
           <FooterList
             title="Holy Mass"
-            listItems={["Mass Offering", "Today's Mass"]}
+            listItems={[
+              { label: "Mass offerings", url: "massOffering" },
+              { label: "Today's Mass", url: "todaysMass" },
+            ]}
           />
           <FooterList
             title="Help & Support"
-            listItems={["Contact Us", "Prayer Request", "Faq"]}
+            listItems={[
+              { label: "Contact Us", url: "/contactUs" },
+              { label: "Prayer Request", url: "/prayerRequest" },
+              { label: "FAQ", url: "faq" },
+            ]}
           />
           <FooterList
             title="Legal"
             listItems={[
-              "Terms & Condition",
-              "Privacy & Policy",
-              "Cancellation Policy",
+              { label: "Terms & Condition", url: "" },
+              { label: "Privacy & Policy", url: "" },
+              { label: "Cancellation Policy", url: "" },
             ]}
           />
         </SimpleGrid>
@@ -151,7 +171,15 @@ const Footer = () => {
             All rights reserved © 2023 Logos Retreat Center
           </Text>
           <Text fontSize={"sm"} textAlign="center">
-            Made with by <span style={{ fontWeight: 500 }}>Wisdom Works</span>{" "}
+            Made with by{" "}
+            <span
+              style={{ fontWeight: 500, cursor: "pointer" }}
+              onClick={() =>
+                window.open("https://www.wisdomworks.co/", "_blank")
+              }
+            >
+              Wisdom Works
+            </span>
             for a better Christian web
           </Text>
         </Box>

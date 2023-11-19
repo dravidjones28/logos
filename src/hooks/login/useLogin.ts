@@ -58,10 +58,9 @@ const useLogin = () => {
           // Check if error.response exists before accessing .data
           if (axiosError.response) {
             const errorMessage = axiosError.response.data;
-            console.log(errorMessage);
             toast({
               title: "Failed",
-              description: `${errorMessage.message}`,
+              description: `${errorMessage}`,
               position: "top",
               status: "error",
               isClosable: true,
