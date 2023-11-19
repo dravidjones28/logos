@@ -7,7 +7,7 @@ export interface FetchResponse<T> {
 }
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:9000/api",
+  baseURL: "https://sleepy-gold-pumps.cyclic.app/api",
 });
 
 export interface PaymentReceive {
