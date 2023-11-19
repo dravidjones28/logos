@@ -13,6 +13,7 @@ import {
   InputLeftElement,
   FormLabel,
   Textarea,
+  Spinner,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -247,8 +248,14 @@ const CreateTestimonal = () => {
               )}
             </FormControl>
 
-            <Button type="submit" colorScheme="blue" mr={3} mt={10}>
-              Publish
+            <Button
+              isDisabled={addTestimonial.isPending ? true : false}
+              type="submit"
+              colorScheme="blue"
+              mr={3}
+              mt={10}
+            >
+              {addTestimonial.isPending ? <Spinner /> : "Publish"}
             </Button>
           </form>
         </Card>
