@@ -27,6 +27,10 @@ import VincentianCongregation from "./pages/VincentianCongregation";
 import Priests from "./pages/Priests";
 import FrJose from "./pages/FrJose";
 import Faq from "./pages/Faq";
+import TermsAndCondition from "./pages/TermsAndCondition";
+import Cancellation from "./pages/Cancellation";
+import Privacy from "./pages/Privacy";
+import Refund from "./pages/Refund";
 
 const router = createBrowserRouter([
   {
@@ -123,6 +127,22 @@ const router = createBrowserRouter([
       {
         path: "faq",
         element: <Faq />,
+      },
+      {
+        path: "termsAndCondition",
+        element: <TermsAndCondition />,
+      },
+      {
+        path: "cancellation",
+        element: <Cancellation />,
+      },
+      {
+        path: "privacy",
+        element: <Privacy />,
+      },
+      {
+        path: "refund",
+        element: <Refund />,
       },
     ],
   },

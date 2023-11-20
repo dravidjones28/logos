@@ -155,9 +155,12 @@ const RegisterPage = () => {
                     <FormControl>
                       <Checkbox {...data("isChecked")}>
                         I agree to the{" "}
-                        <span style={{ fontWeight: 500 }}>
+                        <Link
+                          style={{ fontWeight: 500 }}
+                          to="/termsAndCondition"
+                        >
                           Terms and Conditions
-                        </span>
+                        </Link>
                       </Checkbox>
                       {errors.isChecked && (
                         <FormHelperText color="red">

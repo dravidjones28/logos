@@ -6,6 +6,7 @@ export interface ChartProps {
   _id: number;
   count: number;
 }
+
 interface Dashboard {
   usersToday: { count: number; stats: number };
   retreatBookingToday: {

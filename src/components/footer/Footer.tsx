@@ -156,9 +156,10 @@ const Footer = () => {
           <FooterList
             title="Legal"
             listItems={[
-              { label: "Terms & Condition", url: "" },
-              { label: "Privacy & Policy", url: "" },
-              { label: "Cancellation Policy", url: "" },
+              { label: "Terms & Condition", url: "/termsAndCondition" },
+              { label: "Privacy & Policy", url: "privacy" },
+              { label: "Cancellation Policy", url: "/cancellation" },
+              { label: "Refund", url: "/refund" },
             ]}
           />
         </SimpleGrid>
