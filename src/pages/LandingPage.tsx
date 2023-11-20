@@ -22,9 +22,9 @@ function LandingPage() {
       <BookingSection />
       <YoutubeSection />
       <TestimonialsExperience
-        title=" Experiences at Logos Retreat Center"
+        title=" Experiences at Logos Retreat Centre"
         des=" Discover how lives have been transformed through faith and connection
-          with Jesus at Logos Retreat Center."
+          with Jesus at Logos Retreat Centre."
       />
       <Testimonials />
       <PrayerRequest />

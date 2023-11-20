@@ -48,7 +48,7 @@ const Testimonial = () => {
         >
           Testimonails
         </Text>
-        {session?.isAdmin && (
+        {(session?.isAdmin || session?.isEditor) && (
           <Button
             fontSize="15px"
             fontWeight={500}

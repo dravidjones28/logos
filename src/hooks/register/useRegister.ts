@@ -8,6 +8,8 @@ export interface Register {
   password: string;
   verified?: boolean;
   isAdmin?: boolean;
+  profilePic?: string;
+  isEditor?: boolean;
 }
 
 interface FetchResponse1 {

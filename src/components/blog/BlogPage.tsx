@@ -33,7 +33,7 @@ const BlogPage = () => {
         authorImage={author1}
         authorName="Rev. Fr. Dr. Jose Vettiyankal VC"
         posted="Posted on 28 February 2023"
-        slug="65576e94b6652f5e98f7f86d"
+        slug="655bb049de6b08001c442dca"
       />
       <Blog
         blogImage={post2}
@@ -42,7 +42,7 @@ const BlogPage = () => {
         authorImage={author2}
         authorName="Rev. Fr. George Pallikamyalil VC"
         posted="Posted on 15 August 2023"
-        slug="65576e94b6652f5e98f7f86d"
+        slug="655bb049de6b08001c442dca"
       />
       <Blog
         blogImage={post3}
@@ -51,7 +51,7 @@ const BlogPage = () => {
         authorImage={author3}
         authorName="Rev. Fr. Varghese Thomas VC"
         posted="Posted on 5 Septebmer 2023"
-        slug="65576e94b6652f5e98f7f86d"
+        slug="655bb049de6b08001c442dca"
       />
     </SimpleGrid>
   );

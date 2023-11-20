@@ -6,6 +6,7 @@ export interface DB {
   accesstoken: string;
   email: string;
   isAdmin: boolean;
+  isEditor: boolean;
   profilePic: string;
 }
 

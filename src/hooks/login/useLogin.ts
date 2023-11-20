@@ -8,12 +8,16 @@ export interface Login {
   email: string;
   password: string;
   isAdmin?: boolean;
+  isEditor?: boolean;
+  profilePic?: boolean;
 }
 
 interface FetchResponse1 {
   accessToken: string;
   name: string;
   isAdmin: boolean;
+  isEditor: boolean;
+  profilePic: boolean;
   _id: string;
 }
 
@@ -36,12 +40,16 @@ const useLogin = () => {
         duration: 3000,
       });
 
+      console.log(res);
+
       const objectString = JSON.stringify({
         accesstoken: res.accessToken,
         name: res.name,
         email: login.email,
         isAdmin: res.isAdmin,
+        isEditor: res.isEditor,
         _id: res._id,
+        profilePic: res.profilePic,
       });
       const encryptedObject = CryptoJS.AES.encrypt(
         objectString,

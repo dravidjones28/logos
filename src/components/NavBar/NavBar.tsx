@@ -92,7 +92,7 @@ const NavBar = () => {
                 whiteSpace="nowrap"
                 cursor="pointer"
               >
-                {!isMobile ? "LOGOS RETREAT center" : ""}
+                {!isMobile ? "LOGOS RETREAT centre" : ""}
               </Text>
             </Link>
           </Flex>

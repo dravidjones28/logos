@@ -32,6 +32,7 @@ export default function blogPostWithImage({
   slug,
 }: Blog) {
   const truncatedTitle = title.length > 20 ? title.slice(0, 20) + "..." : title;
+  
   const truncatedType =
     blogType.length > 20 ? blogType.slice(0, 20) + "..." : blogType;
   const navigate = useNavigate();
@@ -88,11 +89,7 @@ export default function blogPostWithImage({
           <Stack mt={6} direction={"row"} spacing={4} align={"center"}>
             {authorImage ? <Avatar src={`${authorImage}`} /> : <NoImage />}
             <Stack direction={"column"} spacing={0} fontSize={"sm"}>
-              <Text
-                fontWeight={600}
-                color="rgb(52, 71, 103);
-"
-              >
+              <Text fontWeight={600} color="rgb(52, 71, 103);">
                 {authorName}
               </Text>
               <Text color={"gray.500"}>{posted}</Text>

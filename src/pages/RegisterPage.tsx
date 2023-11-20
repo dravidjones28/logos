@@ -10,6 +10,7 @@ import {
   FormHelperText,
   FormLabel,
   HStack,
+  Icon,
   Input,
   InputGroup,
   InputRightElement,
@@ -25,12 +26,21 @@ import FormCard from "../components/common/FormCard";
 import { Link, useLocation } from "react-router-dom";
 import useAddRegister from "../hooks/register/useRegister";
 import { Spinner } from "@chakra-ui/react";
+import { MdOutlineDownloadDone } from "react-icons/md";
+import { BsUpload } from "react-icons/bs";
 
 const schema = z.object({
-  firstName: z.string().min(4, "Minimum of 4 Characters"),
-  lastName: z.string().min(4, "Minimum of 4 Characters"),
-  email: z.string().min(4, "Minimum of 4 Characters").email(),
-  password: z.string().min(4, "Minimum of 4 Characters"),
+  firstName: z.string().min(2, "Minimum of 2 Characters"),
+  lastName: z.string().min(2, "Minimum of 2 Characters"),
+  email: z
+    .string()
+    .min(4, "Minimum of 4 Characters")
+    .max(255, "Maximim of 255 Characters")
+    .email(),
+  password: z
+    .string()
+    .min(4, "Minimum of 4 Characters")
+    .max(1024, "Maximum of 1024 Characters"),
   isChecked: z.boolean().refine((value) => value === true, {
     message: "Please agree to terms and condition",
   }),
@@ -54,15 +64,67 @@ const RegisterPage = () => {
   } = useForm<RegisterData>({ resolver: zodResolver(schema) });
 
   const [showPassword, setShowPassword] = useState(false);
-  const onSubmit = (data: RegisterData) => {
-    let formData = {
-      name: `${data.firstName} ${data.lastName}`,
-      email: data.email,
-      password: data.password,
-    };
+  const [pictureError, setPictureError] = useState<{ [key: string]: string }>(
+    {}
+  );
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [uploadedImage, setUploadedImage] = useState<{ [key: string]: string }>(
+    {}
+  );
 
-    addRegister.mutate(formData);
+  const onSubmit = (data: RegisterData) => {
+    if (Object.keys(pictureError).length === 0) {
+      let formData = {
+        name: `${data.firstName} ${data.lastName}`,
+        email: data.email,
+        password: data.password,
+        profilePic: uploadedImage["profilePic"],
+      };
+
+      addRegister.mutate(formData);
+    }
   };
+
+  const handlePicture = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    item: string
+  ) => {
+    setPictureError({});
+
+    const selectedFile = e.target.files?.[0];
+    const fileSizeInKB = selectedFile && selectedFile.size / 1024; // convert bytes to KB
+    const fileType: string | undefined = selectedFile && selectedFile.type;
+    const validImageTypes = [
+      "image/png",
+      "image/jpeg",
+      "image/jpg",
+      "image/webp",
+    ];
+    const validFileTypeRegex = new RegExp(`(${validImageTypes.join("|")})`);
+    let errors: Record<string, string> = {};
+
+    if (fileType && !validFileTypeRegex.test(fileType)) {
+      errors[item] = "Only PNG, JPEG, and JPG files are allowed";
+      setPictureError(errors);
+    } else if (fileSizeInKB && fileSizeInKB > 500) {
+      errors[item] = "File size should not be more than 500 KB";
+      setPictureError(errors);
+    } else {
+      delete errors[item];
+      base64(selectedFile, item);
+    }
+  };
+
+  function base64(file: any, item: string) {
+    if (item === "profilePic") setSelectedImage(file.name);
+
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      if (typeof reader.result === "string")
+        setUploadedImage({ ...uploadedImage, [item]: reader.result });
+    };
+  }
 
   return (
     <LGBox>
@@ -146,6 +208,78 @@ const RegisterPage = () => {
                       </FormHelperText>
                     )}
                   </FormControl>
+                  <FormControl my={1}>
+                    {selectedImage ? (
+                      <Flex>
+                        <FormLabel fontWeight={500}>
+                          Uploaded:{" "}
+                          <span>{selectedImage ? selectedImage : ""}</span>
+                        </FormLabel>
+                        <Icon
+                          as={MdOutlineDownloadDone}
+                          color="green"
+                          boxSize="20px"
+                          ml="-10px"
+                          mt="3px"
+                        />
+                        <Button
+                          bg="#348ded"
+                          _hover={{ bg: "#70b7ff" }}
+                          color="#fff"
+                          mx="10px"
+                          pt="5px"
+                        >
+                          <FormLabel htmlFor="projectImage">Change</FormLabel>
+                        </Button>
+                        <Button
+                          bg="red"
+                          color="#fff"
+                          onClick={() => setSelectedImage("")}
+                        >
+                          Remove
+                        </Button>
+                      </Flex>
+                    ) : (
+                      <>
+                        <Flex>
+                          <FormLabel
+                            // color="blue.500"
+                            // as={Link}
+                            color="gray.500"
+                            cursor="pointer"
+                            htmlFor="projectImage"
+                          >
+                            Add a Profile Picture
+                          </FormLabel>
+                          <Icon mt={1} as={BsUpload} />
+                        </Flex>
+                      </>
+                    )}
+                    {pictureError && (
+                      <FormHelperText
+                        color="red"
+                        position="relative"
+                        top="-15px"
+                      >
+                        {pictureError ? pictureError["profilePic"] : ""}
+                      </FormHelperText>
+                    )}
+                    <Input
+                      id="projectImage"
+                      type="file"
+                      accept="image/*"
+                      size="lg"
+                      hidden
+                      _placeholder={{
+                        opacity: 1,
+                        color: "gray.500",
+                        fontSize: "15px",
+                      }}
+                      // placeholder="Upload"
+                      onChange={(e) => handlePicture(e, "profilePic")}
+                    />
+                  </FormControl>
+
                   <Stack
                     direction={{ base: "column", sm: "row" }}
                     align={"start"}

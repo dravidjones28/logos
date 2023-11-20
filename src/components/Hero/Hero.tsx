@@ -43,7 +43,7 @@ const Hero = () => {
             mt={1}
             mb={3}
           >
-            Join us at Logos Retreat Center, where miracles unfold,
+            Join us at Logos Retreat Centre, where miracles unfold,
             <br />
             bondages break, and lives are forever transformed.
           </Text>

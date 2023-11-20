@@ -86,7 +86,7 @@ const CreateBlog = () => {
         uploadedDate: todayDate,
         description: text,
         authorName: session?.name,
-        // authorImage: "",
+        authorImage: session?.profilePic ? session?.profilePic : "",
       };
 
       addBlog.mutate(formData);

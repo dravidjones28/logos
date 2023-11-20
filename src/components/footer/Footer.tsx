@@ -169,17 +169,17 @@ const Footer = () => {
           mt={20}
         >
           <Text fontSize={"sm"} fontWeight={500} textAlign="center" mb={5}>
-            All rights reserved © 2023 Logos Retreat Center
+            All rights reserved © 2023 Logos Retreat Centre
           </Text>
           <Text fontSize={"sm"} textAlign="center">
-            Made with by{" "}
+            Made with ❤ by
             <span
               style={{ fontWeight: 500, cursor: "pointer" }}
               onClick={() =>
                 window.open("https://www.wisdomworks.co/", "_blank")
               }
             >
-              Wisdom Works
+              {` Wisdom Works `}
             </span>
             for a better Christian web
           </Text>
