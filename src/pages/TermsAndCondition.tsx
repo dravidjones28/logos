@@ -91,9 +91,9 @@ export const ContactCard = () => {
   return (
     <Card maxWidth="500px" p={5}>
       <Text fontSize={{ base: "14px", lg: "16px" }} fontWeight={400}>
-        ContactUs:{" "}
+        Contact Us:
         <strong style={{ fontWeight: 500, fontSize: "15px" }}>
-          999-999-999
+          +91 6366 609 505
         </strong>
       </Text>
       <Text fontSize={{ base: "14px", lg: "16px" }} fontWeight={400}>

@@ -38,7 +38,7 @@ const Refund = () => {
         <Terms
           title="Rescheduling"
           subtitle={[
-            `However, we understand that unforeseen circumstances may arise. If you are unable to attend a retreat you have booked, we offer the option to reschedule your attendance. Please contact us at least [Specify Number of Days] days before your scheduled retreat to arrange for rescheduling.`,
+            `However, we understand that unforeseen circumstances may arise. If you are unable to attend a retreat you have booked, we offer the option to reschedule your attendance. Please contact us at least 7 days before your scheduled retreat to arrange for rescheduling.`,
           ]}
         />
         <Terms
