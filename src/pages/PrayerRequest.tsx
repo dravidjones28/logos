@@ -26,6 +26,7 @@ import z from "zod";
 import useAddPrayerRequest from "../hooks/prayerRequest/useAddPrayerRequest";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import Footer from "../components/footer/Footer";
 const schema = z.object({
   fullName: z
     .string()
@@ -83,7 +84,7 @@ const PrayerRequest = () => {
         }}
         mx={{ base: "5px", lg: "20px" }}
         p={{ base: "10px", lg: "10px" }}
-        mt="15px"
+        mt="35px"
         gap={10}
       >
         <Show above="lg">
@@ -207,6 +208,9 @@ const PrayerRequest = () => {
           </Box>
         </GridItem>
       </Grid>
+      <Box mt={20}>
+        <Footer />
+      </Box>
     </LGBox>
   );
 };

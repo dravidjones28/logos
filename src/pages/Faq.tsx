@@ -14,6 +14,7 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import LGBox from "../components/common/LGBox";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import Footer from "../components/footer/Footer";
 
 interface Props {
   title: string;
@@ -173,6 +174,9 @@ function Faq() {
               />
             </Box>
           </Card>
+        </Box>
+        <Box mt={20}>
+          <Footer />
         </Box>
       </Box>
     </LGBox>

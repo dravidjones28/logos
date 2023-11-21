@@ -58,7 +58,7 @@ const BookingSection = () => {
 
         <SimpleGrid columns={{ base: 1, lg: 2 }} gap={10}>
           <Details
-            title="Logos Retreat Center"
+            title="Logos Retreat Centre"
             subText="Chosen by God to continue the ministry of Jesus, Logos Retreat Center is a beacon of spiritual growth and healing located in Bengaluru."
           />
           <Details

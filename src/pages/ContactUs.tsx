@@ -26,6 +26,7 @@ import z from "zod";
 import useAddContactUs from "../hooks/contactUs/useAddContactUs";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import Footer from "../components/footer/Footer";
 
 const schema = z.object({
   fullName: z
@@ -85,7 +86,7 @@ const ContactUs = () => {
         }}
         mx={{ base: "5px", lg: "20px" }}
         p={{ base: "10px", lg: "10px" }}
-        mt="15px"
+        mt="25px"
         gap={10}
       >
         <Show above="lg">
@@ -208,6 +209,9 @@ const ContactUs = () => {
           </Box>
         </GridItem>
       </Grid>
+      <Box mt={20}>
+        <Footer />
+      </Box>
     </LGBox>
   );
 };

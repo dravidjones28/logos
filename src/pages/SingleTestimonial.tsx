@@ -11,6 +11,7 @@ import {
 import LGBox from "../components/common/LGBox";
 import { useLocation, useParams } from "react-router-dom";
 import useTestimonal from "../hooks/testimonial/useTestimonial";
+import Footer from "../components/footer/Footer";
 
 const TextWithLineBreaks: React.FC<TextProps> = ({ children, ...rest }) => (
   <Text whiteSpace="pre-line" {...rest}>
@@ -92,6 +93,9 @@ const SingleTestimonial = () => {
           </Card>
         </Box>
       </LGBox>
+      <Box mt={20}>
+        <Footer />
+      </Box>
     </Box>
   );
 };

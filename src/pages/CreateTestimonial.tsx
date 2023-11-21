@@ -26,6 +26,7 @@ import "../components/common/createBlog.css";
 import z from "zod";
 import useAddTestimonial from "../hooks/testimonial/useAddTestimonial";
 import { useLocation } from "react-router-dom";
+import Footer from "../components/footer/Footer";
 
 const schema = z.object({
   testimonalName: z
@@ -44,6 +45,7 @@ const CreateTestimonal = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
+
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [pictureError, setPictureError] = useState<{ [key: string]: string }>(
     {}
@@ -259,6 +261,9 @@ const CreateTestimonal = () => {
             </Button>
           </form>
         </Card>
+      </Box>
+      <Box mt={20}>
+        <Footer />
       </Box>
     </LGBox>
   );

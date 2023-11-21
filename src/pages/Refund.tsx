@@ -3,6 +3,7 @@ import LGBox from "../components/common/LGBox";
 import { Terms } from "./TermsAndCondition";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import Footer from "../components/footer/Footer";
 
 const Refund = () => {
   const { pathname } = useLocation();
@@ -47,6 +48,7 @@ const Refund = () => {
           ]}
         />
       </Card>
+      <Footer />
     </LGBox>
   );
 };

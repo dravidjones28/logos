@@ -14,7 +14,6 @@ const TodaysMass = () => {
   const opts = {
     height: "500",
     width: "100%",
-    // https://developers.google.com/youtube/player_parameters
     playerVars: {
       autoplay: 0,
     },

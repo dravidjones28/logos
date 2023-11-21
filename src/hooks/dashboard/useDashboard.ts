@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import APIClient from "../../services/apiClient";
-import db from "../../components/common/db";
 
 export interface ChartProps {
   _id: number;
@@ -27,12 +26,11 @@ interface Dashboard {
   prayerRequestToday: { count: number; stats: number };
 }
 const apiClient = new APIClient<Dashboard, Dashboard>("/stats");
-const session = db();
 
 const useDashboard = () =>
   useQuery({
     queryKey: ["dashboard"],
-    queryFn: () => apiClient.getStats(session?.accesstoken),
+    queryFn: () => apiClient.getStats(),
   });
 
 export default useDashboard;

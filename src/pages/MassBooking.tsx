@@ -279,7 +279,9 @@ function MassBooking() {
             </form>
           </Card>
         </Box>
-        <Footer />
+        <Box mt={10}>
+          <Footer />
+        </Box>
       </Box>
     </LGBox>
   );

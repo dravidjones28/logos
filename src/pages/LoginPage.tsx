@@ -23,6 +23,7 @@ import FormCard from "../components/common/FormCard";
 import { Link, useLocation } from "react-router-dom";
 import useLogin from "../hooks/login/useLogin";
 import { Spinner } from "@chakra-ui/react";
+import Footer from "../components/footer/Footer";
 
 const schema = z.object({
   email: z.string().min(4, "Minimum of 4 Characters").email(),
@@ -147,6 +148,7 @@ const RegisterPage = () => {
           </Card>
         </Stack>
       </Flex>
+      <Footer />
     </LGBox>
   );
 };

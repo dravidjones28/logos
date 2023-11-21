@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import useYourBookings from "../hooks/yourBookings/useYourBookings";
 import CryptoJS, { AES } from "crypto-js";
+import Footer from "../components/footer/Footer";
 
 const YourBookings = () => {
   const session = () => {
@@ -129,6 +130,9 @@ const YourBookings = () => {
           );
         })}
       </SimpleGrid>
+      <Box mt={20}>
+        <Footer />
+      </Box>
     </LGBox>
   );
 };

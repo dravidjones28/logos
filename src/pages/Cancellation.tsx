@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import LGBox from "../components/common/LGBox";
-import { Card, Heading, Text } from "@chakra-ui/react";
+import { Box, Card, Heading, Text } from "@chakra-ui/react";
 import { ContactCard, Terms } from "./TermsAndCondition";
 import { useLocation } from "react-router-dom";
+import Footer from "../components/footer/Footer";
 
 const Cancellation = () => {
   const { pathname } = useLocation();
@@ -28,6 +29,7 @@ const Cancellation = () => {
         <Terms title="Information" link={true} />
         <ContactCard />
       </Card>
+      <Footer />
     </LGBox>
   );
 };

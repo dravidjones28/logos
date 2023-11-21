@@ -3,6 +3,7 @@ import LGBox from "../components/common/LGBox";
 import FacilitiesCard from "../components/facilities/FacilitiesCard";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import Footer from "../components/footer/Footer";
 
 const Facilities = () => {
   const { pathname } = useLocation();
@@ -77,6 +78,9 @@ const Facilities = () => {
           des="Enjoy the comfort of 24/7 hot and cold water supply on every floor."
         />
       </SimpleGrid>
+      <Box mt={20}>
+        <Footer />
+      </Box>
     </LGBox>
   );
 };

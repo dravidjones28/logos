@@ -9,6 +9,7 @@ import {
 import LGBox from "../components/common/LGBox";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import Footer from "../components/footer/Footer";
 
 interface Props {
   title?: string;
@@ -424,6 +425,9 @@ const TermsAndCondition = () => {
         />
         <ContactCard />
       </Card>
+      <Box mt={20}>
+        <Footer />
+      </Box>
     </LGBox>
   );
 };

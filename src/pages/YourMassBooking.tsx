@@ -21,6 +21,7 @@ import {
 import useMassBook from "../hooks/massBooking/useMassBook";
 import CryptoJS, { AES } from "crypto-js";
 import { useEffect } from "react";
+import Footer from "../components/footer/Footer";
 
 const YourMassOffering = () => {
   const session = () => {
@@ -146,6 +147,9 @@ const YourMassOffering = () => {
           );
         })}
       </SimpleGrid>
+      <Box mt={20}>
+        <Footer />
+      </Box>
     </LGBox>
   );
 };

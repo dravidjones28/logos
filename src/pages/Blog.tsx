@@ -6,6 +6,7 @@ import useBlogs from "../hooks/blogs/useBlogs";
 import db from "../components/common/db";
 import BlogContainer from "../components/common/BlogContainer";
 import { useEffect } from "react";
+import Footer from "../components/footer/Footer";
 
 const Blog = () => {
   const navigate = useNavigate();
@@ -96,7 +97,9 @@ const Blog = () => {
           </BlogContainer>
         ))}
       </SimpleGrid>
-      <Box mb={10}></Box>
+      <Box mt={20}>
+        <Footer />
+      </Box>
     </LGBox>
   );
 };

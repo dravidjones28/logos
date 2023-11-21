@@ -6,6 +6,7 @@ import useTestimonal from "../hooks/testimonial/useTestimonials";
 import TestimonialComponent from "../components/testimonials/TestimonialComponent";
 import { Spinner } from "@chakra-ui/react";
 import { useEffect } from "react";
+import Footer from "../components/footer/Footer";
 
 const Testimonial = () => {
   const navigate = useNavigate();
@@ -94,7 +95,9 @@ const Testimonial = () => {
         ))}
       </SimpleGrid>
 
-      <Box mb={10}></Box>
+      <Box mt={20}>
+        <Footer />
+      </Box>
     </LGBox>
   );
 };

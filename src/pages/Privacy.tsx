@@ -3,6 +3,7 @@ import { Card, Heading, Text } from "@chakra-ui/react";
 import { Terms } from "./TermsAndCondition";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import Footer from "../components/footer/Footer";
 
 const Privacy = () => {
   const { pathname } = useLocation();
@@ -234,6 +235,7 @@ const Privacy = () => {
           ]}
         />
       </Card>
+      <Footer />
     </LGBox>
   );
 };

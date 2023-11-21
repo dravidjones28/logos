@@ -88,7 +88,7 @@ const FooterList = ({ title, listItems }: FooterList) => {
 const Footer = () => {
   return (
     <Box
-      mt={{ base: 10, lg: 5 }}
+      pt={{ base: 10, lg: 5 }}
       bg={"#EFF1F4"}
       color={useColorModeValue("gray.700", "gray.200")}
     >
@@ -157,7 +157,7 @@ const Footer = () => {
             title="Legal"
             listItems={[
               { label: "Terms & Condition", url: "/termsAndCondition" },
-              { label: "Privacy & Policy", url: "privacy" },
+              { label: "Privacy & Policy", url: "/privacy" },
               { label: "Cancellation Policy", url: "/cancellation" },
               { label: "Refund", url: "/refund" },
             ]}

@@ -12,6 +12,7 @@ import {
 import LGBox from "../components/common/LGBox";
 import { useLocation, useParams } from "react-router-dom";
 import NoImage from "../assets/no-image-placeholder.webp";
+import Footer from "../components/footer/Footer";
 
 const SingleBlog = () => {
   const boxRef = useRef<HTMLDivElement | null>(null);
@@ -114,6 +115,7 @@ const SingleBlog = () => {
           </Card>
         </Box>
       </LGBox>
+      <Footer />
     </Box>
   );
 };

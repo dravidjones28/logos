@@ -33,9 +33,22 @@ class APIClient<T, K> {
     return axiosInstance.get<T>(this.endpoint, config).then((res) => res.data);
   };
 
-  getStats = (token: string | undefined) => {
+  getStats = () => {
+    const session = () => {
+      if (sessionStorage.getItem("user")) {
+        const session_storage = JSON.parse(sessionStorage.user);
+        const decryptedObjectString = AES.decrypt(
+          session_storage,
+          "secretKey"
+        ).toString(CryptoJS.enc.Utf8);
+        const parse = JSON.parse(decryptedObjectString);
+        console.log(parse);
+        return parse;
+      }
+    };
+    const database = session();
     const headers: AxiosRequestConfig["headers"] = {
-      "x-auth-token": token, // Provide a default value if session?.accesstoken is undefined
+      "x-auth-token": database?.accesstoken,
     };
     return axiosInstance
       .get<T>(this.endpoint, { headers })

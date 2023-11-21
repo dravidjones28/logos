@@ -20,6 +20,7 @@ import db from "../components/common/db";
 import { useParams } from "react-router-dom";
 import useRetreatEvent from "../hooks/retreatEvents/useRetreatEvent";
 import useAddPayment from "../hooks/payment/useAddPayment";
+import Footer from "../components/footer/Footer";
 const Bookings = () => {
   const [count, setCount] = useState<number>(1);
   const [errors, setErrors] = useState<string[]>([]);
@@ -240,6 +241,9 @@ const Bookings = () => {
             </Button>
           </Box>
         </Card>
+      </Box>
+      <Box mt={20}>
+        <Footer />
       </Box>
     </LGBox>
   );

@@ -90,7 +90,9 @@ const TypesOfMass = () => {
             </GridItem>
           </Grid>
         </Box>
-        <Footer />
+        <Box mt={20}>
+          <Footer />
+        </Box>
       </Box>
     </LGBox>
   );

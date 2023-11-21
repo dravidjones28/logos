@@ -27,6 +27,7 @@ import z from "zod";
 import useAddBlogs from "../hooks/blogs/useAddBlogs";
 import db from "../components/common/db";
 import { useLocation } from "react-router-dom";
+import Footer from "../components/footer/Footer";
 
 const schema = z.object({
   blogType: z
@@ -279,6 +280,9 @@ const CreateBlog = () => {
             </Button>
           </form>
         </Card>
+        <Box mt={20}>
+          <Footer />
+        </Box>
       </Box>
     </LGBox>
   );

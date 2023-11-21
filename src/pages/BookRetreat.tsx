@@ -41,6 +41,7 @@ import useAddRetreatEvents from "../hooks/retreatEvents/useAddRetreatEvents";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import styled from "styled-components";
+import Footer from "../components/footer/Footer";
 
 const schema = z
   .object({
@@ -612,6 +613,9 @@ const BookRetreat: React.FC = () => {
             eventClick={handleBookEvent}
           />
         </Box>
+      </Box>
+      <Box mt={20}>
+        <Footer />
       </Box>
     </LGBox>
   );
