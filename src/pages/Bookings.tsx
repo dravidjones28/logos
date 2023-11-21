@@ -234,8 +234,9 @@ const Bookings = () => {
               cursor="pointer"
               _hover={{ bg: "#70b7ff" }}
               onClick={validateInputs}
+              isDisabled={addPayment.isPending ? true : false}
             >
-              Book Retreat
+              {addPayment.isPending ? <Spinner /> : "Book Retreat"}
             </Button>
           </Box>
         </Card>

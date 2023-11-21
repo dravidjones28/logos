@@ -13,6 +13,7 @@ import {
   Radio,
   Button,
   useToast,
+  Spinner,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
@@ -266,8 +267,12 @@ function MassBooking() {
               <Box>
                 {openTable && <CostTable tableValues={tableValues} />}
                 {radioValue && dateValue && openTable && (
-                  <Button isDisabled={true} colorScheme="blue" type="submit">
-                    Confirm
+                  <Button
+                    isDisabled={useAddPayment.isPending ? true : false}
+                    colorScheme="blue"
+                    type="submit"
+                  >
+                    {useAddPayment.isPending ? <Spinner /> : "Confirm"}
                   </Button>
                 )}
               </Box>
