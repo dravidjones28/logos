@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import LGBox from "../components/common/LGBox";
-import { Box, Card, Heading, Text } from "@chakra-ui/react";
+import { Card, Heading, Text } from "@chakra-ui/react";
 import { ContactCard, Terms } from "./TermsAndCondition";
 import { useLocation } from "react-router-dom";
 import Footer from "../components/footer/Footer";
