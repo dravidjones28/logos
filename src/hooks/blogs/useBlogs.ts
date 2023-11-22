@@ -12,6 +12,7 @@ export interface BlogData {
   authorName?: string;
   authorImage?: string;
 }
+
 const apiClient = new APIClient<BlogData[], null>("/blogs");
 const useBlogs = () => {
   return useQuery({

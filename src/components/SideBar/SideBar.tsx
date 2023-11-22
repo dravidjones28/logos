@@ -30,6 +30,7 @@ import { ReactNode } from "react";
 import logout from "../common/logout";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import { PiHandsPrayingLight } from "react-icons/pi";
 
 interface LinkItemProps {
   name: string;
@@ -53,7 +54,10 @@ interface SideBar {
   children: ReactNode;
 }
 
-const LinkItems: Array<LinkItemProps> = [{ name: "Dashboard", icon: FiHome }];
+const LinkItems: Array<LinkItemProps> = [
+  { name: "Dashboard", icon: FiHome },
+  { name: "Prayer Request", icon: PiHandsPrayingLight },
+];
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   const navigate = useNavigate();
@@ -73,11 +77,15 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         alignItems="center"
         mx="8"
         justifyContent="space-between"
-        onClick={() => navigate("/")}
         cursor="pointer"
       >
-        <Image src={Logo} width={34} />
-        <Text ml={{ lg: "15px" }} fontSize="17px" fontWeight={700}>
+        <Image onClick={() => navigate("/")} src={Logo} width={34} />
+        <Text
+          onClick={() => navigate("/")}
+          ml={{ lg: "15px" }}
+          fontSize="17px"
+          fontWeight={700}
+        >
           Logos Retreat Center
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
@@ -247,7 +255,6 @@ const SidebarWithHeader = ({ children }: SideBar) => {
           <SidebarContent onClose={onClose} />
         </DrawerContent>
       </Drawer>
-      {/* mobilenav */}
       <MobileNav onOpen={onOpen} />
       <Box ml={{ base: 0, md: 60 }} p="4">
         {children}
