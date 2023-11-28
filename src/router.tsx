@@ -19,7 +19,6 @@ import MassBooking from "./pages/MassBooking";
 import YourMassOffering from "./pages/YourMassBooking";
 import Facilities from "./pages/Facilities";
 import PrivateRoute from "./pages/PrivateRoute";
-import Dashboard from "./pages/Dashboard";
 import TypesOfMass from "./pages/TypesOfMass";
 import TodaysMass from "./pages/TodaysMass";
 import AboutUs from "./pages/AboutUs";
@@ -31,6 +30,10 @@ import TermsAndCondition from "./pages/TermsAndCondition";
 import Cancellation from "./pages/Cancellation";
 import Privacy from "./pages/Privacy";
 import Refund from "./pages/Refund";
+import Layout from "./components/Dashboard/Layout";
+import Dashboard from "./pages/Dashboard";
+import DashboardBookingRetreat from "./pages/DashboardBookingRetreat";
+import Playground from "./pages/Playground";
 
 const router = createBrowserRouter([
   {
@@ -168,8 +171,17 @@ const router = createBrowserRouter([
     ],
   },
   {
+    element: <NavBar />,
+    children: [{ path: "playground", element: <Playground /> }],
+  },
+  {
     path: "dashboard",
-    element: <Dashboard />,
+    element: <Layout />,
+    errorElement: <ErrorPage />,
+    children: [
+      { index: true, element: <Dashboard /> },
+      { path: "retreatBookings", element: <DashboardBookingRetreat /> },
+    ],
   },
 ]);
 

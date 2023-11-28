@@ -35,6 +35,7 @@ import { PiHandsPrayingLight } from "react-icons/pi";
 interface LinkItemProps {
   name: string;
   icon: IconType;
+  link: string;
 }
 
 interface NavItemProps extends FlexProps {
@@ -50,24 +51,24 @@ interface SidebarProps extends BoxProps {
   onClose: () => void;
 }
 
-interface SideBar {
-  children: ReactNode;
-}
-
 const LinkItems: Array<LinkItemProps> = [
-  { name: "Dashboard", icon: FiHome },
-  { name: "Prayer Request", icon: PiHandsPrayingLight },
+  { name: "Dashboard", icon: FiHome, link: "" },
+  {
+    name: "Retreat Bookings",
+    icon: PiHandsPrayingLight,
+    link: "/dashboard/retreatBookings",
+  },
 ];
 
-const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+export const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   const navigate = useNavigate();
   return (
     <Box
       transition="3s ease"
       bg={useColorModeValue("white", "gray.900")}
-      borderRight="1px"
-      borderRightColor={useColorModeValue("gray.200", "gray.700")}
-      w={{ base: "full", md: 60 }}
+      borderRight={{ lg: "1px" }}
+      borderRightColor={{ lg: useColorModeValue("gray.200", "gray.700") }}
+      w={{ base: "full", md: "235px" }}
       pos="fixed"
       h="full"
       {...rest}
@@ -90,9 +91,14 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
-      {LinkItems.map((link) => (
-        <NavItem fontWeight={500} key={link.name} icon={link.icon}>
-          {link.name}
+      {LinkItems.map((item) => (
+        <NavItem
+          onClick={() => navigate(`${item.link}`)}
+          fontWeight={500}
+          key={item.name}
+          icon={item.icon}
+        >
+          {item.name}
         </NavItem>
       ))}
     </Box>
@@ -103,13 +109,12 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
   return (
     <Box
       as="a"
-      href="#"
       style={{ textDecoration: "none" }}
       _focus={{ boxShadow: "none" }}
     >
       <Flex
         align="center"
-        p="4"
+        p="3"
         mx="4"
         borderRadius="lg"
         role="group"
@@ -147,23 +152,24 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
 
 const sessionStorage = db();
 
-const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+export const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   const navigate = useNavigate();
   const query = useQueryClient();
+
   return (
     <Flex
-      ml={{ base: 0, md: 60 }}
+      // ml={{ base: 0, md: 60 }}
       px={{ base: 4, md: 4 }}
-      height="20"
+      // width="100vw"
+      height="60px"
       alignItems="center"
       bg={"#3182ce"}
       borderBottomWidth="1px"
       borderBottomColor={useColorModeValue("gray.200", "gray.700")}
-      justifyContent={{ base: "space-between", md: "flex-end" }}
-      {...rest}
+      justifyContent={{ base: "space-between", lg: "flex-end" }}
     >
       <IconButton
-        display={{ base: "flex", md: "none" }}
+        display={{ base: "flex", lg: "none" }}
         onClick={onOpen}
         variant="outline"
         aria-label="open menu"
@@ -172,12 +178,11 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       />
 
       <Image
-        display={{ base: "block", md: "none" }}
+        display={{ base: "block", lg: "none" }}
         src={LogoLight}
         width={34}
         onClick={() => navigate("/")}
       />
-
       <HStack spacing={{ base: "0", md: "6" }}>
         <Flex alignItems={"center"}>
           <Menu>
@@ -234,15 +239,12 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   );
 };
 
-const SidebarWithHeader = ({ children }: SideBar) => {
+const SidebarWithHeader = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
-      <SidebarContent
-        onClose={() => onClose}
-        display={{ base: "none", md: "block" }}
-      />
+      <SidebarContent onClose={() => onClose} />
       <Drawer
         isOpen={isOpen}
         placement="left"
@@ -255,10 +257,6 @@ const SidebarWithHeader = ({ children }: SideBar) => {
           <SidebarContent onClose={onClose} />
         </DrawerContent>
       </Drawer>
-      <MobileNav onOpen={onOpen} />
-      <Box ml={{ base: 0, md: 60 }} p="4">
-        {children}
-      </Box>
     </Box>
   );
 };
