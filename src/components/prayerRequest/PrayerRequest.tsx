@@ -70,7 +70,7 @@ const PrayerRequest = () => {
             lineHeight={1.6}
             fontWeight={500}
             cursor="pointer"
-            onClick={() => navigate("/prayerRequest")}
+            onClick={() => navigate("/prayer-request")}
           >
             Pray for me
           </Text>
