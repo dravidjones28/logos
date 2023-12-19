@@ -7,15 +7,6 @@ import {
   SimpleGrid,
   Stack,
   useColorModeValue,
-  Table,
-  TableCaption,
-  TableContainer,
-  Tbody,
-  Td,
-  Tfoot,
-  Th,
-  Thead,
-  Tr,
   Spinner,
 } from "@chakra-ui/react";
 import useMassBook from "../hooks/massBooking/useMassBook";
@@ -89,59 +80,32 @@ const YourMassOffering = () => {
         mt={{ base: 5, lg: "20px" }}
       >
         {yourBookings?.map((item) => {
-          const tableValues = {
-            weekdays: item?.weekdays,
-            weekends: item?.weekends,
-            totalDays: item?.totalDays,
-            weekdayCost: item?.weekdayCost,
-            weekendCost: item?.weekendCost,
-            totalCost: item?.totalCost,
-          };
-
           return (
             <Card p={5}>
               <Stack>
                 <Heading
-                  // eslint-disable-next-line react-hooks/rules-of-hooks
                   color={useColorModeValue("gray.700", "white")}
                   fontSize={"2xl"}
                   fontFamily={"body"}
                 >
                   {item.massType}
                 </Heading>
-                <Text fontWeight={500}>Name : {item.fullName}</Text>
-                <Text fontWeight={500}>Your Intention : {item.intention}</Text>
-                <TableContainer>
-                  <Table variant="simple">
-                    <TableCaption>LOGOS RETREAT CENTER</TableCaption>
-                    <Thead>
-                      <Tr>
-                        <Th>Type</Th>
-                        <Th>Number</Th>
-                        <Th isNumeric>Cost</Th>
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      <Tr>
-                        <Td>WeekDays</Td>
-                        <Td>{`${tableValues?.weekdays}`}</Td>
-                        <Td isNumeric>{`${tableValues?.weekdayCost}`}</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>WeekEnds</Td>
-                        <Td>{`${tableValues?.weekends}`}</Td>
-                        <Td isNumeric>{`${tableValues?.weekendCost}`}</Td>
-                      </Tr>
-                    </Tbody>
-                    <Tfoot>
-                      <Tr>
-                        <Th>Total Days</Th>
-                        <Th>{`${tableValues?.totalDays}`}</Th>
-                        <Th isNumeric>{`${tableValues?.totalCost}`}</Th>
-                      </Tr>
-                    </Tfoot>
-                  </Table>
-                </TableContainer>
+                <Text fontWeight={500}>Name : {item.firstname}</Text>
+                {item.massType === "Gregorian Intention" ? (
+                  <Text fontWeight={500}>
+                    Your Intention : {item.gregorianIntentionField}
+                  </Text>
+                ) : (
+                  <>
+                    <Text fontWeight={500}>
+                      Intention Type: {item.normalIntentionTypes}
+                    </Text>
+                    <Text fontWeight={500}>
+                      Your Intention : {item.normalIntentionField}
+                    </Text>
+                  </>
+                )}
+                <Text fontWeight={500}>Date : {item.massDate}</Text>
               </Stack>
             </Card>
           );

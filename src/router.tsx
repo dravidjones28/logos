@@ -30,10 +30,11 @@ import TermsAndCondition from "./pages/TermsAndCondition";
 import Cancellation from "./pages/Cancellation";
 import Privacy from "./pages/Privacy";
 import Refund from "./pages/Refund";
-import Layout from "./components/Dashboard/Layout";
-import Dashboard from "./pages/Dashboard";
-import DashboardBookingRetreat from "./pages/DashboardBookingRetreat";
-import Playground from "./pages/Playground";
+// import Layout from "./components/Dashboard/Layout";
+// import Dashboard from "./pages/Dashboard";
+// import DashboardBookingRetreat from "./pages/DashboardBookingRetreat";
+// import DashboardMassBooking from "./pages/DashboardMassBooking";
+// import DashboardPrayerRequest from "./pages/DashboardPrayerRequest";
 
 const router = createBrowserRouter([
   {
@@ -66,7 +67,7 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "blogs/createBlog",
+        path: "blogs/create-blog",
         element: <CreateBlog />,
       },
       {
@@ -82,15 +83,15 @@ const router = createBrowserRouter([
         element: <SingleTestimonial />,
       },
       {
-        path: "prayerRequest",
+        path: "prayer-request",
         element: <PrayerRequest />,
       },
       {
-        path: "contactUs",
+        path: "contact-us",
         element: <ContactUs />,
       },
       {
-        path: "bookRetreat",
+        path: "book-a-retreat",
         element: <BookRetreat />,
       },
 
@@ -99,23 +100,23 @@ const router = createBrowserRouter([
         element: <Facilities />,
       },
       {
-        path: "massOffering",
+        path: "mass-offering",
         element: <MassBooking />,
       },
       {
-        path: "typesOfMassOfferings",
+        path: "types-of-mass-offerings",
         element: <TypesOfMass />,
       },
       {
-        path: "todaysMass",
+        path: "todays-mass",
         element: <TodaysMass />,
       },
       {
-        path: "aboutUs",
+        path: "about-us",
         element: <AboutUs />,
       },
       {
-        path: "vincentianCongregation",
+        path: "vincentian-congregation",
         element: <VincentianCongregation />,
       },
       {
@@ -123,7 +124,7 @@ const router = createBrowserRouter([
         element: <Priests />,
       },
       {
-        path: "frJose",
+        path: "fr-jose",
         element: <FrJose />,
       },
       {
@@ -155,11 +156,11 @@ const router = createBrowserRouter([
         element: <PrivateRoute />,
         children: [
           {
-            path: "yourBookings",
+            path: "your-bookings",
             element: <YourBookings />,
           },
           {
-            path: "yourMassOffering",
+            path: "your-mass-offering",
             element: <YourMassOffering />,
           },
           {
@@ -170,19 +171,21 @@ const router = createBrowserRouter([
       },
     ],
   },
-  {
-    element: <NavBar />,
-    children: [{ path: "playground", element: <Playground /> }],
-  },
-  {
-    path: "dashboard",
-    element: <Layout />,
-    errorElement: <ErrorPage />,
-    children: [
-      { index: true, element: <Dashboard /> },
-      { path: "retreatBookings", element: <DashboardBookingRetreat /> },
-    ],
-  },
+
+  // {
+    // path: "dashboard",
+    // element: <Layout />,
+    // errorElement: <ErrorPage />,
+    // children: [
+      // { index: true, element: <Dashboard /> },
+      // { path: "retreat-bookings", element: <DashboardBookingRetreat /> },
+      // { path: "mass-bookings", element: <DashboardMassBooking /> },
+      // {
+        // path: "prayer-request",
+        // element: <DashboardPrayerRequest />,
+      // },
+    // ],
+  // },
 ]);
 
 export default router;

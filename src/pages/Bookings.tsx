@@ -14,18 +14,24 @@ import {
 } from "@chakra-ui/react";
 import { IconButton } from "@chakra-ui/react";
 import { MinusIcon, AddIcon } from "@chakra-ui/icons";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import db from "../components/common/db";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useRetreatEvent from "../hooks/retreatEvents/useRetreatEvent";
 import useAddPayment from "../hooks/payment/useAddPayment";
 import Footer from "../components/footer/Footer";
+// import uuid from "react-uuid";
+import { v4 as uuidv4 } from "uuid";
+import { FaPhone } from "react-icons/fa";
+
 const Bookings = () => {
   const [count, setCount] = useState<number>(1);
   const [errors, setErrors] = useState<string[]>([]);
   const { slug } = useParams();
   const [slots, setSlots] = useState<number>();
+  const [phoneNumber, setPhoneNumber] = useState<string>();
+  const [phoneError, setPhoneError] = useState("");
 
   useEffect(() => {
     setSlots(Number(events?.slots) - count);
@@ -56,22 +62,33 @@ const Bookings = () => {
   };
 
   const handleInputChange = (indexNumber: number, value: string) => {
+    // if (value.trim() !== "") {
+    //   // If the input is not empty, clear the error for that input
+    //   let temp = [...errors];
+    //   temp[indexNumber] = "";
+    //   setErrors(temp);
+    // }
+    if (/^[A-Za-z\s]+$/.test(value)) {
+      // If the input contains only characters and spaces, clear the error for that input
+      let temp = [...errors];
+      temp[indexNumber] = "";
+      setErrors(temp);
+    } else {
+      // If the input contains other characters, set an error for that input
+      let temp = [...errors];
+      temp[indexNumber] = "Only characters and spaces are allowed";
+      setErrors(temp);
+    }
+
     const newInputValues = [...inputValues];
     newInputValues[indexNumber] = value;
 
     setInputValues(newInputValues);
-
-    if (value.trim() !== "") {
-      // If the input is not empty, clear the error for that input
-      let temp = [...errors];
-      temp[indexNumber] = "";
-      setErrors(temp);
-    }
   };
 
-  const addPayment = useAddPayment(slug!, events);
+  const addPayment = useAddPayment();
+  const session = db();
 
-  console.log(errors);
   const validateInputs = () => {
     const newInputValues = inputValues.map((input) => {
       return input.trim() === "" ? "" : input;
@@ -89,6 +106,14 @@ const Bookings = () => {
         return input.trim() === "" ? `Person ${index + 1} is empty` : "";
       });
       setErrors(errorMessages);
+      return;
+    }
+    if (!phoneNumber) {
+      setPhoneError("This field is required");
+      return;
+    } else if (phoneNumber && phoneNumber.length !== 10) {
+      setPhoneError("Phone Number should have 10 digits");
+      return;
     } else {
       let temp: any = {};
       inputValues.map((item, index) => {
@@ -96,22 +121,60 @@ const Bookings = () => {
         temp[name] = item;
       });
 
+      const totalNumberOfPerson = Object.entries(temp)
+        .map(
+          ([key, value]) => `${key}_${(value as string).replace(/\s+$/, "")}`
+        )
+        .join(",");
+
+      const totalAmount = Number(events?.cost) * count;
+
       addPayment.mutate({
-        eventsId: events?._id,
-        persons: temp,
-        amount: Number(events?.cost) * count,
-        slots: slots,
-        title: events?.title,
-        ledBy: events?.ledBy,
-        start: events?.start,
-        end: events?.end,
-        noOfDays: events?.noOfDays,
-        eventsAmount: events?.cost,
+        txnid: `${uuidv4()}`,
+        amount: `${totalAmount}.0`,
+        productinfo: "Retreat Booking",
+        name: `${session?.name}`,
+        phone: `${phoneNumber}`,
+        email: `${session?.email.replace(/\s+$/, "")}`,
+        udf1: totalNumberOfPerson,
+        udf2: `${events?._id}&${session?._id}`,
+        udf3: `${slots}&${events?.cost}`,
+        udf4: events?.title,
+        udf5: events?.ledBy,
+        udf6: `${events?.start}&${events?.end}`,
+        udf7: `${events?.noOfDays}`,
+        udf8: "",
+        udf9: "",
+        udf10: "",
+        unique_id: "",
+        split_payments: "",
+        sub_merchant_id: "",
+        customer_authentication_id: "",
+        surl: "http://localhost:3000/api/response",
+        furl: "http://localhost:3000/api/response",
       });
     }
   };
 
-  const session = db();
+  const validatePhoneNumber = (value: string) => {
+    const isValid = /^\d{10}$/.test(value);
+    return isValid;
+  };
+
+  const handlePhone = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setPhoneNumber(value);
+
+    if (validatePhoneNumber(value)) {
+      setPhoneError("");
+      setPhoneNumber(value);
+    } else {
+      setPhoneError("Invalid phone number. Please enter 10 digits.");
+    }
+  };
+
+  const navigate = useNavigate();
+  if (events?.slots === "0") navigate("/");
 
   if (isLoading)
     return (
@@ -191,6 +254,24 @@ const Bookings = () => {
               Booking Person : {session?.name}{" "}
             </Text>
             <form>
+              <InputGroup>
+                <InputLeftElement marginTop="5px">
+                  <Icon as={FaPhone} color="#5664d2" />
+                </InputLeftElement>
+                <Input
+                  type="text"
+                  size="lg"
+                  fontSize={{ base: "14px", lg: "17px" }}
+                  _placeholder={{
+                    opacity: 1,
+                    color: "gray.500",
+                    fontSize: "14px",
+                  }}
+                  onChange={handlePhone}
+                  placeholder={`+91 Please Enter your phone number`}
+                />
+              </InputGroup>
+              <p style={{ color: "red" }}>{phoneError}</p>
               {Array.from({ length: count }, (_, index) => (
                 <FormControl my={3} key={index}>
                   <InputGroup>

@@ -9,7 +9,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import useYourBookings from "../hooks/yourBookings/useYourBookings";
+import useYourBookings from "../hooks/retreatBookings/useYourBookings";
 import CryptoJS, { AES } from "crypto-js";
 import Footer from "../components/footer/Footer";
 
@@ -56,6 +56,7 @@ const YourBookings = () => {
       </LGBox>
     );
   if (error || !yourBookings) throw error;
+
   return (
     <LGBox>
       <Text
@@ -93,7 +94,7 @@ const YourBookings = () => {
                   fontSize={"sm"}
                   letterSpacing={1.1}
                 >
-                  Led by: {item.eventId.ledBy}
+                  Led by: {item.events.ledBy}
                 </Text>
                 <Heading
                   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -101,17 +102,17 @@ const YourBookings = () => {
                   fontSize={"2xl"}
                   fontFamily={"body"}
                 >
-                  {item.eventId.title}
+                  {item.events.title}
                 </Heading>
                 <Text fontWeight={500} fontSize="14px" color="#2d3748">
-                  Date : {formatDate(item.eventId.start)}
+                  Date : {formatDate(item.events.start)}
                 </Text>
                 <Text fontWeight={700} fontSize="18px" color="#2d3748" mt={2}>
-                  Booking Person: {item.bookingName}
+                  {/* Booking Person: {item.firstName} */}
                 </Text>
 
                 <Text fontWeight={500} fontSize="14px" color="#2d3748">
-                  No of days : {item.eventId.noOfDays}
+                  No of days : {item.events.noOfDays}
                 </Text>
                 <Text fontWeight={700} fontSize="18px" color="#2d3748" mt={2}>
                   List of people

@@ -1,24 +1,19 @@
-// import { BiSolidDashboard, BiSolidChurch } from "react-icons/bi";
-// import { BsPersonBadge } from "react-icons/bs";
-// import { MdPermMedia } from "react-icons/md";
-// import { MdAccountCircle } from "react-icons/md";
-
 import NavItem from "./utlies/navItem";
 
 const NAV_ITEMS: Array<NavItem> = [
   {
-    label: "Retreat",
+    label: "Retreats",
     children: [
       {
         label: "Book a retreat",
-        href: "bookRetreat",
+        href: "book-a-retreat",
       },
       {
         label: "Your bookings",
-        href: "yourBookings",
+        href: "your-bookings",
       },
       {
-        label: "Facilities",
+        label: "Facilities at Logos",
         subLabel: "sublabel for facilities",
         href: "facilities",
       },
@@ -28,22 +23,22 @@ const NAV_ITEMS: Array<NavItem> = [
     label: "Holy Mass",
     children: [
       {
-        label: "Mass offerings",
-        subLabel: "Book your mass offering",
-        href: "massOffering",
+        label: "Mass Offering",
+        subLabel: "Offer a mass online",
+        href: "mass-offering",
       },
       {
         label: "Your Mass offerings",
         subLabel: "Check your mass offerings",
-        href: "yourMassOffering",
+        href: "your-mass-offering",
       },
       {
         label: "Today's Mass",
-        href: "todaysMass",
+        href: "todays-mass",
       },
       {
         label: "Types of Mass Offerings",
-        href: "typesOfMassOfferings",
+        href: "types-of-mass-offerings",
       },
     ],
   },
@@ -52,12 +47,12 @@ const NAV_ITEMS: Array<NavItem> = [
     label: "About",
     children: [
       {
-        label: "Logos Retreat Center",
-        href: "aboutUs",
+        label: "Logos Retreat Centre",
+        href: "about-us",
       },
       {
         label: "Vincentian Congregation",
-        href: "vincentianCongregation",
+        href: "vincentian-congregation",
       },
       {
         label: "Our Priests",
@@ -65,7 +60,7 @@ const NAV_ITEMS: Array<NavItem> = [
       },
       {
         label: "Fr Jose",
-        href: "frJose",
+        href: "fr-jose",
       },
     ],
     href: "#",
@@ -75,14 +70,14 @@ const NAV_ITEMS: Array<NavItem> = [
     children: [
       {
         label: "Contact Us",
-        href: "/contactUs",
+        href: "/contact-us",
       },
       {
         label: "Prayer Request",
-        href: "/prayerRequest",
+        href: "/prayer-request",
       },
       {
-        label: "FAQ",
+        label: "FAQs",
         href: "faq",
       },
     ],
@@ -98,7 +93,7 @@ const NAV_ITEMS: Array<NavItem> = [
       },
       {
         label: "Testimonies",
-        subLabel: "What people experience",
+        subLabel: "People's experiences at our centre",
 
         href: "/testimonials",
       },

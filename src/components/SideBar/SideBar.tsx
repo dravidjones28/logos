@@ -26,11 +26,11 @@ import Logo from "../../assets/logo-dark.svg";
 import LogoLight from "../../assets/logo-light.svg";
 import db from "../common/db";
 import NoImage from "../common/NoImage";
-import { ReactNode } from "react";
 import logout from "../common/logout";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { PiHandsPrayingLight } from "react-icons/pi";
+import { LuChurch } from "react-icons/lu";
+import { FaChurch, FaPray } from "react-icons/fa";
 
 interface LinkItemProps {
   name: string;
@@ -55,8 +55,19 @@ const LinkItems: Array<LinkItemProps> = [
   { name: "Dashboard", icon: FiHome, link: "" },
   {
     name: "Retreat Bookings",
-    icon: PiHandsPrayingLight,
-    link: "/dashboard/retreatBookings",
+    icon: FaChurch,
+    link: "/dashboard/retreat-bookings",
+  },
+  {
+    name: "Mass Bookings",
+    icon: LuChurch,
+    link: "/dashboard/mass-bookings",
+  },
+
+  {
+    name: "Prayer Request",
+    icon: FaPray,
+    link: "/dashboard/prayer-request",
   },
 ];
 
@@ -87,7 +98,7 @@ export const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
           fontSize="17px"
           fontWeight={700}
         >
-          Logos Retreat Center
+          MRDJ
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
@@ -152,7 +163,7 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
 
 const sessionStorage = db();
 
-export const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+export const MobileNav = ({ onOpen }: MobileProps) => {
   const navigate = useNavigate();
   const query = useQueryClient();
 
@@ -240,7 +251,7 @@ export const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 };
 
 const SidebarWithHeader = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onClose } = useDisclosure();
 
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>

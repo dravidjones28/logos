@@ -72,28 +72,30 @@ const NavBar = () => {
             justify={{ base: "center", lg: "start" }}
             ml={{ lg: 20 }}
           >
-            <Image src={Logo} width={34} />
             <Link to="/">
-              <Text
-                fontSize={useBreakpointValue({
-                  base: "lg",
-                  md: "xs",
-                  xl: "lg",
-                })}
-                mt={{ base: "0px", md: "5px" }}
-                letterSpacing={1}
-                fontWeight={700}
-                textAlign={useBreakpointValue({ base: "center", md: "left" })}
-                textTransform="uppercase"
-                fontFamily={"heading"}
-                color="#fff"
-                alignSelf="center"
-                marginLeft="10px"
-                whiteSpace="nowrap"
-                cursor="pointer"
-              >
-                {!isMobile ? "LOGOS RETREAT centre" : ""}
-              </Text>
+              <Flex>
+                <Image src={Logo} width={34} />
+                <Text
+                  fontSize={useBreakpointValue({
+                    base: "lg",
+                    md: "xs",
+                    xl: "lg",
+                  })}
+                  mt={{ base: "0px", md: "5px" }}
+                  letterSpacing={1}
+                  fontWeight={700}
+                  textAlign={useBreakpointValue({ base: "center", md: "left" })}
+                  textTransform="uppercase"
+                  fontFamily={"heading"}
+                  color="#fff"
+                  alignSelf="center"
+                  marginLeft="10px"
+                  whiteSpace="nowrap"
+                  cursor="pointer"
+                >
+                  {!isMobile ? "LOGOS RETREAT centre" : ""}
+                </Text>
+              </Flex>
             </Link>
           </Flex>
 
@@ -124,7 +126,10 @@ const NavBar = () => {
                 <MenuList>
                   <MenuOptionGroup title="Profile">
                     {session.isAdmin && (
-                      <MenuItem onClick={() => navigate("/dashboard")}>
+                      <MenuItem
+                        isDisabled={true}
+                        onClick={() => navigate("/dashboard")}
+                      >
                         My Dashboard
                       </MenuItem>
                     )}

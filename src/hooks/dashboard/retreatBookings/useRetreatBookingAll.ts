@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import APIClient from "../../../services/apiClient";
 import useRetreatBookingQuery from "../../../store";
-import { YourBooking } from "../../yourBookings/useYourBookings";
+import { YourBooking } from "../../retreatBookings/useYourBookings";
 import ms from "ms";
 
 interface RetreatBookingAll {
@@ -9,7 +9,9 @@ interface RetreatBookingAll {
   totalCount: number;
   events: string[];
 }
-const apiClient = new APIClient<RetreatBookingAll, null>("/verifyPayment/all");
+const apiClient = new APIClient<RetreatBookingAll, null>(
+  "/retreatBookings/all"
+);
 
 const useRetreatBookingAll = () => {
   const retreatBookings = useRetreatBookingQuery((s) => s.retreatBookings);

@@ -1,24 +1,29 @@
-import { SimpleGrid } from "@chakra-ui/react";
-import Blog from "./Blog";
+import { Box, SimpleGrid, Spinner } from "@chakra-ui/react";
+import useBlogs from "../../hooks/blogs/useBlogs";
+import LGBox from "../common/LGBox";
+import BlogContainer from "../common/BlogContainer";
+import Blog1 from "../../components/blog/Blog";
 
 const BlogPage = () => {
-  const author1 =
-    "https://res.cloudinary.com/dxdpahm3o/image/upload/v1694873905/Logos%20Retreat%20Centre/Fr-Jose_gsxzmr.webp";
+  const { data: blogs, error, isLoading } = useBlogs();
 
-  const author2 =
-    "https://res.cloudinary.com/dxdpahm3o/image/upload/v1694877759/Logos%20Retreat%20Centre/Fr.-George-Pallickamyalil_wfaimo.webp";
+  const firstThree = blogs?.slice(0, 3);
 
-  const author3 =
-    "https://res.cloudinary.com/dxdpahm3o/image/upload/v1695020307/Logos%20Retreat%20Centre/Fr.-Var_pksgbr.webp";
+  if (isLoading)
+    return (
+      <LGBox>
+        <Box
+          display="flex"
+          height="70vh"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Spinner />
+        </Box>
+      </LGBox>
+    );
+  if (error) return <div>Error</div>;
 
-  const post1 =
-    "https://res.cloudinary.com/dxdpahm3o/image/upload/v1695273650/Logos%20Retreat%20Centre/silent-retreat_hkxv00.webp";
-
-  const post2 =
-    "https://res.cloudinary.com/dxdpahm3o/image/upload/v1695273650/Logos%20Retreat%20Centre/inner-healing_ihrwf3.webp";
-
-  const post3 =
-    "https://res.cloudinary.com/dxdpahm3o/image/upload/v1695273650/Logos%20Retreat%20Centre/intercession_lzcmyk.webp";
   return (
     <SimpleGrid
       columns={{ base: 1, lg: 3 }}
@@ -26,7 +31,21 @@ const BlogPage = () => {
       gap={10}
       mx={{ base: "30px", lg: "145px" }}
     >
-      <Blog
+      {firstThree?.map((item, index) => (
+        <BlogContainer key={index}>
+          <Blog1
+            slug={item._id}
+            blogImage={item.blogImage ? item.blogImage : ""}
+            blogType={item.blogType ? item.blogType : ""}
+            title={item.blogTitle ? item.blogTitle : ""}
+            //   des="Explore the transformative effects of silent retreats on your spiritual journey, and how they deepen your connection to God."
+            authorImage={item.authorImage ? item.authorImage : ""}
+            authorName={item.authorName ? item.authorName : ""}
+            posted={item.uploadedDate ? item.uploadedDate : " "}
+          />
+        </BlogContainer>
+      ))}
+      {/* <Blog
         blogImage={post1}
         blogType="SPIRITUAL GROWTH"
         title="Unlocking The Power Of Silent Retreats"
@@ -34,25 +53,7 @@ const BlogPage = () => {
         authorName="Rev. Fr. Dr. Jose Vettiyankal VC"
         posted="Posted on 28 February 2023"
         slug="655bb049de6b08001c442dca"
-      />
-      <Blog
-        blogImage={post2}
-        blogType="Inner Healing"
-        title="The Essence of Inner Healing Retreats"
-        authorImage={author2}
-        authorName="Rev. Fr. George Pallikamyalil VC"
-        posted="Posted on 15 August 2023"
-        slug="655bb049de6b08001c442dca"
-      />
-      <Blog
-        blogImage={post3}
-        blogType="Prayers"
-        title="Role of Intercession in Modern Times"
-        authorImage={author3}
-        authorName="Rev. Fr. Varghese Thomas VC"
-        posted="Posted on 5 Septebmer 2023"
-        slug="655bb049de6b08001c442dca"
-      />
+      /> */}
     </SimpleGrid>
   );
 };

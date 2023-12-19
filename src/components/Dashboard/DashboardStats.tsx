@@ -32,6 +32,8 @@ const DashboardStats = () => {
 
   if (error || !stats) throw error;
 
+  console.log(stats);
+
   return (
     <>
       <SimpleGrid columns={{ base: 1, lg: 2, xl: 4 }} spacing={5} gap={10}>

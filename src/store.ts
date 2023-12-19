@@ -15,6 +15,18 @@ interface RetreatBookings {
   orderId?: string;
 }
 
+interface MassBookings {
+  pageSize?: number;
+  page?: number;
+  massDate?: string;
+}
+
+interface PrayerRequest {
+  pageSize?: number;
+  page?: number;
+  searchDate?: Date;
+}
+
 interface Props {
   // Landing page navbar open
   isNavBarOpen: boolean;
@@ -35,6 +47,16 @@ interface Props {
   setTitle: (title: string) => void;
   setSearchQuery: (searchQuery: string) => void;
   setOrderId: (orderId: string) => void;
+
+  massBookings: MassBookings;
+  setMassPageSize: (pageSize: number) => void;
+  setMassPage: (page: number) => void;
+  setMassDate: (date: string) => void;
+
+  prayerRequest: PrayerRequest;
+  setPrayerRequestPageSize: (pageSize: number) => void;
+  setPrayerRequestPage: (page: number) => void;
+  setPrayerRequestDate: (searchDate: Date) => void;
 }
 const store = create<Props>((set) => ({
   isNavBarOpen: false,
@@ -56,13 +78,60 @@ const store = create<Props>((set) => ({
 
   // Retreat Bookings
   retreatBookings: {},
-  setPageSize: (pageSize) => set(() => ({ retreatBookings: { pageSize } })),
-  setPage: (page) => set(() => ({ retreatBookings: { page } })),
-  setStartDate: (startDate) => set(() => ({ retreatBookings: { startDate } })),
-  setTitle: (title) => set(() => ({ retreatBookings: { title } })),
+  setPageSize: (pageSize) =>
+    set((state) => ({
+      retreatBookings: { ...state.retreatBookings, pageSize },
+    })),
+  setPage: (page) =>
+    set((state) => ({
+      retreatBookings: { ...state.retreatBookings, page },
+    })),
+  setStartDate: (startDate) =>
+    set((state) => ({
+      retreatBookings: { ...state.retreatBookings, startDate },
+    })),
+  setTitle: (title) =>
+    set((state) => ({
+      retreatBookings: { ...state.retreatBookings, title },
+    })),
   setSearchQuery: (searchQuery) =>
-    set(() => ({ retreatBookings: { searchQuery } })),
-  setOrderId: (orderId) => set(() => ({ retreatBookings: { orderId } })),
+    set((state) => ({
+      retreatBookings: { ...state.retreatBookings, searchQuery },
+    })),
+  setOrderId: (orderId) =>
+    set((state) => ({
+      retreatBookings: { ...state.retreatBookings, orderId },
+    })),
+
+  massBookings: {},
+  setMassPageSize: (pageSize) =>
+    set((state) => ({
+      massBookings: { ...state.massBookings, pageSize },
+    })),
+  setMassPage: (page) =>
+    set((state) => ({
+      massBookings: { ...state.massBookings, page },
+    })),
+
+  setMassDate: (massDate) =>
+    set((state) => ({
+      massBookings: { ...state.massBookings, massDate },
+    })),
+
+  prayerRequest: {},
+  setPrayerRequestPageSize: (pageSize) =>
+    set((state) => ({
+      prayerRequest: { ...state.prayerRequest, pageSize },
+    })),
+  setPrayerRequestPage: (page) =>
+    set((state) => ({
+      prayerRequest: { ...state.prayerRequest, page },
+    })),
+
+  setPrayerRequestDate: (searchDate) =>
+    set((state) => ({
+      prayerRequest: { ...state.prayerRequest, searchDate },
+    })),
 }));
 
 export default store;

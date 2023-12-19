@@ -5,17 +5,15 @@ import { RetreatEvents } from "../retreatEvents/useRetreatEvents";
 
 export interface YourBooking {
   persons: any;
-  eventId: RetreatEvents;
+  events: RetreatEvents;
   amount: number;
-  bookingName: string;
-  razorpay_payment_id: string;
-  razorpay_order_id: string;
+  // firstname: string;
 }
-const apiClient = new APIClient<YourBooking[], null>("/verifyPayment");
+const apiClient = new APIClient<YourBooking[], null>("/retreatBookings");
 
 const useYourBookings = (token: string) =>
   useQuery({
-    queryKey: ["verifyPayment"],
+    queryKey: ["retreatBookings"],
     queryFn: () => apiClient.getWithAccess(token),
     staleTime: ms("24h"),
   });

@@ -64,7 +64,7 @@ const Blog = () => {
             _hover={{ bg: "#70b7ff" }}
             onClick={() => {
               // onOpen();
-              navigate("/blogs/createBlog");
+              navigate("/blogs/create-blog");
             }}
           >
             Create Blog

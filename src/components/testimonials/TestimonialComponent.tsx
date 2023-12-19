@@ -43,13 +43,23 @@ const TestimonialComponent = ({
       setResultDate(`less than 2 minutes ago`);
     } else if (minutesAgo < 60) {
       setResultDate(`less than ${Math.floor(minutesAgo)} minutes ago`);
-    } else {
+    } else if (minutesAgo < 24 * 60) {
       const hoursAgo = Math.floor(duration.as("hours"));
-      const value = (resultDate =
-        hoursAgo === 1 ? "1 hour ago" : `${hoursAgo} hours ago`);
-      setResultDate(value);
+      setResultDate(hoursAgo === 1 ? "1 hour ago" : `${hoursAgo} hours ago`);
+    } else if (minutesAgo < 30 * 24 * 60) {
+      const daysAgo = Math.floor(duration.as("days"));
+      setResultDate(daysAgo === 1 ? "one day ago" : `${daysAgo} days ago`);
+    } else if (minutesAgo < 365 * 24 * 60) {
+      const monthsAgo = Math.floor(duration.as("months"));
+      setResultDate(
+        monthsAgo === 1 ? "one month ago" : `${monthsAgo} months ago`
+      );
+    } else {
+      const yearsAgo = Math.floor(duration.as("years"));
+      setResultDate(yearsAgo === 1 ? "one year ago" : `${yearsAgo} years ago`);
     }
   }
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -62,7 +72,6 @@ const TestimonialComponent = ({
         transform: "scale(1.03)",
         transition: "transform .15s ease-in",
       }}
-      // boxShadow="0 4px 6px rgba(0, 0, 0, 0.1), 0 6px 12px rgba(0, 0, 0, 0.2)"
       onClick={() => navigate(`${_id}`)}
       cursor="pointer"
       border="1px solid #f3f3f3"
@@ -71,8 +80,6 @@ const TestimonialComponent = ({
       bg={useColorModeValue("white", "gray.900")}
       boxShadow={"2xl"}
       height="242px"
-
-      // bg="#409aef"
     >
       <Box position="relative" top="-30px">
         <Image

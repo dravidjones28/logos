@@ -29,22 +29,40 @@ import useMassBooking from "./../hooks/massBooking/useMassBooking";
 import useAuth from "../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router-dom";
 import Footer from "../components/footer/Footer";
+import db from "../components/common/db";
+import { addDays } from "date-fns";
+import ThirtyDaysDate from "../components/Dates/ThirtyDaysDate";
 
 export interface Value {
   dates: Date[] | Date | undefined | DateRange;
 }
 
 const schema = z.object({
-  fullName: z.string().min(2, "Minimum of 4 Characters"),
+  fullName: z
+    .string()
+    .min(2, "Minimum of 4 Characters")
+    .refine((data) => /^[A-Za-z\s]+$/.test(data), {
+      message: "Only characters and spaces are allowed for fullName",
+    }),
+
   email: z.string().min(4, "Minimum of 4 Characters").email(),
   massType: z.string().min(1, "Please Select MassType"),
+  phoneNumber: z.string().min(10, "Please Enter 10 digits").max(10),
+  normalIntentionTypes: z
+    .enum(["Thanks Giving", "Special Intention", "RIP"])
+    .refine((data) => data.length > 0)
+    .optional(),
   normalIntentionField: z
     .string()
-    .refine((data) => data.length > 0)
+    .refine((data) => /^[A-Za-z\s]+$/.test(data), {
+      message: "Only characters and spaces are allowed for fullName",
+    })
     .optional(),
   gregorianIntentionField: z
     .string()
-    .refine((data) => data.length > 0)
+    .refine((data) => /^[A-Za-z\s]+$/.test(data), {
+      message: "Only characters and spaces are allowed for fullName",
+    })
     .optional(),
 });
 
@@ -59,6 +77,8 @@ export interface DateValues {
   totalCost: number;
 }
 
+type DateRangeOrUndefined = DateRange | undefined;
+
 function MassBooking() {
   const { pathname } = useLocation();
 
@@ -67,7 +87,7 @@ function MassBooking() {
   }, [pathname]);
 
   const [radioValue, setRadioValue] = useState("");
-  const [dateValue, setDateValue] = useState<Value>();
+  const [dateValue, setDateValue] = useState<any>();
   const [tableValues, setTableValues] = useState<DateValues>();
   const [openTable, setOpenTable] = useState<boolean>(false);
 
@@ -77,9 +97,14 @@ function MassBooking() {
     formState: { errors },
     setValue,
     watch,
+    unregister,
   } = useForm<MassData>({ resolver: zodResolver(schema) });
 
   const selectedMassType = watch("massType");
+  const auth = useAuth();
+  const navigate = useNavigate();
+  const toast = useToast();
+  const database = db();
 
   const handleValue = (e: any) => {
     setDateValue(undefined);
@@ -92,24 +117,69 @@ function MassBooking() {
   };
 
   const handleMassTypeChange = (value: string) => {
+    console.log(value);
     setValue("massType", value);
-    // Additional logic based on massType if needed
+    if (value === "Normal Intention") {
+      // Unregister fields for Gregorian Intention
+      unregister("gregorianIntentionField");
+    } else if (value === "Gregorian Intention") {
+      // Unregister fields for Normal Intention
+      unregister("normalIntentionTypes");
+      unregister("normalIntentionField");
+    }
   };
 
-  const useAddPayment = useMassBooking();
-  const auth = useAuth();
-  const navigate = useNavigate();
-  const toast = useToast();
+  const massPayment = useMassBooking();
 
   const onSubmit = (data: MassData) => {
+    let filterDateValue = [];
+
+    if (dateValue instanceof Date) {
+      filterDateValue = [dateValue];
+    } else if (Array.isArray(dateValue)) {
+      filterDateValue = dateValue;
+    }
+
+    let temp: any = [];
+
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+
+    filterDateValue.map((item: any) => {
+      const result = item.toLocaleDateString("en-US", options);
+      temp.push(result);
+    });
+
     if (auth) {
-      const field = {
-        ...data,
-        dates: dateValue,
-        ...tableValues,
-        amount: tableValues?.totalCost,
+      let field = {
+        bookingName: data.fullName,
+        amount: Number(tableValues?.totalCost),
+        email: data.email,
+        massType: data.massType,
+        normalIntentionField: data.normalIntentionField
+          ? data.normalIntentionField
+          : "None",
+        normalIntentionTypes: data.normalIntentionTypes
+          ? data.normalIntentionTypes
+          : "None",
+        gregorianIntentionField: data.gregorianIntentionField
+          ? data.gregorianIntentionField
+          : "None",
+        totalDays: tableValues?.totalDays,
+        weekdayCost: tableValues?.weekdayCost,
+        weekdays: tableValues?.weekdays,
+
+        weekendCost: tableValues?.weekendCost,
+        weekends: tableValues?.weekends,
+        massDate: "12/09/2023",
+        author: `${database?._id}`,
+        phone: Number(data.phoneNumber),
       };
-      useAddPayment.mutate(field);
+
+      massPayment.mutate(field);
     } else {
       toast({
         title: "Please Login In",
@@ -121,7 +191,11 @@ function MassBooking() {
       });
       navigate("/login");
     }
+
+    // console.log(field);
   };
+
+  const intetionTypes = ["Thanks Giving", "Special Intention", "RIP"];
 
   return (
     <LGBox>
@@ -163,6 +237,15 @@ function MassBooking() {
                       </FormHelperText>
                     )}
                   </FormControl>
+                  <FormControl isInvalid={errors.phoneNumber ? true : false}>
+                    <FormLabel>Phone Number</FormLabel>
+                    <Input {...data("phoneNumber")} type="number" />
+                    {errors.phoneNumber && (
+                      <FormHelperText color="red">
+                        {errors.phoneNumber.message}
+                      </FormHelperText>
+                    )}
+                  </FormControl>
                   <FormControl isInvalid={errors.massType ? true : false}>
                     <FormLabel>Choose Mass Type</FormLabel>
                     <Select
@@ -188,6 +271,22 @@ function MassBooking() {
                         isInvalid={errors.normalIntentionField ? true : false}
                       >
                         <FormLabel>Normal Intention Field</FormLabel>
+                        <Select
+                          my={3}
+                          placeholder="Select Intention"
+                          {...data("normalIntentionTypes")}
+                        >
+                          {intetionTypes.map((item, index) => (
+                            <option value={item} key={index}>
+                              {item}
+                            </option>
+                          ))}
+                        </Select>
+                        {errors.normalIntentionTypes && (
+                          <FormHelperText color="red" mb={2}>
+                            {errors.normalIntentionTypes.message}
+                          </FormHelperText>
+                        )}
                         <Input {...data("normalIntentionField")} type="text" />
                         {errors.normalIntentionField && (
                           <FormHelperText color="red">
@@ -216,65 +315,116 @@ function MassBooking() {
                 </Box>
               </Box>
               <Box>
-                <Box>
-                  {selectedMassType && (
-                    <Text mt={{ base: 5, lg: 10 }} fontWeight={500}>
-                      How many masses you want to offer?
-                    </Text>
-                  )}
-                  {selectedMassType && (
-                    <RadioGroup
-                      onChange={handleValue}
-                      value={radioValue}
-                      mt={4}
-                    >
-                      <Stack direction={{ base: "column", lg: "row" }}>
-                        <Radio value="1">Single</Radio>
-                        <Radio value="2">Multiple</Radio>
-                        <Radio value="3">Range</Radio>
-                      </Stack>
-                    </RadioGroup>
-                  )}
-                  {radioValue === "1" ? (
-                    <SingleDate
-                      onTableValue={(value: DateValues) =>
-                        setTableValues(value)
+                {selectedMassType === "Gregorian Intention" ? (
+                  <ThirtyDaysDate
+                    onTableValue={(value: DateValues) => {
+                      setTableValues(value);
+                    }}
+                    onValue={(value: DateRangeOrUndefined) => {
+                      // console.log(value);
+                      if (value && value.to && value.from) {
+                        let newDates = [];
+                        for (
+                          let date = value.from;
+                          date <= value.to;
+                          date = addDays(date, 1)
+                        ) {
+                          newDates.push(new Date(date));
+                        }
+                        setDateValue(newDates);
                       }
-                      onValue={(value: any) => setDateValue(value)}
-                    />
-                  ) : radioValue === "2" ? (
-                    <MultipleDate
-                      onTableValue={(value: DateValues) =>
-                        setTableValues(value)
-                      }
-                      onValue={(value: any) => setDateValue(value)}
-                    />
-                  ) : radioValue === "3" ? (
-                    <RangeDate
-                      onTableValue={(value: DateValues) =>
-                        setTableValues(value)
-                      }
-                      onValue={(value: any) => setDateValue(value)}
-                    />
-                  ) : null}
-                  {radioValue && dateValue && !openTable && (
-                    <Button colorScheme="blue" onClick={handleDate}>
-                      Confirm Date
-                    </Button>
-                  )}
-                </Box>
+                    }}
+                  />
+                ) : (
+                  <Box>
+                    {selectedMassType && (
+                      <Text mt={{ base: 5, lg: 10 }} fontWeight={500}>
+                        How many masses you want to offer?
+                      </Text>
+                    )}
+                    {selectedMassType && (
+                      <RadioGroup
+                        onChange={handleValue}
+                        value={radioValue}
+                        mt={4}
+                      >
+                        <Stack direction={{ base: "column", lg: "row" }}>
+                          <Radio value="1">Single</Radio>
+                          <Radio value="2">Multiple</Radio>
+                          <Radio value="3">Range</Radio>
+                        </Stack>
+                      </RadioGroup>
+                    )}
+                    {radioValue === "1" ? (
+                      <SingleDate
+                        onTableValue={(value: DateValues) =>
+                          setTableValues(value)
+                        }
+                        onValue={(value: any) => setDateValue(value)}
+                      />
+                    ) : radioValue === "2" ? (
+                      <MultipleDate
+                        onTableValue={(value: DateValues) =>
+                          setTableValues(value)
+                        }
+                        onValue={(value: any) => setDateValue(value)}
+                      />
+                    ) : radioValue === "3" ? (
+                      <RangeDate
+                        onTableValue={(value: DateValues) => {
+                          // for (let date = startDate; date <= endDate; date.setDate(date.getDate() + 1)) {
+                          //   // Include only Sunday and Monday
+                          //   if (date.getDay() === 0 || date.getDay() === 1) {
+                          //     dateArray.push(new Date(date));
+                          //   }
+                          // }
+                          setTableValues(value);
+                        }}
+                        onValue={(value: any) => {
+                          // console.log(value);
+                          if (value && value.to) {
+                            let newDates = [];
+                            for (
+                              let date = value.from;
+                              date <= value.to;
+                              date = addDays(date, 1)
+                            ) {
+                              newDates.push(new Date(date));
+                            }
+                            // console.log("newDates", newDates);
+                            // console.log("Value:", value);
+                            setOpenTable(false);
+                            setDateValue(newDates);
+                          }
+                        }}
+                      />
+                    ) : null}
+                  </Box>
+                )}
               </Box>
-              <Box>
-                {openTable && <CostTable tableValues={tableValues} />}
-                {radioValue && dateValue && openTable && (
-                  <Button
-                    isDisabled={useAddPayment.isPending ? true : false}
-                    colorScheme="blue"
-                    type="submit"
-                  >
-                    {useAddPayment.isPending ? <Spinner /> : "Confirm"}
+              {(selectedMassType === "Normal Intention" ? radioValue : true) &&
+                dateValue &&
+                !openTable && (
+                  <Button colorScheme="blue" onClick={handleDate}>
+                    Confirm Date
                   </Button>
                 )}
+              <Box>
+                {openTable && <CostTable tableValues={tableValues} />}
+                {(selectedMassType === "Normal Intention"
+                  ? radioValue
+                  : true) &&
+                  dateValue &&
+                  openTable && (
+                    <Button
+                      // isDisabled={massPayment.isPending ? true : false}
+                      isDisabled={true}
+                      colorScheme="blue"
+                      type="submit"
+                    >
+                      {massPayment.isPending ? <Spinner /> : "Confirm"}
+                    </Button>
+                  )}
               </Box>
             </form>
           </Card>

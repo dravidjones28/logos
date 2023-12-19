@@ -121,6 +121,8 @@ const BookRetreat: React.FC = () => {
   const navigate = useNavigate();
   const toast = useToast();
 
+  
+
   const handleShowEvent = () => setShowEvent(!showEvent);
 
   const onSubmit = (data: FormData) => {
@@ -141,7 +143,7 @@ const BookRetreat: React.FC = () => {
         title: data.eventName,
         start: startDate.toISOString().replace(/T.*$/, ""),
         end: endDate.toISOString().replace(/T.*$/, ""),
-        noOfDays: daysDifference,
+        noOfDays: daysDifference.toString(),
         ledBy: data.ledBy,
         cost: data.cost,
         slots: data.slots,
@@ -527,8 +529,8 @@ const BookRetreat: React.FC = () => {
               }}
               colorScheme="blue"
               mr={3}
-              isDisabled={Number(singleEvent?.slots) === 0 ? true : false}
-              // isDisabled={true}
+              // isDisabled={Number(singleEvent?.slots) === 0 ? true : false}
+              isDisabled={true}
             >
               Book Retreat
             </Button>
