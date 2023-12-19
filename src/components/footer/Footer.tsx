@@ -134,29 +134,29 @@ const Footer = () => {
           <FooterList
             title="Retreats"
             listItems={[
-              { label: "Book A Retreat", url: "bookRetreat" },
+              { label: "Book A Retreat", url: "book-a-retreat" },
               { label: "Facilities", url: "facilities" },
             ]}
           />
           <FooterList
             title="Holy Mass"
             listItems={[
-              { label: "Mass offerings", url: "massOffering" },
-              { label: "Today's Mass", url: "todaysMass" },
+              { label: "Mass offerings", url: "your-mass-offering" },
+              { label: "Today's Mass", url: "todays-mass" },
             ]}
           />
           <FooterList
             title="Help & Support"
             listItems={[
-              { label: "Contact Us", url: "/contactUs" },
-              { label: "Prayer Request", url: "/prayerRequest" },
-              { label: "FAQ", url: "faq" },
+              { label: "Contact Us", url: "/contact-us" },
+              { label: "Prayer Request", url: "/prayer-request" },
+              { label: "FAQs", url: "faq" },
             ]}
           />
           <FooterList
             title="Legal"
             listItems={[
-              { label: "Terms & Condition", url: "/termsAndCondition" },
+              { label: "Terms & Condition", url: "/terms-and-condition" },
               { label: "Privacy & Policy", url: "/privacy" },
               { label: "Cancellation Policy", url: "/cancellation" },
               { label: "Refund", url: "/refund" },

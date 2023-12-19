@@ -132,7 +132,7 @@ const router = createBrowserRouter([
         element: <Faq />,
       },
       {
-        path: "termsAndCondition",
+        path: "terms-and-condition",
         element: <TermsAndCondition />,
       },
       {
@@ -173,18 +173,18 @@ const router = createBrowserRouter([
   },
 
   // {
-    // path: "dashboard",
-    // element: <Layout />,
-    // errorElement: <ErrorPage />,
-    // children: [
-      // { index: true, element: <Dashboard /> },
-      // { path: "retreat-bookings", element: <DashboardBookingRetreat /> },
-      // { path: "mass-bookings", element: <DashboardMassBooking /> },
-      // {
-        // path: "prayer-request",
-        // element: <DashboardPrayerRequest />,
-      // },
-    // ],
+  // path: "dashboard",
+  // element: <Layout />,
+  // errorElement: <ErrorPage />,
+  // children: [
+  // { index: true, element: <Dashboard /> },
+  // { path: "retreat-bookings", element: <DashboardBookingRetreat /> },
+  // { path: "mass-bookings", element: <DashboardMassBooking /> },
+  // {
+  // path: "prayer-request",
+  // element: <DashboardPrayerRequest />,
+  // },
+  // ],
   // },
 ]);
 
