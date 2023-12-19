@@ -29,7 +29,8 @@ const useAddRegister = () => {
     onSuccess: (res, _register) => {
       toast({
         title: "Please Verify your Email",
-        description: res.message,
+        description: `Thanks for registering. Please check your email to verify your account
+        `,
         position: "top",
         status: "success",
         isClosable: true,
