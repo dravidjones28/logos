@@ -26,7 +26,7 @@ const useAddRegister = () => {
     mutationFn: (registerValues: Register) =>
       apiClient.register(registerValues),
 
-    onSuccess: (res, _register) => {
+    onSuccess: (_res, _register) => {
       toast({
         title: "Please Verify your Email",
         description: `Thanks for registering. Please check your email to verify your account
