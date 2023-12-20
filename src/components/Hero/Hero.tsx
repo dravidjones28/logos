@@ -51,7 +51,7 @@ const Hero = () => {
             <Button
               size={{ base: "md", md: "lg" }}
               onClick={() => {
-                navigate("/book-retreat");
+                navigate("/book-a-retreat");
               }}
             >
               <Text fontSize={{ base: "13px", lg: "15px" }}>
