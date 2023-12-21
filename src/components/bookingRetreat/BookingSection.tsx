@@ -47,7 +47,7 @@ const BookingSection = () => {
               <Button
                 mt={5}
                 onClick={() => {
-                  navigate("/aboutUs");
+                  navigate("/about-us");
                 }}
               >
                 Discover More
