@@ -47,7 +47,7 @@ const Testimonial = () => {
           fontSize={{ base: "20px", lg: "30px" }}
           letterSpacing={1.1}
         >
-          Testimonails
+          Testimonies
         </Text>
         {(session?.isAdmin || session?.isEditor) && (
           <Button
