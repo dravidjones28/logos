@@ -22,7 +22,7 @@ const useAddTestimonial = (onAdd: () => void) => {
     TestimonialData,
     AddTestimonialContext
   >({
-    mutationFn: (data: TestimonialData) => apiClient.postData(data),
+    mutationFn: (data: TestimonialData) => apiClient.postDataFile(data),
 
     onMutate: (testimonial) => {
       console.log(testimonial);

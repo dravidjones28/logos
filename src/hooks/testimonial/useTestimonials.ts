@@ -4,7 +4,7 @@ import ms from "ms";
 
 export interface TestimonialData {
   _id?: string;
-  testimonialImage: string;
+  testimonialImage?: File;
   testimonalName: string;
   description: string;
   date?: Date;

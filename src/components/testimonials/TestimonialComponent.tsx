@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 interface Testimonal {
   _id: string;
-  imageUrl?: string;
+  imageUrl?: string | File;
   name: string;
   dateNow: Date | undefined;
   des: string;
@@ -66,6 +66,8 @@ const TestimonialComponent = ({
     updateDate();
   }, []);
 
+  const imageURL = `https://sleepy-gold-pumps.cyclic.app/${imageUrl}`;
+
   return (
     <Card
       _hover={{
@@ -83,7 +85,8 @@ const TestimonialComponent = ({
     >
       <Box position="relative" top="-30px">
         <Image
-          src={imageUrl ? `${imageUrl}` : `${EmptyImage}`}
+          // crossorigin="anonymous"
+          src={imageUrl ? imageURL : `${EmptyImage}`}
           width="3.625rem"
           height="3.625rem"
           objectFit="cover"

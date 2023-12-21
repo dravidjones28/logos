@@ -15,18 +15,26 @@ import {
   Textarea,
   Spinner,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { MdDriveFileRenameOutline } from "react-icons/md";
-import { BsUpload } from "react-icons/bs";
-import { MdOutlineDownloadDone } from "react-icons/md";
+
 import "react-quill/dist/quill.snow.css";
 import "../components/common/createBlog.css";
 import z from "zod";
 import useAddTestimonial from "../hooks/testimonial/useAddTestimonial";
 import { useLocation } from "react-router-dom";
 import Footer from "../components/footer/Footer";
+import { BsUpload } from "react-icons/bs";
+
+const MAX_FILE_SIZE = 5000000;
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
 
 const schema = z.object({
   testimonalName: z
@@ -36,9 +44,20 @@ const schema = z.object({
   description: z
     .string()
     .min(3, "Description must be contain minimum of 2 Characters"),
+  testimonialImage: z
+    .any()
+
+    .refine(
+      (files) => files?.[0]?.size <= MAX_FILE_SIZE,
+      `Max image size is 5MB.`
+    )
+    .refine(
+      (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
+      "Only .jpg, .jpeg, .png and .webp formats are supported."
+    ),
 });
 
-type FormData = z.infer<typeof schema>;
+type TestimonialFormData = z.infer<typeof schema>;
 const CreateTestimonal = () => {
   const { pathname } = useLocation();
 
@@ -46,72 +65,47 @@ const CreateTestimonal = () => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [pictureError, setPictureError] = useState<{ [key: string]: string }>(
-    {}
-  );
-  const [uploadedImage, setUploadedImage] = useState<{ [key: string]: string }>(
-    {}
-  );
-
   let {
     register,
     handleSubmit,
     formState: { errors },
     reset,
     setValue,
-  } = useForm<FormData>({
+    // getValues,
+    watch,
+  } = useForm<TestimonialFormData>({
     resolver: zodResolver(schema),
   });
   const addTestimonial = useAddTestimonial(() => {
     reset();
   });
 
-  const onSubmit = (data: FormData) => {
-    let formData = {
-      ...data,
-      testimonialImage: uploadedImage["profilePicture"],
+  const imageName = watch("testimonialImage");
+
+  const onSubmit = (data: TestimonialFormData) => {
+    // let formData = {
+    //   ...data,
+    //   testimonialImage: uploadedImage["profilePicture"],
+    // };
+    // if (Object.keys(pictureError).length === 0) {
+    let temp = new FormData();
+
+    temp.append("testimonalName", data.testimonalName);
+    temp.append("description", data.description);
+    temp.append("testimonialImage", data.testimonialImage[0]);
+
+    const testimonialData: TestimonialFormData = {
+      testimonalName: temp.get("testimonalName") as string,
+      description: temp.get("description") as string,
+      testimonialImage: temp.get("testimonialImage") as File,
+      // Add other properties if needed
     };
-    if (Object.keys(pictureError).length === 0) {
-      addTestimonial.mutate(formData);
-    }
+
+    console.log(testimonialData);
+
+    addTestimonial.mutate(testimonialData);
+    // }
   };
-
-  const handlePicture = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    item: string
-  ) => {
-    setPictureError({});
-
-    const selectedFile = e.target.files?.[0];
-    const fileSizeInKB = selectedFile && selectedFile.size / 1024; // convert bytes to KB
-    const fileType: string | undefined = selectedFile && selectedFile.type;
-    const validImageTypes = ["image/png", "image/jpeg", "image/jpg"];
-    const validFileTypeRegex = new RegExp(`(${validImageTypes.join("|")})`);
-    let errors: Record<string, string> = {};
-
-    if (fileType && !validFileTypeRegex.test(fileType)) {
-      errors[item] = "Only PNG, JPEG, and JPG files are allowed";
-      setPictureError(errors);
-    } else if (fileSizeInKB && fileSizeInKB > 500) {
-      errors[item] = "File size should not be more than 500 KB";
-      setPictureError(errors);
-    } else {
-      delete errors[item];
-      base64(selectedFile, item);
-    }
-  };
-
-  function base64(file: any, item: string) {
-    if (item === "profilePicture") setSelectedImage(file.name);
-
-    let reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      if (typeof reader.result === "string")
-        setUploadedImage({ ...uploadedImage, [item]: reader.result });
-    };
-  }
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
@@ -135,8 +129,8 @@ const CreateTestimonal = () => {
           mt={{ base: "30px", lg: "20px" }}
           p={{ base: "10px", lg: "25px" }}
         >
-          <form onSubmit={handleSubmit((data) => onSubmit(data))}>
-            <FormControl my={1}>
+          <form onSubmit={handleSubmit((data) => onSubmit(data))} method="POST">
+            {/* <FormControl my={1}>
               {selectedImage ? (
                 <Flex>
                   <FormLabel fontWeight={500}>
@@ -161,7 +155,10 @@ const CreateTestimonal = () => {
                   <Button
                     bg="red"
                     color="#fff"
-                    onClick={() => setSelectedImage("")}
+                    onClick={() => {
+                      setSelectedImage(null);
+                      setUploadedImage({});
+                    }}
                   >
                     Remove
                   </Button>
@@ -202,6 +199,49 @@ const CreateTestimonal = () => {
                 // placeholder="Upload"
                 onChange={(e) => handlePicture(e, "profilePicture")}
               />
+            </FormControl> */}
+            <FormControl my={3}>
+              <InputGroup>
+                <>
+                  <Flex>
+                    <FormLabel
+                      // color="blue.500"
+                      // as={Link}
+                      color="gray.500"
+                      cursor="pointer"
+                      htmlFor="profilePicture"
+                    >
+                      Add your profile picture
+                    </FormLabel>
+                    <Icon mt={1} as={BsUpload} />
+                    <Text ml={5} color="gray.500" fontWeight={500}>
+                      {imageName && imageName[0] && imageName[0]?.name}
+                    </Text>
+                  </Flex>
+                </>
+                <Input
+                  {...register("testimonialImage", {
+                    required: true,
+                  })}
+                  id="profilePicture"
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  size="lg"
+                  _placeholder={{
+                    opacity: 1,
+                    color: "gray.500",
+                    fontSize: "15px",
+                  }}
+                  // onChange={(event) => console.log(event.target.files)}
+                  // placeholder="Enter a Your Name"
+                />
+              </InputGroup>
+              {errors.testimonialImage && (
+                <FormHelperText color="red">
+                  {errors.testimonialImage.message?.toString()}
+                </FormHelperText>
+              )}
             </FormControl>
             <FormControl my={3}>
               <InputGroup>

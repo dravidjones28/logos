@@ -30,6 +30,7 @@ import TermsAndCondition from "./pages/TermsAndCondition";
 import Cancellation from "./pages/Cancellation";
 import Privacy from "./pages/Privacy";
 import Refund from "./pages/Refund";
+// import Playground from "./pages/Playground";
 // import Layout from "./components/Dashboard/Layout";
 // import Dashboard from "./pages/Dashboard";
 // import DashboardBookingRetreat from "./pages/DashboardBookingRetreat";
@@ -147,6 +148,10 @@ const router = createBrowserRouter([
         path: "refund",
         element: <Refund />,
       },
+      // {
+      //   path: "playground/:slog",
+      //   element: <Playground />,
+      // },
     ],
   },
   {

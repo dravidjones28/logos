@@ -103,6 +103,35 @@ class APIClient<T, K> {
       });
   }
 
+  postDataFile(data: K) {
+    const session = () => {
+      if (sessionStorage.getItem("user")) {
+        const session_storage = JSON.parse(sessionStorage.user);
+        const decryptedObjectString = AES.decrypt(
+          session_storage,
+          "secretKey"
+        ).toString(CryptoJS.enc.Utf8);
+        const parse = JSON.parse(decryptedObjectString);
+        console.log(parse);
+        return parse;
+      }
+    };
+    const database = session();
+
+    const headers: AxiosRequestConfig["headers"] = {
+      "x-auth-token": database?.accesstoken,
+      "Content-Type": "multipart/form-data",
+    };
+    return axiosInstance
+      .post<T>(this.endpoint, data, {
+        headers,
+      })
+      .then((res) => {
+        console.log(res);
+        return res.data;
+      });
+  }
+
   verfiy(data: K, signature: string) {
     const session = () => {
       if (sessionStorage.getItem("user")) {
