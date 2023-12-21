@@ -37,7 +37,7 @@ function Faq() {
               </Text>
               <Text color="#fff">Last modified: 14 Sep 2023</Text>
             </Box>
-            <Box mx={{ base: "20px", lg: "40px" }}>
+            <Box mx={{ base: "21px", lg: "40px" }}>
               <Text fontWeight={500} fontSize="20px" mb={5} mt={10}>
                 Basics
               </Text>
