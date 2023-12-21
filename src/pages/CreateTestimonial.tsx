@@ -82,8 +82,39 @@ const CreateTestimonal = () => {
   });
 
   const imageName = watch("testimonialImage");
+  const descriptionValue = watch("description");
 
   const [previewImage, setPreviewImage] = useState<any>("");
+
+  const previewFile = () => {
+    if (imageName[0]) {
+      const reader = new FileReader();
+      reader.readAsDataURL(imageName[0]);
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+      };
+    }
+  };
+
+  useEffect(() => {
+    if (imageName) {
+      previewFile();
+    }
+  }, [imageName]);
+
+  const handleTextareaChange = (text: string) => {
+    // const text = e.target.value;
+    const newText = text.replace(/[\n\r]/g, "\n");
+    setValue("description", newText);
+  };
+
+  // descriptionValue
+
+  useEffect(() => {
+    if (descriptionValue) {
+      handleTextareaChange(descriptionValue);
+    }
+  }, [imageName]);
 
   const onSubmit = (data: TestimonialFormData) => {
     // let formData = {
@@ -119,26 +150,6 @@ const CreateTestimonal = () => {
 
     addTestimonial.mutate(formData);
     // }
-  };
-
-  const previewFile = () => {
-    const reader = new FileReader();
-    reader.readAsDataURL(imageName[0]);
-    reader.onloadend = () => {
-      setPreviewImage(reader.result);
-    };
-  };
-
-  useEffect(() => {
-    if (imageName) {
-      previewFile();
-    }
-  }, [imageName]);
-
-  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const text = e.target.value;
-    const newText = text.replace(/[\n\r]/g, "\n");
-    setValue("description", newText);
   };
 
   return (
@@ -317,7 +328,7 @@ const CreateTestimonal = () => {
                   borderRadius: "gray.300",
                 }}
                 height="250px"
-                onChange={handleTextareaChange}
+                // onChange={handleTextareaChange}
                 placeholder="message"
               />
               {errors.description && (

@@ -127,7 +127,7 @@ const NavBar = () => {
                   <MenuOptionGroup title="Profile">
                     {session.isAdmin && (
                       <MenuItem
-                        isDisabled={true}
+                        // isDisabled={true}
                         onClick={() => navigate("/dashboard")}
                       >
                         My Dashboard

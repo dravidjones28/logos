@@ -196,7 +196,7 @@ const DashboardMassBooking = () => {
         </Box>
         {filterResult?.length === 0 ? (
           <Center>
-            <Text>Sorry, No mass bookings</Text>
+            <Text fontWeight={500}>Sorry, No mass bookings</Text>
           </Center>
         ) : (
           <div ref={tableRef}>

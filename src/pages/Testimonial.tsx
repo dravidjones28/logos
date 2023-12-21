@@ -18,6 +18,8 @@ const Testimonial = () => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
+  console.log(testimonails);
+
   if (isLoading)
     return (
       <LGBox>
@@ -31,7 +33,7 @@ const Testimonial = () => {
         </Box>
       </LGBox>
     );
-  if (error) return <div>Error</div>;
+  if (error) throw error;
 
   return (
     <LGBox>

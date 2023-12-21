@@ -6,8 +6,11 @@ export interface FetchResponse<T> {
   data: T;
 }
 
+let mainAPI = "https://sleepy-gold-pumps.cyclic.app/api";
+// let localAPI = "http://localhost:3000/api";
+
 const axiosInstance = axios.create({
-  baseURL: "https://sleepy-gold-pumps.cyclic.app/api",
+  baseURL: mainAPI,
 });
 
 export interface PaymentReceive {
@@ -30,7 +33,10 @@ class APIClient<T, K> {
   }
 
   getAll = (config: AxiosRequestConfig) => {
-    return axiosInstance.get<T>(this.endpoint, config).then((res) => res.data);
+    return axiosInstance
+      .get<T>(this.endpoint, config)
+      .then((res) => res.data)
+      
   };
 
   getAll1 = (config: AxiosRequestConfig) => {
@@ -120,7 +126,6 @@ class APIClient<T, K> {
 
     const headers: AxiosRequestConfig["headers"] = {
       "x-auth-token": database?.accesstoken,
-      "Content-Type": "application/json",
     };
     return axiosInstance
       .post<T>(this.endpoint, data, {

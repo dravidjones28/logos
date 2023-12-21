@@ -30,7 +30,7 @@ import logout from "../common/logout";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { LuChurch } from "react-icons/lu";
-import { FaChurch, FaPray } from "react-icons/fa";
+import { FaChurch, FaPray, FaYoutube } from "react-icons/fa";
 
 interface LinkItemProps {
   name: string;
@@ -69,6 +69,11 @@ const LinkItems: Array<LinkItemProps> = [
     icon: FaPray,
     link: "/dashboard/prayer-request",
   },
+  {
+    name: "Youtube Link",
+    icon: FaYoutube,
+    link: "/dashboard/youtube-link",
+  },
 ];
 
 export const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
@@ -95,10 +100,10 @@ export const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         <Text
           onClick={() => navigate("/")}
           ml={{ lg: "15px" }}
-          fontSize="17px"
+          fontSize="14px"
           fontWeight={700}
         >
-          MRDJ
+          LOGOS RETREAT CENTRE
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>

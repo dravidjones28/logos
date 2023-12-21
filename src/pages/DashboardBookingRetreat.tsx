@@ -19,6 +19,7 @@ import {
   Flex,
   IconButton,
   Tooltip,
+  Center,
 } from "@chakra-ui/react";
 import useRetreatBookingAll from "./../hooks/dashboard/retreatBookings/useRetreatBookingAll";
 import useRetreatBookingQuery from "../store";
@@ -177,6 +178,10 @@ const DashboardBookingRetreat = () => {
               <Box>
                 <Spinner />
               </Box>
+            ) : retreatBookingData?.result.length === 0 ? (
+              <Center>
+                <Text fontWeight={500}>There are no retreat bookings</Text>
+              </Center>
             ) : (
               <Tbody>
                 {retreatBookingData?.result.map((item, index) => {

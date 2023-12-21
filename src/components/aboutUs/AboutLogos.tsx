@@ -38,7 +38,7 @@ const AboutLogos = () => {
         subtitle=" A glimpse of the sacred grounds where countless lives have been
       touched and transformed."
         buttonName="contact us"
-        href="/contactUs"
+        href="/contact-us"
       />
     </>
   );

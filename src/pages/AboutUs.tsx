@@ -22,7 +22,7 @@ const AboutUs = () => {
           subtitle="Experience inner healing through the Word of God, year-round retreats
         and 24/7 intercession."
           buttonName="Book a retreat"
-          link="bookRetreat"
+          link="book-a-retreat"
         />
         <Card
           mx={{ base: "10px", lg: "20px" }}

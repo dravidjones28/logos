@@ -1,5 +1,7 @@
-import { SimpleGrid, Box, Text } from "@chakra-ui/react";
+import { SimpleGrid, Box, Text, Spinner } from "@chakra-ui/react";
 import YouTube from "react-youtube";
+import useYoutubeLink from "../../hooks/youtubeLink/useYoutubeLink";
+import LGBox from "../common/LGBox";
 
 const YoutubeSection = () => {
   const opts = {
@@ -10,6 +12,23 @@ const YoutubeSection = () => {
       autoplay: 0,
     },
   };
+  const { data: youtubeLink, isLoading, error } = useYoutubeLink();
+
+  if (isLoading)
+    return (
+      <LGBox>
+        <Box
+          display="flex"
+          height="70vh"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Spinner />
+        </Box>
+      </LGBox>
+    );
+  if (error) throw error;
+
   return (
     <Box bg="blackAlpha.800" width="100%">
       <SimpleGrid
@@ -42,7 +61,11 @@ const YoutubeSection = () => {
             healing, deliverance, and anointing.
           </Text>
         </Box>
-        <YouTube videoId="PrKHOaGPKkg" opts={opts} />
+        {youtubeLink?.map((item, index) => (
+          <Box key={index}>
+            <YouTube videoId={item.youtubeId} opts={opts} />
+          </Box>
+        ))}
       </SimpleGrid>
     </Box>
   );

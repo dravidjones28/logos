@@ -31,11 +31,12 @@ import Cancellation from "./pages/Cancellation";
 import Privacy from "./pages/Privacy";
 import Refund from "./pages/Refund";
 // import Playground from "./pages/Playground";
-// import Layout from "./components/Dashboard/Layout";
-// import Dashboard from "./pages/Dashboard";
-// import DashboardBookingRetreat from "./pages/DashboardBookingRetreat";
-// import DashboardMassBooking from "./pages/DashboardMassBooking";
-// import DashboardPrayerRequest from "./pages/DashboardPrayerRequest";
+import Layout from "./components/Dashboard/Layout";
+import Dashboard from "./pages/Dashboard";
+import DashboardBookingRetreat from "./pages/DashboardBookingRetreat";
+import DashboardMassBooking from "./pages/DashboardMassBooking";
+import DashboardPrayerRequest from "./pages/DashboardPrayerRequest";
+import YoutubeLink from "./pages/YoutubeLink";
 
 const router = createBrowserRouter([
   {
@@ -177,20 +178,24 @@ const router = createBrowserRouter([
     ],
   },
 
-  // {
-  // path: "dashboard",
-  // element: <Layout />,
-  // errorElement: <ErrorPage />,
-  // children: [
-  // { index: true, element: <Dashboard /> },
-  // { path: "retreat-bookings", element: <DashboardBookingRetreat /> },
-  // { path: "mass-bookings", element: <DashboardMassBooking /> },
-  // {
-  // path: "prayer-request",
-  // element: <DashboardPrayerRequest />,
-  // },
-  // ],
-  // },
+  {
+    path: "dashboard",
+    element: <Layout />,
+    errorElement: <ErrorPage />,
+    children: [
+      { index: true, element: <Dashboard /> },
+      { path: "retreat-bookings", element: <DashboardBookingRetreat /> },
+      { path: "mass-bookings", element: <DashboardMassBooking /> },
+      {
+        path: "prayer-request",
+        element: <DashboardPrayerRequest />,
+      },
+      {
+        path: "youtube-link",
+        element: <YoutubeLink />,
+      },
+    ],
+  },
 ]);
 
 export default router;
