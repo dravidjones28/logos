@@ -14,8 +14,9 @@ import {
   FormLabel,
   Textarea,
   Spinner,
+  Image,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { MdDriveFileRenameOutline } from "react-icons/md";
@@ -82,30 +83,57 @@ const CreateTestimonal = () => {
 
   const imageName = watch("testimonialImage");
 
+  const [previewImage, setPreviewImage] = useState<any>("");
+
   const onSubmit = (data: TestimonialFormData) => {
     // let formData = {
     //   ...data,
     //   testimonialImage: uploadedImage["profilePicture"],
     // };
     // if (Object.keys(pictureError).length === 0) {
-    let temp = new FormData();
+    // let temp = new FormData();
 
-    temp.append("testimonalName", data.testimonalName);
-    temp.append("description", data.description);
-    temp.append("testimonialImage", data.testimonialImage[0]);
+    // // const reader = new FileReader();
 
-    const testimonialData: TestimonialFormData = {
-      testimonalName: temp.get("testimonalName") as string,
-      description: temp.get("description") as string,
-      testimonialImage: temp.get("testimonialImage") as File,
-      // Add other properties if needed
+    // temp.append("testimonalName", data.testimonalName);
+    // temp.append("description", data.description);
+    // temp.append("testimonialImage", previewImage);
+
+    // const testimonialData: TestimonialFormData = {
+    //   testimonalName: temp.get("testimonalName") as string,
+    //   description: temp.get("description") as string,
+    //   testimonialImage: temp.get("testimonialImage") as File,
+    //   // Add other properties if needed
+    // };
+
+    // testimonialData.testimonialImage = reader.readAsDataURL(
+    //   data.testimonialImage[0]
+    // );
+
+    // console.log(testimonialData);
+
+    let formData = {
+      ...data,
+      testimonialImage: previewImage,
     };
 
-    console.log(testimonialData);
-
-    addTestimonial.mutate(testimonialData);
+    addTestimonial.mutate(formData);
     // }
   };
+
+  const previewFile = () => {
+    const reader = new FileReader();
+    reader.readAsDataURL(imageName[0]);
+    reader.onloadend = () => {
+      setPreviewImage(reader.result);
+    };
+  };
+
+  useEffect(() => {
+    if (imageName) {
+      previewFile();
+    }
+  }, [imageName]);
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
@@ -241,6 +269,15 @@ const CreateTestimonal = () => {
                 <FormHelperText color="red">
                   {errors.testimonialImage.message?.toString()}
                 </FormHelperText>
+              )}
+              {previewImage && (
+                <Image
+                  src={previewImage}
+                  width={200}
+                  height={200}
+                  borderRadius="50%"
+                  objectFit="cover"
+                />
               )}
             </FormControl>
             <FormControl my={3}>

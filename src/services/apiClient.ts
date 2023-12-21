@@ -120,7 +120,7 @@ class APIClient<T, K> {
 
     const headers: AxiosRequestConfig["headers"] = {
       "x-auth-token": database?.accesstoken,
-      "Content-Type": "multipart/form-data",
+      "Content-Type": "application/json",
     };
     return axiosInstance
       .post<T>(this.endpoint, data, {
