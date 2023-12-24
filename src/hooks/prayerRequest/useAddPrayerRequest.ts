@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@chakra-ui/react";
 import { PrayerRequestData } from "./usePrayerRequest";
 import APIClient from "../../services/apiClient";
+import { useNavigate } from "react-router-dom";
 
 export interface AddBlogContext {
   prevoiusPrayerRequest: PrayerRequestData[];
@@ -13,6 +14,7 @@ const apiClient = new APIClient<PrayerRequestData, PrayerRequestData>(
 const useAddPrayerRequest = (onAdd: () => void) => {
   const toast = useToast();
   const query = useQueryClient();
+  const navigate = useNavigate();
 
   return useMutation<
     PrayerRequestData,
@@ -46,6 +48,8 @@ const useAddPrayerRequest = (onAdd: () => void) => {
         }
       );
       onAdd();
+
+      return navigate("/");
     },
 
     onError: (error, _blog, context) => {
