@@ -53,17 +53,13 @@ const schema = z.object({
     .enum(["Thanksgiving", "Special Intention", "RIP"])
     .refine((data) => data.length > 0)
     .optional(),
-  normalIntentionField: z
-    .string()
-    .refine((data) => /^[A-Za-z\s]+$/.test(data), {
-      message: "Only characters and spaces are allowed for fullName",
-    })
-    .optional(),
+  normalIntentionField: z.string().min(2).optional(),
   gregorianIntentionField: z
     .string()
-    .refine((data) => /^[A-Za-z\s]+$/.test(data), {
-      message: "Only characters and spaces are allowed for fullName",
-    })
+    .min(2)
+    // .refine((data) => /^[A-Za-z\s]+$/.test(data), {
+    //   message: "Only characters and spaces are allowed for fullName",
+    // })
     .optional(),
 });
 
@@ -403,8 +399,8 @@ function MassBooking() {
                   dateValue &&
                   openTable && (
                     <Button
-                      isDisabled={massPayment.isPending ? true : false}
-                      // isDisabled={true}
+                      // isDisabled={massPayment.isPending ? true : false}
+                      isDisabled={true}
                       colorScheme="blue"
                       type="submit"
                     >
