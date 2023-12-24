@@ -13,7 +13,7 @@ import CreateTestimonal from "./pages/CreateTestimonial";
 import PrayerRequest from "./pages/PrayerRequest";
 import ContactUs from "./pages/ContactUs";
 import BookRetreat from "./pages/BookRetreat";
-import Bookings from "./pages/Bookings";
+// import Bookings from "./pages/Bookings";
 import YourBookings from "./pages/YourBookings";
 import MassBooking from "./pages/MassBooking";
 import YourMassOffering from "./pages/YourMassBooking";
