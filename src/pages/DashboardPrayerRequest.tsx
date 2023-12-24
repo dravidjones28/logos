@@ -9,6 +9,7 @@ import {
   Select,
   Tooltip,
   Spinner,
+  Box,
 } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { FaDownload } from "react-icons/fa";
@@ -98,7 +99,12 @@ const DashboardPrayerRequest = () => {
         Prayer Request
       </Heading>
 
-      <Flex gap={4} alignItems="center" justifyContent="space-between">
+      <Box
+        display="flex"
+        gap={4}
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <Flex gap={4}>
           <Select
             // placeholder="Retreat Name"
@@ -207,7 +213,7 @@ const DashboardPrayerRequest = () => {
             />
           </Tooltip>
         </Flex>
-      </Flex>
+      </Box>
       <TableComp
         data={prayerRequestData?.results ? prayerRequestData?.results : []}
         columns={cols}

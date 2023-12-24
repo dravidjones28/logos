@@ -50,7 +50,7 @@ const schema = z.object({
   massType: z.string().min(1, "Please Select MassType"),
   phoneNumber: z.string().min(10, "Please Enter 10 digits").max(10),
   normalIntentionTypes: z
-    .enum(["Thanks Giving", "Special Intention", "RIP"])
+    .enum(["Thanksgiving", "Special Intention", "RIP"])
     .refine((data) => data.length > 0)
     .optional(),
   normalIntentionField: z
@@ -181,7 +181,7 @@ function MassBooking() {
     }
   };
 
-  const intetionTypes = ["Thanks Giving", "Special Intention", "RIP"];
+  const intetionTypes = ["Thanksgiving", "Special Intention", "RIP"];
 
   return (
     <LGBox>
