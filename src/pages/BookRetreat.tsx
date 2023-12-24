@@ -529,8 +529,8 @@ const BookRetreat: React.FC = () => {
               }}
               colorScheme="blue"
               mr={3}
-              isDisabled={Number(singleEvent?.slots) === 0 ? true : false}
-              // isDisabled={true}
+              // isDisabled={Number(singleEvent?.slots) === 0 ? true : false}
+              isDisabled={true}
             >
               Book Retreat
             </Button>

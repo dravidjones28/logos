@@ -169,10 +169,10 @@ const router = createBrowserRouter([
             path: "your-mass-offering",
             element: <YourMassOffering />,
           },
-          {
-            path: "book-a-retreat/booking/:slug",
-            element: <Bookings />,
-          },
+          // {
+          //   path: "book-a-retreat/booking/:slug",
+          //   element: <Bookings />,
+          // },
         ],
       },
     ],
