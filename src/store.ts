@@ -24,7 +24,7 @@ interface MassBookings {
 interface PrayerRequest {
   pageSize?: number;
   page?: number;
-  searchDate?: Date;
+  searchDate?: string;
 }
 
 interface Props {
@@ -55,8 +55,12 @@ interface Props {
 
   prayerRequest: PrayerRequest;
   setPrayerRequestPageSize: (pageSize: number) => void;
-  setPrayerRequestPage: (page: number) => void;
-  setPrayerRequestDate: (searchDate: Date) => void;
+  setPrayerRequestPage: (
+    page: number,
+    totalPages: number | undefined,
+    prevOrNext: string
+  ) => void;
+  setPrayerRequestDate: (searchDate: string) => void;
 }
 const store = create<Props>((set) => ({
   isNavBarOpen: false,
@@ -118,19 +122,29 @@ const store = create<Props>((set) => ({
       massBookings: { ...state.massBookings, massDate },
     })),
 
-  prayerRequest: {},
-  setPrayerRequestPageSize: (pageSize) =>
-    set((state) => ({
+  prayerRequest: { page: 1, pageSize: 10 },
+  setPrayerRequestPageSize: (pageSize) => {
+    return set((state) => ({
       prayerRequest: { ...state.prayerRequest, pageSize },
-    })),
-  setPrayerRequestPage: (page) =>
-    set((state) => ({
-      prayerRequest: { ...state.prayerRequest, page },
-    })),
+      ...(({ searchDate, ...rest }) => rest)(state.prayerRequest),
+    }));
+  },
+  setPrayerRequestPage: (page, totalPages, prevOrNext) => {
+    let result = 0;
+
+    if (prevOrNext === "next")
+      result = Math.min(page + 1, totalPages ? totalPages : 0);
+    if (prevOrNext === "prev") result = Math.max(page - 1, 1);
+
+    return set((state) => ({
+      prayerRequest: { ...state.prayerRequest, page: result },
+      ...(({ searchDate, ...rest }) => rest)(state.prayerRequest),
+    }));
+  },
 
   setPrayerRequestDate: (searchDate) =>
-    set((state) => ({
-      prayerRequest: { ...state.prayerRequest, searchDate },
+    set(() => ({
+      prayerRequest: { searchDate },
     })),
 }));
 

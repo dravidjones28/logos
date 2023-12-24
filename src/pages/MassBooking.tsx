@@ -32,6 +32,7 @@ import Footer from "../components/footer/Footer";
 import db from "../components/common/db";
 import { addDays } from "date-fns";
 import ThirtyDaysDate from "../components/Dates/ThirtyDaysDate";
+import { format } from "date-fns";
 
 export interface Value {
   dates: Date[] | Date | undefined | DateRange;
@@ -87,7 +88,7 @@ function MassBooking() {
   }, [pathname]);
 
   const [radioValue, setRadioValue] = useState("");
-  const [dateValue, setDateValue] = useState<any>();
+  const [dateValue, setDateValue] = useState<Date[] | Date>([]);
   const [tableValues, setTableValues] = useState<DateValues>();
   const [openTable, setOpenTable] = useState<boolean>(false);
 
@@ -107,7 +108,7 @@ function MassBooking() {
   const database = db();
 
   const handleValue = (e: any) => {
-    setDateValue(undefined);
+    setDateValue([]);
     setRadioValue(e);
     setOpenTable(false);
   };
@@ -131,32 +132,24 @@ function MassBooking() {
 
   const massPayment = useMassBooking();
 
+  console.log(dateValue);
   const onSubmit = (data: MassData) => {
-    let filterDateValue = [];
-
-    if (dateValue instanceof Date) {
-      filterDateValue = [dateValue];
-    } else if (Array.isArray(dateValue)) {
-      filterDateValue = dateValue;
-    }
-
     let temp: any = [];
 
-    const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    };
+    const formatDate = (date: Date): string => format(date, "yyyy-MM-dd");
 
-    filterDateValue.map((item: any) => {
-      const result = item.toLocaleDateString("en-US", options);
-      temp.push(result);
-    });
+    if (Array.isArray(dateValue)) {
+      temp = dateValue.map((item) => formatDate(item));
+    } else {
+      temp = [formatDate(dateValue)];
+    }
+
+    console.log(temp);
 
     if (auth) {
       let field = {
         bookingName: data.fullName,
-        amount: Number(tableValues?.totalCost),
+        // amount: Number(tableValues?.totalCost),
         email: data.email,
         massType: data.massType,
         normalIntentionField: data.normalIntentionField
@@ -168,13 +161,8 @@ function MassBooking() {
         gregorianIntentionField: data.gregorianIntentionField
           ? data.gregorianIntentionField
           : "None",
-        totalDays: tableValues?.totalDays,
-        weekdayCost: tableValues?.weekdayCost,
-        weekdays: tableValues?.weekdays,
 
-        weekendCost: tableValues?.weekendCost,
-        weekends: tableValues?.weekends,
-        massDate: "12/09/2023",
+        massDate: temp,
         author: `${database?._id}`,
         phone: Number(data.phoneNumber),
       };
@@ -191,8 +179,6 @@ function MassBooking() {
       });
       navigate("/login");
     }
-
-    // console.log(field);
   };
 
   const intetionTypes = ["Thanks Giving", "Special Intention", "RIP"];
@@ -417,8 +403,8 @@ function MassBooking() {
                   dateValue &&
                   openTable && (
                     <Button
-                      // isDisabled={massPayment.isPending ? true : false}
-                      isDisabled={true}
+                      isDisabled={massPayment.isPending ? true : false}
+                      // isDisabled={true}
                       colorScheme="blue"
                       type="submit"
                     >

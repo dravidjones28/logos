@@ -1,29 +1,46 @@
 import { useQuery } from "@tanstack/react-query";
 import APIClient from "../../../services/apiClient";
 import useMassBookingQuery from "../../../store";
-import { PrayerRequestData } from "../../prayerRequest/usePrayerRequest";
-
 import ms from "ms";
 
-interface PrayerRequestBookingAll {
-  result: PrayerRequestData[];
-  totalCount: number;
+interface PrayerRequestData {
+  _id: string;
+  fullName: string;
+  email: string;
+  message: string;
 }
+interface PrayerRequestBookingAll {
+  results: PrayerRequestData[];
+  next?: {
+    page: number;
+    limit: number;
+  };
+  previous?: {
+    page: number;
+    limit: number;
+  };
+  count?: number;
+  searchDateValuesLength?: number;
+}
+
 const apiClient = new APIClient<PrayerRequestBookingAll, null>(
-  "/prayerRequest/all"
+  "/prayerRequest"
 );
 
-const useMassBookingAll = () => {
+const usePrayerRequestAll = () => {
   const prayerRequestBooking = useMassBookingQuery((s) => s.prayerRequest);
 
-  return useQuery({
-    queryKey: ["prayerRequestBookingsAll", prayerRequestBooking],
+  return useQuery<PrayerRequestBookingAll, Error>({
+    queryKey: ["prayerRequest", prayerRequestBooking],
+
     queryFn: () =>
       apiClient.getAll1({
         params: {
-          pageSize: prayerRequestBooking.pageSize,
+          limit: prayerRequestBooking?.pageSize
+            ? prayerRequestBooking?.pageSize
+            : 10,
+          searchDate: prayerRequestBooking?.searchDate,
           page: prayerRequestBooking.page,
-          searchDate: prayerRequestBooking.searchDate,
         },
       }),
 
@@ -31,4 +48,25 @@ const useMassBookingAll = () => {
   });
 };
 
-export default useMassBookingAll;
+// return useInfiniteQuery<PrayerRequestBookingAll, Error>({
+//   queryKey: ["prayerRequest", prayerRequestBooking],
+
+//   queryFn: ({ pageParam = 1 }) =>
+//     apiClient.getAll1({
+//       params: {
+//         limit: prayerRequestBooking?.pageSize
+//           ? prayerRequestBooking?.pageSize
+//           : 3,
+//         searchDate: prayerRequestBooking?.searchDate,
+//         page: pageParam,
+//       },
+//     }),
+//   getNextPageParam: (lastPage) => lastPage.next?.page ?? false,
+//   getPreviousPageParam: (previousPage) =>
+//     previousPage.previous?.page ?? false,
+//   initialPageParam: 1,
+
+//   staleTime: ms("24h"),
+// });
+
+export default usePrayerRequestAll;
