@@ -90,7 +90,7 @@ const YourMassOffering = () => {
                 >
                   {item.massType}
                 </Heading>
-                <Text fontWeight={500}>Name : {item.firstname}</Text>
+                <Text fontWeight={500}>Name : {item.bookingName}</Text>
                 {item.massType === "Gregorian Intention" ? (
                   <Text fontWeight={500}>
                     Your Intention : {item.gregorianIntentionField}

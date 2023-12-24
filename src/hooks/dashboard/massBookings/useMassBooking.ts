@@ -6,8 +6,17 @@ import { YourBooking } from "../../massBooking/useMassBook";
 import ms from "ms";
 
 interface MassBookingAll {
-  result: YourBooking[];
-  totalCount: number;
+  results: YourBooking[];
+  next?: {
+    page: number;
+    limit: number;
+  };
+  previous?: {
+    page: number;
+    limit: number;
+  };
+  count?: number;
+  searchDateValuesLength?: number;
 }
 const apiClient = new APIClient<MassBookingAll, null>("/massVerifyPayment/all");
 
@@ -21,7 +30,7 @@ const useMassBookingAll = () => {
         params: {
           pageSize: massBookings.pageSize,
           page: massBookings.page,
-          searchDate: massBookings.massDate,
+          searchDate: massBookings.searchDate,
         },
       }),
 

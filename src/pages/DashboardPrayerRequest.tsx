@@ -78,7 +78,7 @@ const DashboardPrayerRequest = () => {
       // Add other properties as needed
     }));
     downloadExcel({
-      fileName: "Mass Bookings",
+      fileName: "Prayer Requests",
       sheet: "Pr",
       tablePayload: {
         header,

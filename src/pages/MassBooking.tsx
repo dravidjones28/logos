@@ -399,8 +399,8 @@ function MassBooking() {
                   dateValue &&
                   openTable && (
                     <Button
-                      // isDisabled={massPayment.isPending ? true : false}
-                      isDisabled={true}
+                      isDisabled={massPayment.isPending ? true : false}
+                      // isDisabled={true}
                       colorScheme="blue"
                       type="submit"
                     >

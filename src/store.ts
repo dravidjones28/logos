@@ -18,7 +18,7 @@ interface RetreatBookings {
 interface MassBookings {
   pageSize?: number;
   page?: number;
-  massDate?: string;
+  searchDate?: string;
 }
 
 interface PrayerRequest {
@@ -50,8 +50,12 @@ interface Props {
 
   massBookings: MassBookings;
   setMassPageSize: (pageSize: number) => void;
-  setMassPage: (page: number) => void;
-  setMassDate: (date: string) => void;
+  setMassPage: (
+    page: number,
+    totalPages: number | undefined,
+    prevOrNext: string
+  ) => void;
+  setMassDate: (searchDate: string) => void;
 
   prayerRequest: PrayerRequest;
   setPrayerRequestPageSize: (pageSize: number) => void;
@@ -107,19 +111,29 @@ const store = create<Props>((set) => ({
       retreatBookings: { ...state.retreatBookings, orderId },
     })),
 
-  massBookings: {},
-  setMassPageSize: (pageSize) =>
-    set((state) => ({
+  massBookings: { page: 1, pageSize: 10 },
+  setMassPageSize: (pageSize) => {
+    return set((state) => ({
       massBookings: { ...state.massBookings, pageSize },
-    })),
-  setMassPage: (page) =>
-    set((state) => ({
-      massBookings: { ...state.massBookings, page },
-    })),
+      ...(({ searchDate, ...rest }) => rest)(state.massBookings),
+    }));
+  },
+  setMassPage: (page, totalPages, prevOrNext) => {
+    let result = 0;
 
-  setMassDate: (massDate) =>
-    set((state) => ({
-      massBookings: { ...state.massBookings, massDate },
+    if (prevOrNext === "next")
+      result = Math.min(page + 1, totalPages ? totalPages : 0);
+    if (prevOrNext === "prev") result = Math.max(page - 1, 1);
+
+    return set((state) => ({
+      massBookings: { ...state.massBookings, page: result },
+      ...(({ searchDate, ...rest }) => rest)(state.massBookings),
+    }));
+  },
+
+  setMassDate: (searchDate) =>
+    set(() => ({
+      massBookings: { searchDate },
     })),
 
   prayerRequest: { page: 1, pageSize: 10 },
