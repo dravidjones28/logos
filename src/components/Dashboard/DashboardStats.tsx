@@ -3,17 +3,21 @@ import {
   Icon,
   Box,
   Spinner,
-  Grid,
-  GridItem,
-  Card,
-  Text,
+  // Grid,
+  // GridItem,
+  // Card,
+  // Text,
 } from "@chakra-ui/react";
-import { BiSolidChurch, BiSolidUser, BiRupee } from "react-icons/bi";
+import {
+  BiSolidChurch,
+  BiSolidUser,
+  //  BiRupee
+} from "react-icons/bi";
 import { GiTicket } from "react-icons/gi";
 import { PiHandsPrayingLight } from "react-icons/pi";
 import DashboardCard from "./DashboardCard";
 import useDashboard from "../../hooks/dashboard/useDashboard";
-import BarChart from "./BarChart";
+// import BarChart from "./BarChart";
 
 const DashboardStats = () => {
   const { data: stats, isLoading, error } = useDashboard();
@@ -70,7 +74,7 @@ const DashboardStats = () => {
           statValue={stats.prayerRequestToday.stats}
         />
       </SimpleGrid>
-      <Grid
+      {/* <Grid
         mt={10}
         templateAreas={{
           base: `"graph" "main1" "main2"`,
@@ -165,7 +169,7 @@ const DashboardStats = () => {
             statValue={stats.massBookingToday.stats}
           />
         </GridItem>
-      </Grid>
+      </Grid> */}
     </>
   );
 };

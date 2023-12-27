@@ -13,12 +13,14 @@ import {
 } from "@chakra-ui/react";
 import useMassBooking from "../hooks/dashboard/massBookings/useMassBooking";
 import useMassBookingQuery from "../store";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { downloadExcel } from "react-export-table-to-excel";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { FaDownload } from "react-icons/fa";
 import TableComp from "../components/Tables/TableComp";
+import ReactToPrint from "react-to-print";
+import { MdOutlinePrint } from "react-icons/md";
 
 interface Item {
   bookingName: string;
@@ -39,7 +41,7 @@ const DashboardMassBooking = () => {
 
   const isPrevButtonDisabled = (page: number) => page === 1;
   const isNextButtonDisabled = (page: number, totalCount: number) =>
-    massBooking.pageSize ? page * massBooking?.pageSize >= totalCount : false;
+    massBooking.limit ? page * massBooking?.limit >= totalCount : false;
 
   const formatMassDate = (massDate: string[]) => massDate.join(", ");
   const cols = useMemo<ColumnDef<Item>[]>(
@@ -117,6 +119,8 @@ const DashboardMassBooking = () => {
       },
     });
   }
+  const tableRef = useRef<HTMLTableElement>(null);
+
   if (isLoading) return <Spinner />;
   if (error) throw error;
   return (
@@ -138,7 +142,7 @@ const DashboardMassBooking = () => {
           <Select
             // placeholder="Retreat Name"
             width={{ base: "100%", md: "200px" }}
-            value={massBooking.pageSize}
+            value={massBooking.limit}
             onChange={(e) => {
               setMassPageSize(Number(e.target.value));
             }}
@@ -149,6 +153,7 @@ const DashboardMassBooking = () => {
             <option value={20}>Show 20</option>
             <option value={50}>Show 50</option>
           </Select>
+
           <Input
             value={massBooking.searchDate}
             type="date"
@@ -167,15 +172,37 @@ const DashboardMassBooking = () => {
           >
             All
           </Button>
-          <Icon
-            as={FaDownload}
-            boxSize={4}
-            color="#666"
-            cursor="pointer"
-            _hover={{ color: "#ccc" }}
-            marginTop={2}
-            onClick={handleDownloadExcel}
-          />
+          <Tooltip label="Download as Excel">
+            <Box>
+              <Icon
+                as={FaDownload}
+                boxSize={4}
+                color="#666"
+                cursor="pointer"
+                _hover={{ color: "#ccc" }}
+                marginTop={2}
+                onClick={handleDownloadExcel}
+              />
+            </Box>
+          </Tooltip>
+
+          <Tooltip label="Print">
+            <Box>
+              <ReactToPrint
+                trigger={() => (
+                  <Icon
+                    as={MdOutlinePrint}
+                    boxSize={5}
+                    color="#666"
+                    cursor="pointer"
+                    _hover={{ color: "#ccc" }}
+                    marginTop={2}
+                  />
+                )}
+                content={() => tableRef?.current}
+              />
+            </Box>
+          </Tooltip>
         </Flex>
         <Flex gap={1} alignItems="center">
           {massBookingData?.searchDateValuesLength && (
@@ -238,6 +265,7 @@ const DashboardMassBooking = () => {
       <TableComp
         data={massBookingData?.results ? massBookingData?.results : []}
         columns={cols}
+        elementRef={tableRef}
       />
     </>
   );

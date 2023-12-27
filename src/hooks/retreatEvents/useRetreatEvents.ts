@@ -8,8 +8,9 @@ export interface RetreatEvents {
   ledBy: string;
   end: string;
   noOfDays: string;
-  cost: string;
-  slots: string;
+  nonAcCost: string;
+  acCost: string;
+  slots: number;
 }
 
 const apiClient = new APIClient<RetreatEvents[], null>("/retreatEvents");

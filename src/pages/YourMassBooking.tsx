@@ -105,7 +105,14 @@ const YourMassOffering = () => {
                     </Text>
                   </>
                 )}
-                <Text fontWeight={500}>Date : {item.massDate}</Text>
+                <Text fontWeight={500}>
+                  Date :
+                  {item.massDate.map((item) => (
+                    <div>
+                      <Text>{item}</Text>
+                    </div>
+                  ))}
+                </Text>
               </Stack>
             </Card>
           );

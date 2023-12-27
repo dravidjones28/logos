@@ -17,8 +17,10 @@ import TableComp from "../components/Tables/TableComp";
 import usePrayerRequestAll from "../hooks/dashboard/prayerRequest/usePrayerRequest";
 import usePrayerRequestQuery from "../store";
 import type { ColumnDef } from "@tanstack/react-table";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { downloadExcel } from "react-export-table-to-excel";
+import { MdOutlinePrint } from "react-icons/md";
+import ReactToPrint from "react-to-print";
 
 interface Item {
   fullName?: string;
@@ -86,6 +88,9 @@ const DashboardPrayerRequest = () => {
       },
     });
   }
+
+  const tableRef = useRef<HTMLTableElement>(null);
+
   if (isLoading) return <Spinner />;
   if (error) throw error;
 
@@ -119,6 +124,8 @@ const DashboardPrayerRequest = () => {
             <option value={10}>Show 10</option>
             <option value={20}>Show 20</option>
             <option value={50}>Show 50</option>
+            <option value={100}>Show 100</option>
+            <option value={200}>Show 200</option>
           </Select>
           <Input
             value={prayerRequest.searchDate}
@@ -138,15 +145,36 @@ const DashboardPrayerRequest = () => {
           >
             All
           </Button>
-          <Icon
-            as={FaDownload}
-            boxSize={4}
-            color="#666"
-            cursor="pointer"
-            _hover={{ color: "#ccc" }}
-            marginTop={2}
-            onClick={handleDownloadExcel}
-          />
+          <Tooltip label="Download as excel">
+            <Box>
+              <Icon
+                as={FaDownload}
+                boxSize={4}
+                color="#666"
+                cursor="pointer"
+                _hover={{ color: "#ccc" }}
+                marginTop={2}
+                onClick={handleDownloadExcel}
+              />
+            </Box>
+          </Tooltip>
+          <Tooltip label="Print">
+            <Box>
+              <ReactToPrint
+                trigger={() => (
+                  <Icon
+                    as={MdOutlinePrint}
+                    boxSize={5}
+                    color="#666"
+                    cursor="pointer"
+                    _hover={{ color: "#ccc" }}
+                    marginTop={2}
+                  />
+                )}
+                content={() => tableRef?.current}
+              />
+            </Box>
+          </Tooltip>
         </Flex>
         <Flex gap={1} alignItems="center">
           {prayerRequestData?.searchDateValuesLength && (
@@ -217,6 +245,7 @@ const DashboardPrayerRequest = () => {
       <TableComp
         data={prayerRequestData?.results ? prayerRequestData?.results : []}
         columns={cols}
+        elementRef={tableRef}
       />
     </>
   );

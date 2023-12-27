@@ -49,13 +49,19 @@ const schema = z
       .string()
       .min(3, "title must be contain minimum of 2 Characters"),
     ledBy: z.string().min(3, "Led By must be contain minimum of 2 Characters"),
-    cost: z.string().min(1, "cost is required"),
-    slots: z.string().min(1, "slot is required"),
+    nonAcCost: z.string().min(1, "cost is required"),
+    acCost: z.string().min(1, "cost is required"),
+    slots: z
+      .string()
+      .refine((value) => !isNaN(parseFloat(value)) && parseFloat(value) > 1, {
+        message: "Slots must be a valid number greater than 1.",
+      })
+      .transform((value) => parseFloat(value)),
     start: z.coerce.date().refine((start) => {
       const startDate = new Date(start);
       const today = new Date();
-      today.setHours(0, 0, 0, 0); // Set today's time to midnight for accurate comparison
-      return startDate >= today;
+      today.setHours(23, 59, 59, 999); // Set today's time to midnight for accurate comparison
+      return startDate > today;
     }, "Start date must be in the future"),
     end: z.coerce.date(),
   })
@@ -70,7 +76,8 @@ interface SingleEvent {
   ledBy: string;
   start: string;
   days: number;
-  cost: string;
+  nonAcCost: string;
+  acCost: string;
   slots: string;
 }
 
@@ -81,13 +88,13 @@ const StyledFullCalendar = styled(FullCalendar)`
 `;
 
 function renderEventContent(eventInfo: any) {
-  console.log(eventInfo);
+  // console.log(eventInfo);
   return (
-    <>
+    <div style={{ cursor: "pointer" }}>
       {/* <div>{eventInfo.timeText}</div> */}
       <div>{eventInfo.event.title}</div>
       <span>Led By: {eventInfo.event.extendedProps.ledBy}</span>
-    </>
+    </div>
   );
 }
 
@@ -121,8 +128,6 @@ const BookRetreat: React.FC = () => {
   const navigate = useNavigate();
   const toast = useToast();
 
-  
-
   const handleShowEvent = () => setShowEvent(!showEvent);
 
   const onSubmit = (data: FormData) => {
@@ -145,7 +150,8 @@ const BookRetreat: React.FC = () => {
         end: endDate.toISOString().replace(/T.*$/, ""),
         noOfDays: daysDifference.toString(),
         ledBy: data.ledBy,
-        cost: data.cost,
+        nonAcCost: data.nonAcCost,
+        acCost: data.acCost,
         slots: data.slots,
       };
 
@@ -199,7 +205,8 @@ const BookRetreat: React.FC = () => {
       ledBy: clickInfo.event.extendedProps.ledBy,
       start: formattedDate,
       days: clickInfo.event.extendedProps.noOfDays,
-      cost: clickInfo.event.extendedProps.cost,
+      nonAcCost: clickInfo.event.extendedProps.nonAcCost,
+      acCost: clickInfo.event.extendedProps.acCost,
       _id: clickInfo.event.extendedProps._id,
       slots: clickInfo.event.extendedProps.slots,
     });
@@ -256,7 +263,7 @@ const BookRetreat: React.FC = () => {
   const session = db();
   const auth = useAuth();
 
-  console.log(Number(singleEvent?.slots) === 0 ? true : false);
+  // console.log(Number(singleEvent?.slots) === 0 ? true : false);
 
   if (isLoading)
     return (
@@ -271,7 +278,7 @@ const BookRetreat: React.FC = () => {
         </Box>
       </LGBox>
     );
-  if (error) return <div>Error</div>;
+  if (error) throw error;
 
   return (
     <LGBox>
@@ -285,10 +292,13 @@ const BookRetreat: React.FC = () => {
       >
         <ModalOverlay />
         <form onSubmit={handleSubmit((data) => onSubmit(data))}>
-          <ModalContent w={desktopWidth ? 600 : tabWidth ? 400 : 300}>
+          <ModalContent
+            w={desktopWidth ? 600 : tabWidth ? 400 : 300}
+            h={desktopWidth ? 500 : tabWidth ? 400 : 400}
+          >
             <ModalHeader>Create a Event</ModalHeader>
             <ModalCloseButton />
-            <ModalBody>
+            <ModalBody overflowY="auto">
               <FormControl>
                 <FormLabel>Event Name</FormLabel>
                 <InputGroup>
@@ -342,13 +352,13 @@ const BookRetreat: React.FC = () => {
                 )}
               </FormControl>
               <FormControl my={5}>
-                <FormLabel>Cost</FormLabel>
+                <FormLabel>Non-AC cost</FormLabel>
                 <InputGroup>
                   <InputLeftElement marginTop="5px">
                     <Icon as={BiMoneyWithdraw} color="#5664d2" />
                   </InputLeftElement>
                   <Input
-                    {...register("cost", {
+                    {...register("nonAcCost", {
                       required: true,
                     })}
                     type="number"
@@ -358,12 +368,38 @@ const BookRetreat: React.FC = () => {
                       color: "gray.500",
                       fontSize: "15px",
                     }}
-                    placeholder="Cost amount"
+                    placeholder="Non-AC Cost amount"
                   />
                 </InputGroup>
-                {errors.cost && (
+                {errors.nonAcCost && (
                   <FormHelperText color="red">
-                    {errors.cost.message}
+                    {errors.nonAcCost.message}
+                  </FormHelperText>
+                )}
+              </FormControl>
+              <FormControl my={5}>
+                <FormLabel>AC Cost Amount</FormLabel>
+                <InputGroup>
+                  <InputLeftElement marginTop="5px">
+                    <Icon as={BiMoneyWithdraw} color="#5664d2" />
+                  </InputLeftElement>
+                  <Input
+                    {...register("acCost", {
+                      required: true,
+                    })}
+                    type="number"
+                    size="lg"
+                    _placeholder={{
+                      opacity: 1,
+                      color: "gray.500",
+                      fontSize: "15px",
+                    }}
+                    placeholder="AC Cost amount"
+                  />
+                </InputGroup>
+                {errors.acCost && (
+                  <FormHelperText color="red">
+                    {errors.acCost.message}
                   </FormHelperText>
                 )}
               </FormControl>
@@ -492,8 +528,12 @@ const BookRetreat: React.FC = () => {
               <span style={{ fontWeight: 700 }}>{singleEvent?.ledBy}</span>
             </Text>
             <Text fontWeight={500} my={3}>
-              Cost :{" "}
-              <span style={{ fontWeight: 700 }}>{singleEvent?.cost}</span>
+              Non-AC Cost :{" "}
+              <span style={{ fontWeight: 700 }}>{singleEvent?.nonAcCost}</span>
+            </Text>
+            <Text fontWeight={500} my={3}>
+              AC Cost :{" "}
+              <span style={{ fontWeight: 700 }}>{singleEvent?.acCost}</span>
             </Text>
             <Text fontWeight={500} my={3}>
               Slots :{" "}

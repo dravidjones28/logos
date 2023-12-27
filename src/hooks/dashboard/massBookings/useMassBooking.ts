@@ -28,7 +28,7 @@ const useMassBookingAll = () => {
     queryFn: () =>
       apiClient.getAll1({
         params: {
-          pageSize: massBookings.pageSize,
+          limit: massBookings.limit,
           page: massBookings.page,
           searchDate: massBookings.searchDate,
         },

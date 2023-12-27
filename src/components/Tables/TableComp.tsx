@@ -6,6 +6,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { RefObject, useEffect, useRef } from "react";
 
 interface ReactTableProps<T extends object> {
   data: T[];
@@ -14,19 +15,33 @@ interface ReactTableProps<T extends object> {
   showNavigation?: boolean;
   showGlobalFilter?: boolean;
   filterFn?: FilterFn<T>;
+  elementRef?: RefObject<HTMLTableElement>;
 }
 
-const TableComp = <T extends object>({ data, columns }: ReactTableProps<T>) => {
+const TableComp = <T extends object>({
+  data,
+  columns,
+  elementRef: forwardedRef,
+}: ReactTableProps<T>) => {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const internalTableRef = useRef<HTMLTableElement>(null);
+  const forwardedRef1 = forwardedRef || internalTableRef;
+
+  useEffect(() => {
+    if (forwardedRef1.current !== internalTableRef.current) {
+      (forwardedRef1 as any).current = internalTableRef.current;
+    }
+  }, [forwardedRef1]);
+
   return (
     <>
       <Box height="350px" overflowY="auto">
-        <Table variant="simple" size={{ base: "sm" }}>
+        <Table variant="simple" size={{ base: "sm" }} ref={internalTableRef}>
           <Thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>

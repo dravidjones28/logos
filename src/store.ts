@@ -16,7 +16,7 @@ interface RetreatBookings {
 }
 
 interface MassBookings {
-  pageSize?: number;
+  limit?: number;
   page?: number;
   searchDate?: string;
 }
@@ -111,10 +111,10 @@ const store = create<Props>((set) => ({
       retreatBookings: { ...state.retreatBookings, orderId },
     })),
 
-  massBookings: { page: 1, pageSize: 10 },
-  setMassPageSize: (pageSize) => {
+  massBookings: { page: 1, limit: 10 },
+  setMassPageSize: (limit) => {
     return set((state) => ({
-      massBookings: { ...state.massBookings, pageSize },
+      massBookings: { ...state.massBookings, limit },
       ...(({ searchDate, ...rest }) => rest)(state.massBookings),
     }));
   },

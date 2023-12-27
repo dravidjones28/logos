@@ -50,7 +50,8 @@ const useAddRetreatEvents = (onAdd: () => void, calendarRef: any) => {
               end: res.end,
               ledBy: res.ledBy,
               noOfDays: res.noOfDays,
-              cost: res.cost,
+              nonAcCost: res.nonAcCost,
+              acCost: res.acCost,
               slots: res.slots,
             });
 
