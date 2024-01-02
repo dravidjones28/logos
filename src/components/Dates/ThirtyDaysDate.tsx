@@ -46,10 +46,10 @@ function ThirtyDaysDate({ onValue, onTableValue }: Value) {
 
     while (currentDay <= dateRange.to) {
       if (isWeekend(currentDay)) {
-        weekendCost += 150; // Weekend cost
+        weekendCost += 200; // Weekend cost
         weekends++;
       } else {
-        weekdayCost += 100; // Weekday cost
+        weekdayCost += 200; // Weekday cost
         weekdays++;
       }
       currentDay = addDays(currentDay, 1);

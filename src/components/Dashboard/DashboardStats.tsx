@@ -36,7 +36,6 @@ const DashboardStats = () => {
 
   if (error || !stats) throw error;
 
-  console.log(stats);
 
   return (
     <>

@@ -41,10 +41,10 @@ export default function SingleDate({ onValue, onTableValue }: Value) {
 
     if (selectedDate) {
       if (isWeekend(selectedDate)) {
-        weekendCost += 150; // Weekend cost
+        weekendCost += 200; // Weekend cost
         weekends++;
       } else {
-        weekdayCost += 100; // Weekday cost
+        weekdayCost += 150; // Weekday cost
         weekdays++;
       }
     }

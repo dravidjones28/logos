@@ -44,10 +44,10 @@ export default function MultipleDate({ onValue, onTableValue }: Value) {
 
     selectedDays.forEach((date) => {
       if (isWeekend(date)) {
-        weekendCost += 150; // Weekend cost
+        weekendCost += 200; // Weekend cost
         weekends++;
       } else {
-        weekdayCost += 100; // Weekday cost
+        weekdayCost += 150; // Weekday cost
         weekdays++;
       }
     });

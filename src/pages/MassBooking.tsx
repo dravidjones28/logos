@@ -140,7 +140,6 @@ function MassBooking() {
       temp = [formatDate(dateValue)];
     }
 
-    console.log(temp);
 
     if (auth) {
       let field = {

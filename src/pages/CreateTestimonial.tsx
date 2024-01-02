@@ -47,7 +47,6 @@ const schema = z.object({
     .min(3, "Description must be contain minimum of 2 Characters"),
   testimonialImage: z
     .any()
-
     .refine(
       (files) => files?.[0]?.size <= MAX_FILE_SIZE,
       `Max image size is 5MB.`
@@ -84,8 +83,8 @@ const CreateTestimonal = () => {
   const imageName = watch("testimonialImage");
   const descriptionValue = watch("description");
 
+  // Preview Image
   const [previewImage, setPreviewImage] = useState<any>("");
-
   const previewFile = () => {
     if (imageName[0]) {
       const reader = new FileReader();

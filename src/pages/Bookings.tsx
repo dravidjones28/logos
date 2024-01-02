@@ -27,6 +27,9 @@
 // import { v4 as uuidv4 } from "uuid";
 // import { FaPhone } from "react-icons/fa";
 
+// import { useNavigate, useParams } from "react-router-dom";
+// import useRetreatEvent from "../hooks/retreatEvents/useRetreatEvent";
+
 // const Bookings = () => {
 //   const [count, setCount] = useState<number>(1);
 //   const [errors, setErrors] = useState<string[]>([]);
@@ -337,6 +340,11 @@
 // import React from "react";
 
 const Bookings = () => {
+  // const { slug } = useParams();
+  // const { data: events, isLoading, error } = useRetreatEvent(slug!);
+  // const navigate = useNavigate();
+
+  // if (events?.slots === 0) navigate("/");
   return <div>Bookings</div>;
 };
 
