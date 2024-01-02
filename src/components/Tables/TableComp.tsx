@@ -40,7 +40,7 @@ const TableComp = <T extends object>({
 
   return (
     <>
-      <Box height="350px" overflowY="auto">
+      <Box height="450px" overflowY="auto">
         <Table variant="simple" size={{ base: "sm" }} ref={internalTableRef}>
           <Thead>
             {table.getHeaderGroups().map((headerGroup) => (
