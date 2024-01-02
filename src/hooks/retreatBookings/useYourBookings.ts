@@ -6,7 +6,6 @@ import { RetreatEvents } from "../retreatEvents/useRetreatEvents";
 export interface YourBooking {
   persons: any;
   events: RetreatEvents;
-  amount: number;
   // firstname: string;
 }
 const apiClient = new APIClient<YourBooking[], null>("/retreatBookings");

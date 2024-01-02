@@ -252,9 +252,13 @@ class APIClient<T, K> {
     const headers: AxiosRequestConfig["headers"] = {
       "x-auth-token": token,
     };
-    return axiosInstance.get<T>(this.endpoint, { headers }).then((res) => {
-      return res.data;
-    });
+    return axiosInstance
+      .get<T>(this.endpoint, { headers })
+      .then((res) => {
+        console.log(res);
+        return res.data;
+      })
+      .catch((error) => console.log(error));
   };
 }
 

@@ -42,6 +42,8 @@ const YourBookings = () => {
     return date.toLocaleDateString("en-US", options);
   };
 
+  console.log(error);
+
   if (isLoading)
     return (
       <LGBox>
@@ -55,6 +57,7 @@ const YourBookings = () => {
         </Box>
       </LGBox>
     );
+
   if (error || !yourBookings) throw error;
 
   return (
@@ -83,7 +86,7 @@ const YourBookings = () => {
         mt={{ base: 5, lg: "20px" }}
       >
         {yourBookings.map((item) => {
-          const persons = Object.keys(item.persons).map((i) => item.persons[i]);
+          console.log(item);
           return (
             <Card p={5}>
               <Stack>
@@ -117,15 +120,15 @@ const YourBookings = () => {
                 <Text fontWeight={700} fontSize="18px" color="#2d3748" mt={2}>
                   List of people
                 </Text>
-                {persons.map((item) => (
+                {item.persons.map((item1: any) => (
                   <Text fontWeight={500} fontSize="14px" color="#2d3748">
-                    {item}
+                    {item1.name}
                   </Text>
                 ))}
 
-                <Text fontWeight={700} fontSize="16px" color="#2d3748" mt={3}>
+                {/* <Text fontWeight={700} fontSize="16px" color="#2d3748" mt={3}>
                   Total {item.amount}
-                </Text>
+                </Text> */}
               </Stack>
             </Card>
           );
