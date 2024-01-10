@@ -61,7 +61,14 @@ const schema = z.object({
     ])
     .refine((data) => data.length > 0)
     .optional(),
-  normalIntentionField: z.string().min(2).optional(),
+  normalIntentionField: z
+    .string()
+    .min(2, "First Name should contain atleast 2 characters")
+    .optional(),
+  normalIntentionField1: z
+    .string()
+    .min(2, "Last Name should contain atleast 2 characters")
+    .optional(),
   gregorianIntentionField: z.string().min(2).optional(),
 });
 
@@ -125,6 +132,7 @@ function MassBooking() {
       // Unregister fields for Normal Intention
       unregister("normalIntentionTypes");
       unregister("normalIntentionField");
+      unregister("normalIntentionField1");
     }
   };
 
@@ -149,7 +157,7 @@ function MassBooking() {
         email: data.email,
         massType: data.massType,
         normalIntentionField: data.normalIntentionField
-          ? data.normalIntentionField
+          ? `${data.normalIntentionField} ${data.normalIntentionField1}`
           : "None",
         normalIntentionTypes: data.normalIntentionTypes
           ? data.normalIntentionTypes
@@ -277,16 +285,32 @@ function MassBooking() {
                             {errors.normalIntentionTypes.message}
                           </FormHelperText>
                         )}
-                        <Input
-                          {...data("normalIntentionField")}
-                          type="text"
-                          placeholder="Name"
-                        />
-                        {errors.normalIntentionField && (
-                          <FormHelperText color="red">
-                            {errors.normalIntentionField.message}
-                          </FormHelperText>
-                        )}
+                        <Stack direction={{ base: "column", lg: "row" }}>
+                          <Box>
+                            <Input
+                              {...data("normalIntentionField")}
+                              type="text"
+                              placeholder="First Name"
+                            />
+                            {errors.normalIntentionField && (
+                              <FormHelperText color="red">
+                                {errors.normalIntentionField.message}
+                              </FormHelperText>
+                            )}
+                          </Box>
+                          <Box>
+                            <Input
+                              {...data("normalIntentionField1")}
+                              type="text"
+                              placeholder="Last Name"
+                            />
+                            {errors.normalIntentionField1 && (
+                              <FormHelperText color="red">
+                                {errors.normalIntentionField1.message}
+                              </FormHelperText>
+                            )}
+                          </Box>
+                        </Stack>
                       </FormControl>
                     )}
 
