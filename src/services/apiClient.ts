@@ -33,10 +33,7 @@ class APIClient<T, K> {
   }
 
   getAll = (config: AxiosRequestConfig) => {
-    return axiosInstance
-      .get<T>(this.endpoint, config)
-      .then((res) => res.data)
-      
+    return axiosInstance.get<T>(this.endpoint, config).then((res) => res.data);
   };
 
   getAll1 = (config: AxiosRequestConfig) => {

@@ -50,17 +50,19 @@ const schema = z.object({
   massType: z.string().min(1, "Please Select MassType"),
   phoneNumber: z.string().min(10, "Please Enter 10 digits").max(10),
   normalIntentionTypes: z
-    .enum(["Thanksgiving", "Special Intention", "RIP"])
+    .enum([
+      "Thanksgiving Mass",
+      "Mass for Special Intention",
+      "Mass for the soul",
+      "Thanksgiving Mass on birthday",
+      "Thanksgiving Mass on wedding anniversary",
+      "Thanksgiving Mass on priestly ordination",
+      "Thanksgiving Mass on religious vocation",
+    ])
     .refine((data) => data.length > 0)
     .optional(),
   normalIntentionField: z.string().min(2).optional(),
-  gregorianIntentionField: z
-    .string()
-    .min(2)
-    // .refine((data) => /^[A-Za-z\s]+$/.test(data), {
-    //   message: "Only characters and spaces are allowed for fullName",
-    // })
-    .optional(),
+  gregorianIntentionField: z.string().min(2).optional(),
 });
 
 export type MassData = z.infer<typeof schema>;
@@ -140,7 +142,6 @@ function MassBooking() {
       temp = [formatDate(dateValue)];
     }
 
-
     if (auth) {
       let field = {
         bookingName: data.fullName,
@@ -176,7 +177,15 @@ function MassBooking() {
     }
   };
 
-  const intetionTypes = ["Thanksgiving", "Special Intention", "RIP"];
+  const intetionTypes = [
+    "Thanksgiving Mass",
+    "Mass for Special Intention",
+    "Mass for the soul",
+    "Thanksgiving Mass on birthday",
+    "Thanksgiving Mass on wedding anniversary",
+    "Thanksgiving Mass on priestly ordination",
+    "Thanksgiving Mass on religious vocation",
+  ];
 
   return (
     <LGBox>
@@ -251,7 +260,7 @@ function MassBooking() {
                       <FormControl
                         isInvalid={errors.normalIntentionField ? true : false}
                       >
-                        <FormLabel>Normal Intention Field</FormLabel>
+                        <FormLabel>Mass offered for</FormLabel>
                         <Select
                           my={3}
                           placeholder="Select Intention"
@@ -268,7 +277,11 @@ function MassBooking() {
                             {errors.normalIntentionTypes.message}
                           </FormHelperText>
                         )}
-                        <Input {...data("normalIntentionField")} type="text" />
+                        <Input
+                          {...data("normalIntentionField")}
+                          type="text"
+                          placeholder="Name"
+                        />
                         {errors.normalIntentionField && (
                           <FormHelperText color="red">
                             {errors.normalIntentionField.message}

@@ -8,8 +8,8 @@ interface MassBooking {
   amount?: number;
   email: string;
   massType: string;
-  normalIntentionField: string;
   normalIntentionTypes: string;
+  normalIntentionField: string;
   gregorianIntentionField: string;
   totalDays?: number;
   weekdayCost?: number;

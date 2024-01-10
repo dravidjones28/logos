@@ -1,185 +1,158 @@
-// import LGBox from "../components/common/LGBox";
+// import { useParams } from "react-router-dom";
+// import useRetreatEvent from "../hooks/retreatEvents/useRetreatEvent";
 // import {
-//   Box,
-//   Button,
 //   Card,
-//   FormControl,
+//   Box,
+//   Text,
 //   HStack,
-//   Icon,
-//   Input,
+//   IconButton,
+//   Spinner,
+//   FormControl,
 //   InputGroup,
 //   InputLeftElement,
-//   Spinner,
-//   Text,
+//   Icon,
+//   Input,
+//   Select,
+//   Button,
 // } from "@chakra-ui/react";
-// import { IconButton } from "@chakra-ui/react";
+// import LGBox from "../components/common/LGBox";
 // import { MinusIcon, AddIcon } from "@chakra-ui/icons";
-// import { ChangeEvent, useEffect, useState } from "react";
-// import { BsFillPersonPlusFill } from "react-icons/bs";
+// import { useState } from "react";
 // import db from "../components/common/db";
-// import {
-//   //  useNavigate,
-//    useParams } from "react-router-dom";
-// import useRetreatEvent from "../hooks/retreatEvents/useRetreatEvent";
-// import useAddPayment from "../hooks/payment/useAddPayment";
-// import Footer from "../components/footer/Footer";
-// // import uuid from "react-uuid";
-// import { v4 as uuidv4 } from "uuid";
+// import { z } from "zod";
+// import { useForm } from "react-hook-form";
+// import { zodResolver } from "@hookform/resolvers/zod";
+// import { BsFillPersonPlusFill } from "react-icons/bs";
 // import { FaPhone } from "react-icons/fa";
+// import useAddPayment from "./../hooks/payment/useAddPayment";
 
-import { useNavigate, useParams } from "react-router-dom";
-import useRetreatEvent from "../hooks/retreatEvents/useRetreatEvent";
+// const schema = z.object({
+//   formData: z
+//     .array(
+//       z.object({
+//         name: z.string().min(2, "Name should be minimum of 2 characters"),
+//         phoneNumber: z
+//           .string()
+//           .min(7, "Phone Number should be minimum of 7 characters"),
+//         file: z.string().min(3, "File should be minimum of 3 characters"),
+//         acOrNonAc: z
+//           .enum(["ac", "non-ac"])
+
+//           .refine((value) => value !== undefined, {
+//             message:
+//               "Invalid value for 'acOrNonAc'. Choose between 'ac' or 'non-ac'.",
+//           }),
+//       })
+//     )
+//     .refine(
+//       (data) => {
+//         return data.every((item) => item.name && item.file);
+//       },
+//       { message: "All fields are required" }
+//     ),
+// });
+
+// // Define the form data type based on the schema
+// type FormData = z.infer<typeof schema>;
 
 // const Bookings = () => {
-//   const [count, setCount] = useState<number>(1);
-//   const [errors, setErrors] = useState<string[]>([]);
 //   const { slug } = useParams();
-//   const [slots, setSlots] = useState<number>();
-//   const [phoneNumber, setPhoneNumber] = useState<string>();
-//   const [phoneError, setPhoneError] = useState("");
-
-//   useEffect(() => {
-//     setSlots(Number(events?.slots) - count);
-//   }, [count, []]);
-
+//   const session = db();
 //   const { data: events, isLoading, error } = useRetreatEvent(slug!);
 
-//   const [inputValues, setInputValues] = useState<string[]>(
-//     Array(count).fill("")
-//   );
+//   const [count, setCount] = useState(1);
 
-//   const handleIncrement = () => {
-//     if (slots === 0) return;
-//     else {
-//       setCount(count + 1);
-//       setInputValues((prevInputValues) => [...prevInputValues, ""]);
-//     }
-//   };
-
-//   const handleDecrement = () => {
-//     if (count > 1) {
-//       setCount(count - 1);
-//       setInputValues((prevInputValues) => prevInputValues.slice(1, count));
-//       let temp = errors;
-//       temp.pop();
-//       setErrors(temp);
-//     }
-//   };
-
-//   const handleInputChange = (indexNumber: number, value: string) => {
-//     // if (value.trim() !== "") {
-//     //   // If the input is not empty, clear the error for that input
-//     //   let temp = [...errors];
-//     //   temp[indexNumber] = "";
-//     //   setErrors(temp);
-//     // }
-//     if (/^[A-Za-z\s]+$/.test(value)) {
-//       // If the input contains only characters and spaces, clear the error for that input
-//       let temp = [...errors];
-//       temp[indexNumber] = "";
-//       setErrors(temp);
-//     } else {
-//       // If the input contains other characters, set an error for that input
-//       let temp = [...errors];
-//       temp[indexNumber] = "Only characters and spaces are allowed";
-//       setErrors(temp);
-//     }
-
-//     const newInputValues = [...inputValues];
-//     newInputValues[indexNumber] = value;
-
-//     setInputValues(newInputValues);
-//   };
+//   const {
+//     register,
+//     handleSubmit,
+//     watch,
+//     trigger,
+//     formState: { errors },
+//     setError,
+//     setValue,
+//   } = useForm<FormData>({
+//     resolver: zodResolver(schema),
+//   });
 
 //   const addPayment = useAddPayment();
-//   const session = db();
 
-//   const validateInputs = () => {
-//     const newInputValues = inputValues.map((input) => {
-//       return input.trim() === "" ? "" : input;
+//   const valuesOfFormData = watch("formData");
+
+//   let total = 0;
+//   valuesOfFormData?.slice(0, count).map((item) => {
+//     if (item.acOrNonAc === "ac") total += 3000;
+//     if (item.acOrNonAc === "non-ac") total += 500;
+//   });
+
+//   console.log("total", total);
+
+//   const handleCount = (newCount: number) => {
+//     if (events?.slots && newCount > 0 && newCount <= events?.slots) {
+//       setCount(newCount);
+//     }
+//   };
+
+//   const handleFileChange = async (
+//     index: number,
+//     e: React.ChangeEvent<HTMLInputElement>
+//   ) => {
+//     const file = e.target.files && e.target.files[0];
+
+//     if (file) {
+//       if (file.type === "application/pdf") {
+//         // Check minimum size (500 KB)
+//         if (file.size > 500 * 1024) {
+//           setError(`formData[${index}].file`, {
+//             type: "manual",
+//             message: "File must be at least 500 KB",
+//           });
+//           return;
+//         } else {
+//           // Clear the error if the file is valid
+//           setError(`formData[${index}].file`, undefined);
+//         }
+//       } else {
+//         setError(`formData[${index}].file`, {
+//           type: "manual",
+//           message: "Please upload a valid PDF file.",
+//         });
+//         return;
+//       }
+
+//       const base64String = await readFileAsBase64(file);
+//       setValue(`formData[${index}].file`, base64String);
+//       // Trigger re-validation for the file input
+//       trigger(`formData[${index}].file`);
+
+//       // Trigger re-validation for the text input
+//       trigger(`formData[${index}].name`);
+//     }
+//   };
+
+//   const readFileAsBase64 = (file: File): Promise<string> => {
+//     return new Promise((resolve) => {
+//       const fileReader = new FileReader();
+//       fileReader.onloadend = () => {
+//         resolve(fileReader.result as string);
+//       };
+//       fileReader.readAsDataURL(file);
 //     });
+//   };
 
-//     setInputValues(newInputValues);
+//   const onSubmit = (data: FormData) => {
+//     let newData = data.formData.slice(0, count);
+//     console.log(newData);
 
-//     const isValid = newInputValues.every((input) => {
-//       return input.trim() !== "";
+//     addPayment.mutate({
+//       bookingName: session?.name,
+//       email: session?.email,
+//       persons: newData,
+//       author: session?._id,
+//       eventId: events?._id,
 //     });
-
-//     if (!isValid) {
-//       // If there are empty inputs, set the corresponding error messages
-//       const errorMessages = newInputValues.map((input, index) => {
-//         return input.trim() === "" ? `Person ${index + 1} is empty` : "";
-//       });
-//       setErrors(errorMessages);
-//       return;
-//     }
-//     if (!phoneNumber) {
-//       setPhoneError("This field is required");
-//       return;
-//     } else if (phoneNumber && phoneNumber.length !== 10) {
-//       setPhoneError("Phone Number should have 10 digits");
-//       return;
-//     } else {
-//       let temp: any = {};
-//       inputValues.map((item, index) => {
-//         const name = `Person${index + 1}`;
-//         temp[name] = item;
-//       });
-
-//       const totalNumberOfPerson = Object.entries(temp)
-//         .map(
-//           ([key, value]) => `${key}_${(value as string).replace(/\s+$/, "")}`
-//         )
-//         .join(",");
-
-//       const totalAmount = Number(events?.cost) * count;
-
-//       addPayment.mutate({
-//         txnid: `${uuidv4()}`,
-//         amount: `${totalAmount}.0`,
-//         productinfo: "Retreat Booking",
-//         name: `${session?.name}`,
-//         phone: `${phoneNumber}`,
-//         email: `${session?.email.replace(/\s+$/, "")}`,
-//         udf1: totalNumberOfPerson,
-//         udf2: `${events?._id}&${session?._id}`,
-//         udf3: `${slots}&${events?.cost}`,
-//         udf4: events?.title,
-//         udf5: events?.ledBy,
-//         udf6: `${events?.start}&${events?.end}`,
-//         udf7: `${events?.noOfDays}`,
-//         udf8: "",
-//         udf9: "",
-//         udf10: "",
-//         unique_id: "",
-//         split_payments: "",
-//         sub_merchant_id: "",
-//         customer_authentication_id: "",
-//         surl: "http://localhost:3000/api/response",
-//         furl: "http://localhost:3000/api/response",
-//       });
-//     }
 //   };
 
-//   const validatePhoneNumber = (value: string) => {
-//     const isValid = /^\d{10}$/.test(value);
-//     return isValid;
-//   };
-
-//   const handlePhone = (event: ChangeEvent<HTMLInputElement>) => {
-//     const { value } = event.target;
-//     setPhoneNumber(value);
-
-//     if (validatePhoneNumber(value)) {
-//       setPhoneError("");
-//       setPhoneNumber(value);
-//     } else {
-//       setPhoneError("Invalid phone number. Please enter 10 digits.");
-//     }
-//   };
-
-//   // const navigate = useNavigate();
-//   // if (events?.slots === "0") navigate("/");
+//   console.log(errors);
 
 //   if (isLoading)
 //     return (
@@ -195,6 +168,8 @@ import useRetreatEvent from "../hooks/retreatEvents/useRetreatEvent";
 //       </LGBox>
 //     );
 //   if (error || !events) throw error;
+
+//   if (events?.slots === 0) navigate("/");
 
 //   return (
 //     <LGBox>
@@ -214,7 +189,7 @@ import useRetreatEvent from "../hooks/retreatEvents/useRetreatEvent";
 //             fontWeight={500}
 //             textAlign="center"
 //           >
-//             {events.title}
+//             {events?.title}
 //           </Text>
 //           <Box>
 //             <HStack>
@@ -225,12 +200,12 @@ import useRetreatEvent from "../hooks/retreatEvents/useRetreatEvent";
 //               >
 //                 Number of People{" "}
 //               </Text>
-
 //               <IconButton
 //                 mt="10px"
 //                 icon={<MinusIcon />}
-//                 onClick={handleDecrement}
+//                 onClick={() => handleCount(count - 1)}
 //                 aria-label="Add people"
+//                 isDisabled={count === 1 ? true : false}
 //                 boxSize={{ base: "25px", lg: "30px" }}
 //               />
 //               <Text mt="10px" fontSize={{ base: "14px", lg: "17px" }}>
@@ -239,8 +214,9 @@ import useRetreatEvent from "../hooks/retreatEvents/useRetreatEvent";
 //               <IconButton
 //                 aria-label="remove people"
 //                 icon={<AddIcon />}
+//                 isDisabled={Number(events?.slots) - count === 0 ? true : false}
 //                 mt="10px"
-//                 onClick={handleIncrement}
+//                 onClick={() => handleCount(count + 1)}
 //                 boxSize={{ base: "25px", lg: "30px" }}
 //               />
 //             </HStack>
@@ -249,7 +225,7 @@ import useRetreatEvent from "../hooks/retreatEvents/useRetreatEvent";
 //               my={2}
 //               fontWeight={500}
 //             >
-//               slots : {slots ? slots : Number(events.slots) - count}
+//               slots : {Number(events.slots) - count}
 //             </Text>
 //             <Text
 //               fontSize={{ base: "14px", lg: "17px" }}
@@ -258,27 +234,11 @@ import useRetreatEvent from "../hooks/retreatEvents/useRetreatEvent";
 //             >
 //               Booking Person : {session?.name}{" "}
 //             </Text>
-//             <form>
-//               <InputGroup>
-//                 <InputLeftElement marginTop="5px">
-//                   <Icon as={FaPhone} color="#5664d2" />
-//                 </InputLeftElement>
-//                 <Input
-//                   type="text"
-//                   size="lg"
-//                   fontSize={{ base: "14px", lg: "17px" }}
-//                   _placeholder={{
-//                     opacity: 1,
-//                     color: "gray.500",
-//                     fontSize: "14px",
-//                   }}
-//                   onChange={handlePhone}
-//                   placeholder={`+91 Please Enter your phone number`}
-//                 />
-//               </InputGroup>
-//               <p style={{ color: "red" }}>{phoneError}</p>
-//               {Array.from({ length: count }, (_, index) => (
-//                 <FormControl my={3} key={index}>
+//           </Box>
+//           <form onSubmit={handleSubmit(onSubmit)}>
+//             {[...Array(count)].map((_, index) => (
+//               <Card key={index} paddingX="30px" marginBottom="30px">
+//                 <FormControl my={3}>
 //                   <InputGroup>
 //                     <InputLeftElement marginTop="5px">
 //                       <Icon as={BsFillPersonPlusFill} color="#5664d2" />
@@ -292,21 +252,78 @@ import useRetreatEvent from "../hooks/retreatEvents/useRetreatEvent";
 //                         color: "gray.500",
 //                         fontSize: "14px",
 //                       }}
-//                       value={inputValues[index]}
-//                       onChange={(e) => handleInputChange(index, e.target.value)}
+//                       {...register(`formData.${index}.name` as const)}
 //                       placeholder={`Enter Person ${index + 1} Name`}
 //                     />
 //                   </InputGroup>
-//                   <p style={{ color: "red" }}>{errors[index]}</p>
+//                   {errors.formData?.[index]?.name && (
+//                     <p style={{ color: "red" }}>
+//                       {" "}
+//                       {errors.formData[index].name.message}
+//                     </p>
+//                   )}
 //                 </FormControl>
-//               ))}
-//             </form>
+//                 <FormControl my={3} key={index}>
+//                   <InputGroup>
+//                     <InputLeftElement marginTop="5px">
+//                       <Icon as={FaPhone} color="#5664d2" />
+//                     </InputLeftElement>
+//                     <Input
+//                       type="number"
+//                       size="lg"
+//                       fontSize={{ base: "14px", lg: "17px" }}
+//                       _placeholder={{
+//                         opacity: 1,
+//                         color: "gray.500",
+//                         fontSize: "14px",
+//                       }}
+//                       {...register(`formData.${index}.phoneNumber` as const)}
+//                       placeholder={`Enter Person ${index + 1} Phone Number`}
+//                     />
+//                   </InputGroup>
+//                   {errors.formData?.[index]?.phoneNumber && (
+//                     <p style={{ color: "red" }}>
+//                       {errors.formData[index].phoneNumber.message}
+//                     </p>
+//                   )}
+//                 </FormControl>
+//                 <Select
+//                   my={3}
+//                   placeholder="Room Type"
+//                   {...register(`formData.${index}.acOrNonAc` as const)}
+//                 >
+//                   <option value="ac">Ac</option>
+//                   <option value="non-ac">Non-Ac</option>
+//                 </Select>
+//                 {errors.formData?.[index]?.acOrNonAc && (
+//                   <p style={{ color: "red" }}>
+//                     {errors.formData[index].acOrNonAc.message}
+//                   </p>
+//                 )}
+//                 <div>
+//                   <label htmlFor={`file-${index}`}>
+//                     Upload Adhaard Card {index + 1}
+//                   </label>
+//                   <Input
+//                     type="file"
+//                     accept=".pdf"
+//                     onChange={(e) => handleFileChange(index, e)}
+//                   />
+//                   {errors.formData?.[index]?.file && (
+//                     <p style={{ color: "red" }}>
+//                       {errors.formData[index].file.message}
+//                     </p>
+//                   )}
+//                 </div>
+//               </Card>
+//             ))}
+
 //             <Text
 //               fontSize={{ base: "14px", lg: "17px" }}
 //               my={5}
 //               fontWeight={500}
 //             >
-//               {/* Total: {Number(events.cost) * count} */}
+//               Total: {total}
 //             </Text>
 //             <Button
 //               fontSize={{ base: "10px", lg: "15px" }}
@@ -320,16 +337,13 @@ import useRetreatEvent from "../hooks/retreatEvents/useRetreatEvent";
 //               color="#fff"
 //               cursor="pointer"
 //               _hover={{ bg: "#70b7ff" }}
-//               onClick={validateInputs}
+//               type="submit"
 //               isDisabled={addPayment.isPending ? true : false}
 //             >
 //               {addPayment.isPending ? <Spinner /> : "Book Retreat"}
 //             </Button>
-//           </Box>
+//           </form>
 //         </Card>
-//       </Box>
-//       <Box mt={20}>
-//         <Footer />
 //       </Box>
 //     </LGBox>
 //   );
@@ -337,15 +351,7 @@ import useRetreatEvent from "../hooks/retreatEvents/useRetreatEvent";
 
 // export default Bookings;
 
-// import React from "react";
-
 const Bookings = () => {
-  const { slug } = useParams();
-  const { data: events, isLoading, error } = useRetreatEvent(slug!);
-  const navigate = useNavigate();
-
-  if (events?.slots === 0) navigate("/");
-
   return <div>Bookings</div>;
 };
 

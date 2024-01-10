@@ -3,32 +3,21 @@ import { useToast } from "@chakra-ui/react";
 import APIClient from "../../services/apiClient";
 import { useNavigate } from "react-router-dom";
 
-interface Payment {
-  txnid: string;
-  amount: string;
-  productinfo: string;
-  name: string;
-  phone: string;
-  email: string;
-  udf1: string;
-  udf2: string | undefined;
-  udf3: string;
-  udf4: string | undefined;
-  udf5: string | undefined;
-  udf6: string | undefined;
-  udf7: string | undefined;
-  udf8: string | undefined;
-  udf9: string;
-  udf10: string;
-  unique_id: string;
-  split_payments: string;
-  sub_merchant_id: string;
-  customer_authentication_id: string;
-  surl: string;
-  furl: string;
+interface Person {
+  name?: String;
+  file?: String;
+  phoneNumber?: String;
+  acOrNonAc?: String;
 }
 
-const apiClient = new APIClient<string, Payment>("/initiate_payment");
+interface Payment {
+  bookingName: String;
+  email: String;
+  persons: Person[];
+  events: string;
+}
+
+const apiClient = new APIClient<string, Payment>("/retreatBookings");
 
 const useAddPayment = () => {
   const toast = useToast();
@@ -42,8 +31,8 @@ const useAddPayment = () => {
       try {
         const url = res;
         window.open(url);
-        query.clear();
-        return navigate("/", { replace: true });
+        navigate("/", { replace: true });
+        return query.clear();
       } catch (error) {
         toast({
           title: "Failed",

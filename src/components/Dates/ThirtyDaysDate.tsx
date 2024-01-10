@@ -19,7 +19,8 @@ function ThirtyDaysDate({ onValue, onTableValue }: Value) {
 
   const isDateSelectable = (date: Date): boolean => {
     const today = new Date();
-    return date >= today;
+    const nextWeek = addDays(today, 7);
+    return date >= nextWeek;
   };
 
   const formatDate = (date: Date): string => {
