@@ -9,6 +9,7 @@ import {
   Box,
   Spinner,
   Text,
+  FormLabel,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,7 +20,10 @@ import LGBox from "../components/common/LGBox";
 import useYoutubeLinkUpdate from "../hooks/youtubeLink/useYoutubeLinkUpdate";
 
 const schema = z.object({
-  youtubeId: z
+  youtubeMassId: z
+    .string()
+    .min(11, "Youtube Link is should be minimum of 11 characters"),
+  youtubeRetreatId: z
     .string()
     .min(11, "Youtube Link is should be minimum of 11 characters"),
 });
@@ -66,16 +70,24 @@ const YoutubeLink = () => {
   return (
     <>
       {youtubeLink?.map((item) => (
-        <Text>Current Youtube Video Id : {item.youtubeId}</Text>
+        <>
+          <Text fontWeight={500}>
+            Current Youtube Video Id : {item.youtubeMassId}
+          </Text>
+          <Text fontWeight={500}>
+            Current Retreat Video Id : {item.youtubeRetreatId}
+          </Text>
+        </>
       ))}
       <form onSubmit={handleSubmit((data) => onSubmit(data))}>
         <FormControl my={3}>
+          <FormLabel>Youtube Mass Video Id</FormLabel>
           <InputGroup>
             <InputLeftElement marginTop="5px">
               <Icon as={MdDriveFileRenameOutline} color="#5664d2" />
             </InputLeftElement>
             <Input
-              {...register("youtubeId", {
+              {...register("youtubeMassId", {
                 required: true,
               })}
               type="text"
@@ -88,9 +100,35 @@ const YoutubeLink = () => {
               placeholder="Update Youtube Link"
             />
           </InputGroup>
-          {errors.youtubeId && (
+          {errors.youtubeMassId && (
             <FormHelperText color="red">
-              {errors.youtubeId.message}
+              {errors.youtubeMassId.message}
+            </FormHelperText>
+          )}
+        </FormControl>
+        <FormControl my={3}>
+          <FormLabel>Youtube Retreat Video Id</FormLabel>
+          <InputGroup>
+            <InputLeftElement marginTop="5px">
+              <Icon as={MdDriveFileRenameOutline} color="#5664d2" />
+            </InputLeftElement>
+            <Input
+              {...register("youtubeRetreatId", {
+                required: true,
+              })}
+              type="text"
+              size="lg"
+              _placeholder={{
+                opacity: 1,
+                color: "gray.500",
+                fontSize: "15px",
+              }}
+              placeholder="Update Youtube Link"
+            />
+          </InputGroup>
+          {errors.youtubeRetreatId && (
+            <FormHelperText color="red">
+              {errors.youtubeRetreatId.message}
             </FormHelperText>
           )}
         </FormControl>

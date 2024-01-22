@@ -4,7 +4,8 @@ import ms from "ms";
 
 export interface YoutubeLinkData {
   _id?: string;
-  youtubeId?: string;
+  youtubeMassId?: string;
+  youtubeRetreatId?: string;
 }
 const apiClient = new APIClient<YoutubeLinkData[], null>("/youtubeLink");
 const useYoutubeLink = () => {

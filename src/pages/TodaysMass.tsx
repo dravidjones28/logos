@@ -42,7 +42,7 @@ const TodaysMass = () => {
         <Box py={{ base: 3, lg: 5 }}>
           {youtubeLink?.map((item, index) => (
             <Box mx={{ base: "5px", lg: "145px" }} key={index}>
-              <YouTube videoId={item.youtubeId} opts={opts} />
+              <YouTube videoId={item.youtubeMassId} opts={opts} />
             </Box>
           ))}
         </Box>

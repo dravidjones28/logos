@@ -262,75 +262,80 @@ function MassBooking() {
                     )}
                   </FormControl>
                 </Stack>
-                <Box display="flex" justifyContent="center" mt={5}>
-                  <Box width="100%">
-                    {selectedMassType === "Normal Intention" && (
-                      <FormControl
-                        isInvalid={errors.normalIntentionField ? true : false}
-                      >
-                        <FormLabel>Mass offered for</FormLabel>
-                        <Select
-                          my={3}
-                          placeholder="Select Intention"
-                          {...data("normalIntentionTypes")}
-                        >
-                          {intetionTypes.map((item, index) => (
-                            <option value={item} key={index}>
-                              {item}
-                            </option>
-                          ))}
-                        </Select>
-                        {errors.normalIntentionTypes && (
-                          <FormHelperText color="red" mb={2}>
-                            {errors.normalIntentionTypes.message}
-                          </FormHelperText>
-                        )}
-                        <Stack direction={{ base: "column", lg: "row" }}>
-                          <Box>
-                            <Input
-                              {...data("normalIntentionField")}
-                              type="text"
-                              placeholder="First Name"
-                            />
-                            {errors.normalIntentionField && (
-                              <FormHelperText color="red">
-                                {errors.normalIntentionField.message}
-                              </FormHelperText>
-                            )}
-                          </Box>
-                          <Box>
-                            <Input
-                              {...data("normalIntentionField1")}
-                              type="text"
-                              placeholder="Last Name"
-                            />
-                            {errors.normalIntentionField1 && (
-                              <FormHelperText color="red">
-                                {errors.normalIntentionField1.message}
-                              </FormHelperText>
-                            )}
-                          </Box>
-                        </Stack>
-                      </FormControl>
-                    )}
+                {/* <Box display="flex" justifyContent="center" mt={5}> */}
+                <Box width="100%" mt={5}>
+                  {selectedMassType === "Normal Intention" && (
+                    <FormControl
+                      isInvalid={errors.normalIntentionField ? true : false}
+                    >
+                      <Stack direction={{ base: "column", lg: "row" }}>
+                        <Box>
+                          <FormLabel>Mass offered for</FormLabel>
+                          <Select
+                            my={3}
+                            placeholder="Select Intention"
+                            {...data("normalIntentionTypes")}
+                            width="500px"
+                          >
+                            {intetionTypes.map((item, index) => (
+                              <option value={item} key={index}>
+                                {item}
+                              </option>
+                            ))}
+                          </Select>
+                          {errors.normalIntentionTypes && (
+                            <FormHelperText color="red" mb={2}>
+                              {errors.normalIntentionTypes.message}
+                            </FormHelperText>
+                          )}
+                        </Box>
+                        <Box>
+                          <FormLabel>First Name</FormLabel>
 
-                    {selectedMassType === "Gregorian Intention" && (
-                      <FormControl
-                        isInvalid={
-                          errors.gregorianIntentionField ? true : false
-                        }
-                      >
-                        <FormLabel>Gregorian Intention Field</FormLabel>
-                        <Textarea {...data("gregorianIntentionField")} />
-                        {errors.gregorianIntentionField && (
-                          <FormHelperText color="red">
-                            {errors.gregorianIntentionField.message}
-                          </FormHelperText>
-                        )}
-                      </FormControl>
-                    )}
-                  </Box>
+                          <Input
+                            {...data("normalIntentionField")}
+                            type="text"
+                            placeholder="Enter First Name"
+                          />
+                          {errors.normalIntentionField && (
+                            <FormHelperText color="red">
+                              {errors.normalIntentionField.message}
+                            </FormHelperText>
+                          )}
+                        </Box>
+                        <Box>
+                          <FormLabel>Last Name</FormLabel>
+
+                          <Input
+                            {...data("normalIntentionField1")}
+                            type="text"
+                            placeholder="Enter Last Name"
+                          />
+                          {errors.normalIntentionField1 && (
+                            <FormHelperText color="red">
+                              {errors.normalIntentionField1.message}
+                            </FormHelperText>
+                          )}
+                        </Box>
+                      </Stack>
+                    </FormControl>
+                  )}
+
+                  {selectedMassType === "Gregorian Intention" && (
+                    <FormControl
+                      isInvalid={errors.gregorianIntentionField ? true : false}
+                    >
+                      <FormLabel>Gregorian Intention Field</FormLabel>
+                      <Textarea {...data("gregorianIntentionField")} />
+                      {errors.gregorianIntentionField && (
+                        <FormHelperText color="red">
+                          {errors.gregorianIntentionField.message}
+                        </FormHelperText>
+                      )}
+                    </FormControl>
+                  )}
                 </Box>
+                {/* </Box> */}
               </Box>
               <Box>
                 {selectedMassType === "Gregorian Intention" ? (

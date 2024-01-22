@@ -63,7 +63,7 @@ const YoutubeSection = () => {
         </Box>
         {youtubeLink?.map((item, index) => (
           <Box key={index}>
-            <YouTube videoId={item.youtubeId} opts={opts} />
+            <YouTube videoId={item.youtubeRetreatId} opts={opts} />
           </Box>
         ))}
       </SimpleGrid>

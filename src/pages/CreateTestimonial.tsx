@@ -243,8 +243,6 @@ const CreateTestimonal = () => {
                 <>
                   <Flex>
                     <FormLabel
-                      // color="blue.500"
-                      // as={Link}
                       color="gray.500"
                       cursor="pointer"
                       htmlFor="profilePicture"
