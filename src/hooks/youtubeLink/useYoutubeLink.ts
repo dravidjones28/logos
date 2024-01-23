@@ -11,7 +11,7 @@ const apiClient = new APIClient<YoutubeLinkData[], null>("/youtubeLink");
 const useYoutubeLink = () => {
   return useQuery({
     queryKey: ["youtubeLink"],
-    queryFn: apiClient.getAll,
+    queryFn: apiClient.getAll1,
     staleTime: ms("24h"),
   });
 };

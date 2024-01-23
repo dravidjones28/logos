@@ -125,10 +125,25 @@ const NavBar = () => {
 
                 <MenuList>
                   <MenuOptionGroup title="Profile">
-                    {session.isAdmin && (
+                    {(session.isAdmin ||
+                      session.isIntercessionAdmin ||
+                      session.isBookingAdmin ||
+                      session.isYoutubeLinkAdmin) && (
                       <MenuItem
                         // isDisabled={true}
-                        onClick={() => navigate("/dashboard")}
+
+                        onClick={() => {
+                          if (session.isAdmin) navigate("/dashboard/stats");
+
+                          if (session.isIntercessionAdmin)
+                            navigate("/dashboard/prayer-request");
+
+                          if (session.isBookingAdmin)
+                            navigate("/dashboard/mass-bookings");
+
+                          if (session.isYoutubeLinkAdmin)
+                            navigate("dashboard/youtube-link");
+                        }}
                       >
                         My Dashboard
                       </MenuItem>

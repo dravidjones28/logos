@@ -23,11 +23,11 @@ function db(): DB | undefined {
     return parse;
   }
 }
-const useAuth = () => {
+const useAdmin = () => {
   const session = db();
 
-  if (session) return session;
+  if (session?.isAdmin) return session;
   return false;
 };
 
-export default useAuth;
+export default useAdmin;

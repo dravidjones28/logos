@@ -7,6 +7,9 @@ export interface DB {
   email: string;
   isAdmin: boolean;
   isEditor: boolean;
+  isIntercessionAdmin: boolean;
+  isBookingAdmin: boolean;
+  isYoutubeLinkAdmin: boolean;
   profilePic: string;
 }
 

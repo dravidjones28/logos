@@ -37,8 +37,14 @@ import DashboardBookingRetreat from "./pages/DashboardBookingRetreat";
 import DashboardMassBooking from "./pages/DashboardMassBooking";
 import DashboardPrayerRequest from "./pages/DashboardPrayerRequest";
 import YoutubeLink from "./pages/YoutubeLink";
+import UsersDashboard from "./pages/UsersDashboard";
+import AdminPrivateRoute from "./components/AdminPrivateRoute";
+import IsIntercessionPrivateRoute from "./components/IsIntercessionPrivateRoute";
+import IsBookingAdminPrivateRoute from "./components/IsBookingAdminPrivateRoute";
+import YoutubeAdminPrivateRoute from "./components/YoutubeAdminPrivateRoute";
 
 const router = createBrowserRouter([
+  // For All Users
   {
     path: "/",
     element: <NavBar />,
@@ -155,6 +161,8 @@ const router = createBrowserRouter([
       // },
     ],
   },
+
+  // For authenicated users
   {
     element: <NavBar />,
     children: [
@@ -178,21 +186,87 @@ const router = createBrowserRouter([
     ],
   },
 
+  // For Admin Users
   {
     path: "dashboard",
-    element: <Layout />,
+    element: <AdminPrivateRoute />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <Dashboard /> },
-      { path: "retreat-bookings", element: <DashboardBookingRetreat /> },
-      { path: "mass-bookings", element: <DashboardMassBooking /> },
       {
-        path: "prayer-request",
-        element: <DashboardPrayerRequest />,
+        element: <Layout />,
+        errorElement: <ErrorPage />,
+        children: [
+          { path: "stats", element: <Dashboard /> },
+          { path: "retreat-bookings", element: <DashboardBookingRetreat /> },
+          { path: "mass-bookings", element: <DashboardMassBooking /> },
+          {
+            path: "prayer-request",
+            element: <DashboardPrayerRequest />,
+          },
+          {
+            path: "youtube-link",
+            element: <YoutubeLink />,
+          },
+          {
+            path: "users",
+            element: <UsersDashboard />,
+          },
+        ],
       },
+    ],
+  },
+
+  // For Intercession Admin Users
+  {
+    path: "dashboard/prayer-request",
+    element: <IsIntercessionPrivateRoute />,
+    errorElement: <ErrorPage />,
+    children: [
       {
-        path: "youtube-link",
-        element: <YoutubeLink />,
+        element: <Layout />,
+        errorElement: <ErrorPage />,
+        children: [{ index: true, element: <DashboardPrayerRequest /> }],
+      },
+    ],
+  },
+
+  //Booking admin Users
+  {
+    path: "dashboard/mass-bookings",
+    element: <IsBookingAdminPrivateRoute />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        element: <Layout />,
+        errorElement: <ErrorPage />,
+        children: [{ index: true, element: <DashboardMassBooking /> }],
+      },
+    ],
+  },
+
+  {
+    path: "dashboard/retreat-bookings",
+    element: <IsBookingAdminPrivateRoute />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        element: <Layout />,
+        errorElement: <ErrorPage />,
+        children: [{ index: true, element: <DashboardBookingRetreat /> }],
+      },
+    ],
+  },
+
+  // Youtube admin Users
+  {
+    path: "dashboard/youtube-link",
+    element: <YoutubeAdminPrivateRoute />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        element: <Layout />,
+        errorElement: <ErrorPage />,
+        children: [{ index: true, element: <YoutubeLink /> }],
       },
     ],
   },

@@ -27,6 +27,13 @@ interface PrayerRequest {
   searchDate?: string;
 }
 
+interface UsersData {
+  pageSize?: number;
+  page?: number;
+  searchDate?: string;
+  searchEmail?: string;
+}
+
 interface Props {
   // Landing page navbar open
   isNavBarOpen: boolean;
@@ -65,6 +72,16 @@ interface Props {
     prevOrNext: string
   ) => void;
   setPrayerRequestDate: (searchDate: string) => void;
+
+  usersData: UsersData;
+  setUsersDataPageSize: (pageSize: number) => void;
+  setUsersDataPage: (
+    page: number,
+    totalPages: number | undefined,
+    prevOrNext: string
+  ) => void;
+  setUsersDataDate: (searchDate: string) => void;
+  setUsersEmail: (searchEmail: string) => void;
 }
 const store = create<Props>((set) => ({
   isNavBarOpen: false,
@@ -159,6 +176,35 @@ const store = create<Props>((set) => ({
   setPrayerRequestDate: (searchDate) =>
     set(() => ({
       prayerRequest: { searchDate },
+    })),
+
+  usersData: { page: 1, pageSize: 10 },
+  setUsersDataPageSize: (pageSize) => {
+    return set((state) => ({
+      usersData: { ...state.usersData, pageSize },
+      ...(({ searchDate, ...rest }) => rest)(state.usersData),
+    }));
+  },
+  setUsersDataPage: (page, totalPages, prevOrNext) => {
+    let result = 0;
+
+    if (prevOrNext === "next")
+      result = Math.min(page + 1, totalPages ? totalPages : 0);
+    if (prevOrNext === "prev") result = Math.max(page - 1, 1);
+
+    return set((state) => ({
+      usersData: { ...state.usersData, page: result },
+      ...(({ searchDate, ...rest }) => rest)(state.usersData),
+    }));
+  },
+
+  setUsersDataDate: (searchDate) =>
+    set(() => ({
+      usersData: { searchDate },
+    })),
+  setUsersEmail: (searchEmail) =>
+    set(() => ({
+      usersData: { searchEmail },
     })),
 }));
 

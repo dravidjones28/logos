@@ -25,12 +25,11 @@ import { IconType } from "react-icons";
 import Logo from "../../assets/logo-dark.svg";
 import LogoLight from "../../assets/logo-light.svg";
 import db from "../common/db";
-import NoImage from "../common/NoImage";
 import logout from "../common/logout";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { LuChurch } from "react-icons/lu";
-import { FaChurch, FaPray, FaYoutube } from "react-icons/fa";
+import { FaChurch, FaPray, FaYoutube, FaUsers } from "react-icons/fa";
 
 interface LinkItemProps {
   name: string;
@@ -52,7 +51,7 @@ interface SidebarProps extends BoxProps {
 }
 
 const LinkItems: Array<LinkItemProps> = [
-  { name: "Dashboard", icon: FiHome, link: "" },
+  { name: "Dashboard", icon: FiHome, link: "/dashboard/stats" },
   {
     name: "Retreat Bookings",
     icon: FaChurch,
@@ -74,10 +73,16 @@ const LinkItems: Array<LinkItemProps> = [
     icon: FaYoutube,
     link: "/dashboard/youtube-link",
   },
+  {
+    name: "Users",
+    icon: FaUsers,
+    link: "/dashboard/users",
+  },
 ];
 
 export const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   const navigate = useNavigate();
+  const currentUser = db();
   return (
     <Box
       transition="3s ease"
@@ -107,16 +112,26 @@ export const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
-      {LinkItems.map((item) => (
-        <NavItem
-          onClick={() => navigate(`${item.link}`)}
-          fontWeight={500}
-          key={item.name}
-          icon={item.icon}
-        >
-          {item.name}
-        </NavItem>
-      ))}
+      {LinkItems.map((item) => {
+        if (
+          currentUser?.isAdmin ||
+          (currentUser?.isIntercessionAdmin &&
+            item.name === "Prayer Request") ||
+          (currentUser?.isYoutubeLinkAdmin && item.name === "Youtube Link") ||
+          (currentUser?.isBookingAdmin &&
+            (item.name === "Mass Bookings" || item.name === "Retreat Bookings"))
+        )
+          return (
+            <NavItem
+              onClick={() => navigate(`${item.link}`)}
+              fontWeight={500}
+              key={item.name}
+              icon={item.icon}
+            >
+              {item.name}
+            </NavItem>
+          );
+      })}
     </Box>
   );
 };
@@ -166,9 +181,9 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
   );
 };
 
-const sessionStorage = db();
-
 export const MobileNav = ({ onOpen }: MobileProps) => {
+  const currentUser = db();
+  console.log(currentUser);
   const navigate = useNavigate();
   const query = useQueryClient();
 
@@ -208,16 +223,11 @@ export const MobileNav = ({ onOpen }: MobileProps) => {
               _focus={{ boxShadow: "none" }}
             >
               <HStack>
-                {sessionStorage?.profilePic ? (
-                  <Avatar
-                    size={"sm"}
-                    src={
-                      "https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
-                    }
-                  />
-                ) : (
-                  <NoImage />
-                )}
+                <Avatar
+                  size="sm"
+                  name={currentUser?.name}
+                  src={currentUser?.profilePic}
+                />
                 <VStack
                   display={{ base: "none", md: "flex" }}
                   alignItems="flex-start"
@@ -225,10 +235,18 @@ export const MobileNav = ({ onOpen }: MobileProps) => {
                   ml="2"
                 >
                   <Text fontSize="sm" color="#fff" fontWeight={700}>
-                    {sessionStorage?.name}
+                    {currentUser?.name}
                   </Text>
                   <Text fontSize="xs" color="#fff" fontWeight={700}>
-                    Admin
+                    {currentUser?.isAdmin
+                      ? "Admin"
+                      : currentUser?.isIntercessionAdmin
+                      ? "Intercession Admin"
+                      : currentUser?.isYoutubeLinkAdmin
+                      ? "Youtube Admin"
+                      : currentUser?.isBookingAdmin
+                      ? "Booking Admin"
+                      : ""}
                   </Text>
                 </VStack>
               </HStack>

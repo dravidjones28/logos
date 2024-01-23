@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@chakra-ui/react";
 import APIClient from "../../services/apiClient";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +17,9 @@ interface FetchResponse1 {
   name: string;
   isAdmin: boolean;
   isEditor: boolean;
+  isIntercessionAdmin: boolean;
+  isBookingAdmin: boolean;
+  isYoutubeLinkAdmin: boolean;
   profilePic: boolean;
   _id: string;
 }
@@ -26,6 +29,7 @@ const apiClient = new APIClient<FetchResponse1, Login>("/auth");
 const useLogin = () => {
   const toast = useToast();
   const navigate = useNavigate();
+  const query = useQueryClient();
 
   return useMutation<FetchResponse1, Error, Login>({
     mutationFn: (registerValues: Login) => apiClient.register(registerValues),
@@ -40,7 +44,8 @@ const useLogin = () => {
         duration: 3000,
       });
 
-      console.log(res);
+      query.clear();
+      sessionStorage.clear();
 
       const objectString = JSON.stringify({
         accesstoken: res.accessToken,
@@ -48,6 +53,9 @@ const useLogin = () => {
         email: login.email,
         isAdmin: res.isAdmin,
         isEditor: res.isEditor,
+        isIntercessionAdmin: res.isIntercessionAdmin,
+        isBookingAdmin: res.isBookingAdmin,
+        isYoutubeLinkAdmin: res.isYoutubeLinkAdmin,
         _id: res._id,
         profilePic: res.profilePic,
       });
