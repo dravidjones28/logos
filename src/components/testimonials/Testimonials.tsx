@@ -35,6 +35,7 @@ const Testimonials = () => {
       >
         {firstThree?.map((t) => (
           <TestimonialComponent
+            key={t._id}
             _id={t._id ? `testimonials/${t._id}` : ""}
             imageUrl={t.testimonialImage}
             name={t.testimonalName}

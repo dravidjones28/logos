@@ -1,56 +1,54 @@
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import LGBox from "../components/common/LGBox";
 import {
   Box,
   Button,
   Card,
-  Center,
   Flex,
   FormControl,
   FormHelperText,
   FormLabel,
   Input,
-  InputGroup,
-  InputRightElement,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormCard from "../components/common/FormCard";
 import { Link, useLocation } from "react-router-dom";
-import useLogin from "../hooks/login/useLogin";
 import { Spinner } from "@chakra-ui/react";
 import Footer from "../components/footer/Footer";
+import useForgotPassword from "../hooks/forgotpassword/useForgotPassword";
 
 const schema = z.object({
   email: z.string().min(4, "Minimum of 4 Characters").email(),
-  password: z.string().min(4, "Minimum of 4 Characters"),
 });
 
-export type RegisterData = z.infer<typeof schema>;
+export type ForgotPasswordData = z.infer<typeof schema>;
 
-const RegisterPage = () => {
+const ForgotPassword = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  const login = useLogin();
+  const forgotPassword = useForgotPassword();
 
   const {
     register: data,
     handleSubmit,
     formState: { errors },
-  } = useForm<RegisterData>({ resolver: zodResolver(schema) });
+  } = useForm<ForgotPasswordData>({ resolver: zodResolver(schema) });
 
-  const [showPassword, setShowPassword] = useState(false);
-  const onSubmit = (data: RegisterData) => {
-    login.mutate(data);
+  const onSubmit = (data: ForgotPasswordData) => {
+    const temp = {
+      ...data,
+      redirectUrl: "https://logosretreatcentre.com/passwordReset",
+    };
+    forgotPassword.mutate(temp);
   };
 
   return (
@@ -65,8 +63,8 @@ const RegisterPage = () => {
           <Card>
             <FormCard
               width={280}
-              title1="Sign In"
-              title2=" Enter your email and password to sign in"
+              title1="Forgot Password!"
+              title2="Enter your email"
             />
 
             <Box
@@ -86,31 +84,7 @@ const RegisterPage = () => {
                       </FormHelperText>
                     )}
                   </FormControl>
-                  <FormControl isInvalid={errors.password ? true : false}>
-                    <FormLabel>Password</FormLabel>
-                    <InputGroup>
-                      <Input
-                        {...data("password")}
-                        type={showPassword ? "text" : "password"}
-                      />
 
-                      <InputRightElement h={"full"}>
-                        <Button
-                          variant={"ghost"}
-                          onClick={() =>
-                            setShowPassword((showPassword) => !showPassword)
-                          }
-                        >
-                          {showPassword ? <ViewIcon /> : <ViewOffIcon />}
-                        </Button>
-                      </InputRightElement>
-                    </InputGroup>
-                    {errors.password && (
-                      <FormHelperText color="red">
-                        {errors.password.message}
-                      </FormHelperText>
-                    )}
-                  </FormControl>
                   <Stack
                     direction={{ base: "column", sm: "row" }}
                     align={"start"}
@@ -127,33 +101,24 @@ const RegisterPage = () => {
                       _hover={{
                         bg: "blue.500",
                       }}
-                      disabled={login.isPending ? true : false}
+                      disabled={forgotPassword.isPending ? true : false}
                     >
-                      {login.isPending ? <Spinner /> : "Sign in"}
+                      {forgotPassword.isPending ? <Spinner /> : "Send"}
                     </Button>
                   </Stack>
                 </form>
-                <Box pt={6}>
-                  <Center>
+                <Stack pt={6}>
+                  <Text align={"center"}>
+                    Forget it,
                     <Link
                       style={{ color: "#3182CE", cursor: "pointer" }}
-                      to="/forgotPassword"
+                      to="/login"
                     >
-                      {`Forgot Password?`}
+                      {` Send me `}
                     </Link>
-                  </Center>
-                  <Stack>
-                    <Text align={"center"}>
-                      Don't have an account?
-                      <Link
-                        style={{ color: "#3182CE", cursor: "pointer" }}
-                        to="/register"
-                      >
-                        {` Register`}
-                      </Link>
-                    </Text>
-                  </Stack>
-                </Box>
+                    back to the sign in screen
+                  </Text>
+                </Stack>
               </Stack>
             </Box>
           </Card>
@@ -164,4 +129,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default ForgotPassword;

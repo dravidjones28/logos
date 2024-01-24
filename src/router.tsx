@@ -42,6 +42,9 @@ import AdminPrivateRoute from "./components/AdminPrivateRoute";
 import IsIntercessionPrivateRoute from "./components/IsIntercessionPrivateRoute";
 import IsBookingAdminPrivateRoute from "./components/IsBookingAdminPrivateRoute";
 import YoutubeAdminPrivateRoute from "./components/YoutubeAdminPrivateRoute";
+import ForgotPassword from "./pages/ForgotPassword";
+import EmailSent from "./pages/EmailSent";
+import VerifyPassword from "./pages/VerifyPassword";
 
 const router = createBrowserRouter([
   // For All Users
@@ -155,6 +158,19 @@ const router = createBrowserRouter([
         path: "refund",
         element: <Refund />,
       },
+      {
+        path: "forgotPassword",
+        element: <ForgotPassword />,
+      },
+      {
+        path: "emailSent/:userEmail?/:reset?",
+        element: <EmailSent />,
+      },
+      {
+        path: "passwordreset/:userId/:resetString",
+        element: <VerifyPassword />,
+      },
+
       // {
       //   path: "playground/:slog",
       //   element: <Playground />,

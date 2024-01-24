@@ -1,10 +1,8 @@
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import LGBox from "../components/common/LGBox";
 import {
   Box,
   Button,
   Card,
-  Center,
   Flex,
   FormControl,
   FormHelperText,
@@ -13,7 +11,6 @@ import {
   InputGroup,
   InputRightElement,
   Stack,
-  Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -21,36 +18,51 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormCard from "../components/common/FormCard";
-import { Link, useLocation } from "react-router-dom";
-import useLogin from "../hooks/login/useLogin";
+import { useLocation, useParams } from "react-router-dom";
 import { Spinner } from "@chakra-ui/react";
 import Footer from "../components/footer/Footer";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import useVerifyPassword from "../hooks/forgotpassword/useVerifyPassword";
 
-const schema = z.object({
-  email: z.string().min(4, "Minimum of 4 Characters").email(),
-  password: z.string().min(4, "Minimum of 4 Characters"),
-});
+const schema = z
+  .object({
+    password: z.string().min(4, "Minimum of 4 Characters"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
-export type RegisterData = z.infer<typeof schema>;
+export type VerifyPasswordData = z.infer<typeof schema>;
 
-const RegisterPage = () => {
+const VerifyPassword = () => {
   const { pathname } = useLocation();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword1, setShowPassword1] = useState(false);
+
+  const { userId, resetString } = useParams();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  const login = useLogin();
+  const verifyPassword = useVerifyPassword();
 
   const {
     register: data,
     handleSubmit,
     formState: { errors },
-  } = useForm<RegisterData>({ resolver: zodResolver(schema) });
+  } = useForm<VerifyPasswordData>({ resolver: zodResolver(schema) });
 
-  const [showPassword, setShowPassword] = useState(false);
-  const onSubmit = (data: RegisterData) => {
-    login.mutate(data);
+  const onSubmit = (data: VerifyPasswordData) => {
+    const temp = {
+      newPassword: data.confirmPassword,
+      userId: userId ?? "",
+      resetString: resetString ?? "",
+    };
+
+    verifyPassword.mutate(temp);
   };
 
   return (
@@ -65,8 +77,8 @@ const RegisterPage = () => {
           <Card>
             <FormCard
               width={280}
-              title1="Sign In"
-              title2=" Enter your email and password to sign in"
+              title1="Set New Password!"
+              title2="Enter your new password"
             />
 
             <Box
@@ -77,15 +89,6 @@ const RegisterPage = () => {
             >
               <Stack spacing={4}>
                 <form onSubmit={handleSubmit((data) => onSubmit(data))}>
-                  <FormControl isInvalid={errors.email ? true : false}>
-                    <FormLabel>Email address</FormLabel>
-                    <Input {...data("email")} type="email" />
-                    {errors.email && (
-                      <FormHelperText color="red">
-                        {errors.email.message}
-                      </FormHelperText>
-                    )}
-                  </FormControl>
                   <FormControl isInvalid={errors.password ? true : false}>
                     <FormLabel>Password</FormLabel>
                     <InputGroup>
@@ -111,6 +114,34 @@ const RegisterPage = () => {
                       </FormHelperText>
                     )}
                   </FormControl>
+                  <FormControl
+                    isInvalid={errors.confirmPassword ? true : false}
+                  >
+                    <FormLabel>Confirm Password</FormLabel>
+                    <InputGroup>
+                      <Input
+                        {...data("confirmPassword")}
+                        type={showPassword1 ? "text" : "password"}
+                      />
+
+                      <InputRightElement h={"full"}>
+                        <Button
+                          variant={"ghost"}
+                          onClick={() =>
+                            setShowPassword1((showPassword1) => !showPassword1)
+                          }
+                        >
+                          {showPassword1 ? <ViewIcon /> : <ViewOffIcon />}
+                        </Button>
+                      </InputRightElement>
+                    </InputGroup>
+                    {errors.confirmPassword && (
+                      <FormHelperText color="red">
+                        {errors.confirmPassword.message}
+                      </FormHelperText>
+                    )}
+                  </FormControl>
+
                   <Stack
                     direction={{ base: "column", sm: "row" }}
                     align={"start"}
@@ -127,33 +158,12 @@ const RegisterPage = () => {
                       _hover={{
                         bg: "blue.500",
                       }}
-                      disabled={login.isPending ? true : false}
+                      disabled={verifyPassword.isPending ? true : false}
                     >
-                      {login.isPending ? <Spinner /> : "Sign in"}
+                      {verifyPassword.isPending ? <Spinner /> : "Update"}
                     </Button>
                   </Stack>
                 </form>
-                <Box pt={6}>
-                  <Center>
-                    <Link
-                      style={{ color: "#3182CE", cursor: "pointer" }}
-                      to="/forgotPassword"
-                    >
-                      {`Forgot Password?`}
-                    </Link>
-                  </Center>
-                  <Stack>
-                    <Text align={"center"}>
-                      Don't have an account?
-                      <Link
-                        style={{ color: "#3182CE", cursor: "pointer" }}
-                        to="/register"
-                      >
-                        {` Register`}
-                      </Link>
-                    </Text>
-                  </Stack>
-                </Box>
               </Stack>
             </Box>
           </Card>
@@ -164,4 +174,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default VerifyPassword;
