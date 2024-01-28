@@ -42,8 +42,6 @@ const YourBookings = () => {
     return date.toLocaleDateString("en-US", options);
   };
 
-  console.log(error);
-
   if (isLoading)
     return (
       <LGBox>

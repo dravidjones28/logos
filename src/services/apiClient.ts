@@ -6,6 +6,7 @@ export interface FetchResponse<T> {
   data: T;
 }
 
+// Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh
 let mainAPI = "https://sleepy-gold-pumps.cyclic.app/api";
 // let localAPI = "http://localhost:3000/api";
 
@@ -33,7 +34,12 @@ class APIClient<T, K> {
   }
 
   getAll = (config: AxiosRequestConfig) => {
-    return axiosInstance.get<T>(this.endpoint, config).then((res) => res.data);
+    const headers: AxiosRequestConfig["headers"] = {
+      Authorization: "Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh",
+    };
+    return axiosInstance
+      .get<T>(this.endpoint, { ...config, headers })
+      .then((res) => res.data);
   };
 
   getAll1 = (config: AxiosRequestConfig) => {
@@ -51,6 +57,8 @@ class APIClient<T, K> {
     const database = session();
     const headers: AxiosRequestConfig["headers"] = {
       "x-auth-token": database?.accesstoken,
+
+      Authorization: "Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh",
     };
     return axiosInstance
       .get<T>(this.endpoint, { ...config, headers })
@@ -72,6 +80,8 @@ class APIClient<T, K> {
     const database = session();
     const headers: AxiosRequestConfig["headers"] = {
       "x-auth-token": database?.accesstoken,
+
+      Authorization: "Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh",
     };
     return axiosInstance
       .get<T>(this.endpoint, { headers })
@@ -94,7 +104,10 @@ class APIClient<T, K> {
     const database = session();
 
     const headers: AxiosRequestConfig["headers"] = {
-      "x-auth-token": database?.accesstoken, // Provide a default value if session?.accesstoken is undefined
+      "x-auth-token": database?.accesstoken,
+
+      Authorization: "Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh",
+      // Provide a default value if session?.accesstoken is undefined
     };
     return axiosInstance
       .post<T>(this.endpoint, data, {
@@ -123,6 +136,8 @@ class APIClient<T, K> {
 
     const headers: AxiosRequestConfig["headers"] = {
       "x-auth-token": database?.accesstoken,
+
+      Authorization: "Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh",
     };
     return axiosInstance
       .post<T>(this.endpoint, data, {
@@ -182,7 +197,9 @@ class APIClient<T, K> {
     const database = session();
 
     const headers: AxiosRequestConfig["headers"] = {
-      "x-auth-token": database?.accesstoken, // Provide a default value if session?.accesstoken is undefined
+      "x-auth-token": database?.accesstoken,
+      Authorization: "Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh",
+      // Provide a default value if session?.accesstoken is undefined
     };
 
     return axiosInstance
@@ -195,9 +212,15 @@ class APIClient<T, K> {
   }
 
   register(data: K) {
-    return axiosInstance.post<T>(this.endpoint, data).then((res) => {
-      return res.data;
-    });
+    return axiosInstance
+      .post<T>(this.endpoint, data, {
+        headers: {
+          Authorization: "Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh",
+        },
+      })
+      .then((res) => {
+        return res.data;
+      });
   }
 
   payment(data: K) {
@@ -215,6 +238,7 @@ class APIClient<T, K> {
     const database = session();
     const headers: AxiosRequestConfig["headers"] = {
       "x-auth-token": database?.accesstoken,
+      Authorization: "Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh",
     };
     return axiosInstance
       .post<T>(this.endpoint, data, { headers })
@@ -238,7 +262,9 @@ class APIClient<T, K> {
     };
     const database = session();
     const headers: AxiosRequestConfig["headers"] = {
-      "x-auth-token": database?.accesstoken, // Provide a default value if session?.accesstoken is undefined
+      "x-auth-token": database?.accesstoken,
+      Authorization: "Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh",
+      // Provide a default value if session?.accesstoken is undefined
     };
     return axiosInstance
       .get<T>(this.endpoint + "/" + id, { headers })
@@ -248,6 +274,7 @@ class APIClient<T, K> {
   getWithAccess = (token: string) => {
     const headers: AxiosRequestConfig["headers"] = {
       "x-auth-token": token,
+      Authorization: "Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh",
     };
     return axiosInstance
       .get<T>(this.endpoint, { headers })
