@@ -11,6 +11,7 @@ interface MassBooking {
   normalIntentionTypes: string;
   normalIntentionField: string;
   gregorianIntentionField: string;
+  time: string;
   totalDays?: number;
   weekdayCost?: number;
   weekdays?: number;

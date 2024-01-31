@@ -72,6 +72,11 @@ const DashboardMassBooking = () => {
         accessorKey: "normalIntentionTypes",
       },
       {
+        header: "Time",
+        cell: (row) => row.renderValue(),
+        accessorKey: "time",
+      },
+      {
         header: "Dates",
         accessorKey: "massDate",
         // Cell: ({ value }: { value: Date[] }) => (

@@ -48,6 +48,7 @@ const schema = z.object({
 
   email: z.string().min(4, "Minimum of 4 Characters").email(),
   massType: z.string().min(1, "Please Select MassType"),
+  time: z.string().min(1, "Please select time slot"),
   phoneNumber: z.string().min(10, "Please Enter 10 digits").max(10),
   normalIntentionTypes: z
     .enum([
@@ -137,6 +138,10 @@ function MassBooking() {
   };
 
   const massPayment = useMassBooking();
+  const isDateValueArray = Array.isArray(dateValue);
+  const isDateValueNotEmpty = isDateValueArray && dateValue.length > 0;
+
+  console.log(isDateValueNotEmpty);
 
   console.log(dateValue);
   const onSubmit = (data: MassData) => {
@@ -156,6 +161,7 @@ function MassBooking() {
         // amount: Number(tableValues?.totalCost),
         email: data.email,
         massType: data.massType,
+        time: data.time,
         normalIntentionField: data.normalIntentionField
           ? `${data.normalIntentionField} ${data.normalIntentionField1}`
           : "None",
@@ -261,6 +267,24 @@ function MassBooking() {
                       </FormHelperText>
                     )}
                   </FormControl>
+                  <FormControl isInvalid={errors.time ? true : false}>
+                    <FormLabel>Choose Mass Timings</FormLabel>
+                    <Select
+                      placeholder="Select an option"
+                      {...data("time", { required: true })}
+                      // onChange={(e) => handleMassTypeChange(e.target.value)}
+                    >
+                      <option value="6:00 a.m">6.00 a.m</option>
+                      <option value="6:30 a.m">6.30 a.m</option>
+                      <option value="4:30 p.m">4.30 p.m</option>
+                      <option value="others">others</option>
+                    </Select>
+                    {errors.time && (
+                      <FormHelperText color="red">
+                        {errors.time.message}
+                      </FormHelperText>
+                    )}
+                  </FormControl>
                 </Stack>
                 {/* <Box display="flex" justifyContent="center" mt={5}> */}
                 <Box width="100%" mt={5}>
@@ -325,7 +349,7 @@ function MassBooking() {
                     <FormControl
                       isInvalid={errors.gregorianIntentionField ? true : false}
                     >
-                      <FormLabel>Gregorian Intention Field</FormLabel>
+                      <FormLabel>Gregorian souls masses</FormLabel>
                       <Textarea {...data("gregorianIntentionField")} />
                       {errors.gregorianIntentionField && (
                         <FormHelperText color="red">
@@ -427,6 +451,7 @@ function MassBooking() {
               </Box>
               {(selectedMassType === "Normal Intention" ? radioValue : true) &&
                 dateValue &&
+                isDateValueNotEmpty &&
                 !openTable && (
                   <Button colorScheme="blue" onClick={handleDate}>
                     Confirm Date

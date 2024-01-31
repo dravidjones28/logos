@@ -8,6 +8,7 @@ export interface YourBooking {
   weekends: number;
   massDate: string[];
   bookingName: string;
+  time: string;
   email: string;
   massType: string;
   normalIntentionField: string;
