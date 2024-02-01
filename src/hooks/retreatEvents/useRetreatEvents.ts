@@ -8,8 +8,7 @@ export interface RetreatEvents {
   ledBy: string;
   end: string;
   noOfDays: string;
-  nonAcCost: string;
-  acCost: string;
+  cost: string;
   slots: number;
 }
 

@@ -49,8 +49,7 @@ const schema = z
       .string()
       .min(3, "title must be contain minimum of 2 Characters"),
     ledBy: z.string().min(3, "Led By must be contain minimum of 2 Characters"),
-    nonAcCost: z.string().min(1, "cost is required"),
-    acCost: z.string().min(1, "cost is required"),
+    cost: z.string().min(1, "cost is required"),
     slots: z
       .string()
       .refine((value) => !isNaN(parseFloat(value)) && parseFloat(value) > 1, {
@@ -76,8 +75,7 @@ interface SingleEvent {
   ledBy: string;
   start: string;
   days: number;
-  nonAcCost: string;
-  acCost: string;
+  cost: string;
   slots: string;
 }
 
@@ -150,8 +148,7 @@ const BookRetreat: React.FC = () => {
         end: endDate.toISOString().replace(/T.*$/, ""),
         noOfDays: daysDifference.toString(),
         ledBy: data.ledBy,
-        nonAcCost: data.nonAcCost,
-        acCost: data.acCost,
+        cost: data.cost,
         slots: data.slots,
       };
 
@@ -205,8 +202,7 @@ const BookRetreat: React.FC = () => {
       ledBy: clickInfo.event.extendedProps.ledBy,
       start: formattedDate,
       days: clickInfo.event.extendedProps.noOfDays,
-      nonAcCost: clickInfo.event.extendedProps.nonAcCost,
-      acCost: clickInfo.event.extendedProps.acCost,
+      cost: clickInfo.event.extendedProps.cost,
       _id: clickInfo.event.extendedProps._id,
       slots: clickInfo.event.extendedProps.slots,
     });
@@ -352,13 +348,13 @@ const BookRetreat: React.FC = () => {
                 )}
               </FormControl>
               <FormControl my={5}>
-                <FormLabel>Non-AC cost</FormLabel>
+                <FormLabel>Cost</FormLabel>
                 <InputGroup>
                   <InputLeftElement marginTop="5px">
                     <Icon as={BiMoneyWithdraw} color="#5664d2" />
                   </InputLeftElement>
                   <Input
-                    {...register("nonAcCost", {
+                    {...register("cost", {
                       required: true,
                     })}
                     type="number"
@@ -368,41 +364,16 @@ const BookRetreat: React.FC = () => {
                       color: "gray.500",
                       fontSize: "15px",
                     }}
-                    placeholder="Non-AC Cost amount"
+                    placeholder="Cost amount"
                   />
                 </InputGroup>
-                {errors.nonAcCost && (
+                {errors.cost && (
                   <FormHelperText color="red">
-                    {errors.nonAcCost.message}
+                    {errors.cost.message}
                   </FormHelperText>
                 )}
               </FormControl>
-              <FormControl my={5}>
-                <FormLabel>AC Cost Amount</FormLabel>
-                <InputGroup>
-                  <InputLeftElement marginTop="5px">
-                    <Icon as={BiMoneyWithdraw} color="#5664d2" />
-                  </InputLeftElement>
-                  <Input
-                    {...register("acCost", {
-                      required: true,
-                    })}
-                    type="number"
-                    size="lg"
-                    _placeholder={{
-                      opacity: 1,
-                      color: "gray.500",
-                      fontSize: "15px",
-                    }}
-                    placeholder="AC Cost amount"
-                  />
-                </InputGroup>
-                {errors.acCost && (
-                  <FormHelperText color="red">
-                    {errors.acCost.message}
-                  </FormHelperText>
-                )}
-              </FormControl>
+
               <FormControl my={5}>
                 <FormLabel>Slots</FormLabel>
                 <InputGroup>
@@ -528,12 +499,8 @@ const BookRetreat: React.FC = () => {
               <span style={{ fontWeight: 700 }}>{singleEvent?.ledBy}</span>
             </Text>
             <Text fontWeight={500} my={3}>
-              Non-AC Cost :{" "}
-              <span style={{ fontWeight: 700 }}>{singleEvent?.nonAcCost}</span>
-            </Text>
-            <Text fontWeight={500} my={3}>
-              AC Cost :{" "}
-              <span style={{ fontWeight: 700 }}>{singleEvent?.acCost}</span>
+              Cost :{" "}
+              <span style={{ fontWeight: 700 }}>{singleEvent?.cost}</span>
             </Text>
             <Text fontWeight={500} my={3}>
               Slots :{" "}
