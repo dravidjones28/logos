@@ -16,6 +16,7 @@ export interface YourBooking {
   gregorianIntentionField: string;
   phone: number;
   date?: any;
+  amount: number;
 }
 const apiClient = new APIClient<YourBooking[], null>("/massVerifyPayment");
 

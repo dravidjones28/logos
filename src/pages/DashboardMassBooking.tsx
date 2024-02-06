@@ -103,6 +103,11 @@ const DashboardMassBooking = () => {
         ),
       },
       {
+        header: "Amount",
+        cell: (row) => row.renderValue(),
+        accessorKey: "amount",
+      },
+      {
         header: "Intention received on",
         cell: (row) => row.renderValue(),
         accessorKey: "date",
@@ -120,6 +125,7 @@ const DashboardMassBooking = () => {
     "Dates",
     "Time",
     "Intention received on",
+    "Amount",
   ];
 
   function handleDownloadExcel() {
@@ -132,6 +138,7 @@ const DashboardMassBooking = () => {
       massDate: item.massDate.join(", "),
       time: item.time,
       dateReceived: item.date,
+      amount: item.amount ?? "none",
     }));
     downloadExcel({
       fileName: "Mass Bookings",
