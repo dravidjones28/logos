@@ -33,6 +33,15 @@ interface Item {
 const DashboardMassBooking = () => {
   const { data: massBookingData, error, isLoading } = useMassBooking();
 
+  const filteredDate = massBookingData?.results.map((item) => {
+    const dateObject = new Date(item?.date);
+
+    // Format the date as a normal date
+    const normalDate = dateObject.toLocaleDateString();
+    item.date = normalDate;
+    return item;
+  });
+
   const massBooking = useMassBookingQuery((s) => s.massBookings);
   const setMassDate = useMassBookingQuery((s) => s.setMassDate);
   const setNextPage = useMassBookingQuery((s) => s.setMassPage);
@@ -44,6 +53,7 @@ const DashboardMassBooking = () => {
     massBooking.limit ? page * massBooking?.limit >= totalCount : false;
 
   const formatMassDate = (massDate: string[]) => massDate.join(", ");
+
   const cols = useMemo<ColumnDef<Item>[]>(
     () => [
       {
@@ -92,6 +102,11 @@ const DashboardMassBooking = () => {
           </Box>
         ),
       },
+      {
+        header: "Intention received on",
+        cell: (row) => row.renderValue(),
+        accessorKey: "date",
+      },
     ],
     []
   );
@@ -99,21 +114,24 @@ const DashboardMassBooking = () => {
   const header = [
     "Booking Name",
     "Mass type",
-
     "Normal Intention",
     "Gregorian Intention",
     "Type",
     "Dates",
+    "Time",
+    "Intention received on",
   ];
 
   function handleDownloadExcel() {
-    const transformedBody = (massBookingData?.results || []).map((item) => ({
+    const transformedBody = (filteredDate || []).map((item) => ({
       bookingName: item.bookingName,
       massType: item.massType,
       normalIntentionField: item.normalIntentionField,
       gregorianIntentionField: item.gregorianIntentionField,
       normalIntentionTypes: item.normalIntentionTypes,
       massDate: item.massDate.join(", "),
+      time: item.time,
+      dateReceived: item.date,
     }));
     downloadExcel({
       fileName: "Mass Bookings",
@@ -137,6 +155,7 @@ const DashboardMassBooking = () => {
       >
         Mass Booking
       </Heading>
+
       <Box
         display="flex"
         gap={4}
@@ -268,7 +287,7 @@ const DashboardMassBooking = () => {
         </Flex>
       </Box>
       <TableComp
-        data={massBookingData?.results ? massBookingData?.results : []}
+        data={filteredDate ? filteredDate : []}
         columns={cols}
         elementRef={tableRef}
       />

@@ -101,7 +101,7 @@ const YourMassOffering = () => {
                       Intention Type: {item.normalIntentionTypes}
                     </Text>
                     <Text fontWeight={500}>
-                      Your Intention : {item.normalIntentionField}
+                      Intention Name : {item.normalIntentionField}
                     </Text>
                   </>
                 )}

@@ -8,7 +8,6 @@ import {
   Input,
   FormHelperText,
   Select,
-  Textarea,
   RadioGroup,
   Radio,
   Button,
@@ -70,7 +69,14 @@ const schema = z.object({
     .string()
     .min(2, "Last Name should contain atleast 2 characters")
     .optional(),
-  gregorianIntentionField: z.string().min(2).optional(),
+  gregorianIntentionField: z
+    .string()
+    .min(2, "First Name should contain atleast 2 characters")
+    .optional(),
+  gregorianIntentionField1: z
+    .string()
+    .min(2, "Last Name should contain atleast 2 characters")
+    .optional(),
 });
 
 export type MassData = z.infer<typeof schema>;
@@ -118,6 +124,7 @@ function MassBooking() {
     setRadioValue(e);
     setOpenTable(false);
   };
+  console.log(errors);
 
   const handleDate = () => {
     setOpenTable(true);
@@ -129,6 +136,7 @@ function MassBooking() {
     if (value === "Normal Intention") {
       // Unregister fields for Gregorian Intention
       unregister("gregorianIntentionField");
+      unregister("gregorianIntentionField1");
     } else if (value === "Gregorian Intention") {
       // Unregister fields for Normal Intention
       unregister("normalIntentionTypes");
@@ -169,7 +177,7 @@ function MassBooking() {
           ? data.normalIntentionTypes
           : "None",
         gregorianIntentionField: data.gregorianIntentionField
-          ? data.gregorianIntentionField
+          ? `${data.gregorianIntentionField} ${data.gregorianIntentionField1}`
           : "None",
 
         massDate: temp,
@@ -346,17 +354,40 @@ function MassBooking() {
                   )}
 
                   {selectedMassType === "Gregorian Intention" && (
-                    <FormControl
-                      isInvalid={errors.gregorianIntentionField ? true : false}
-                    >
-                      <FormLabel>Gregorian souls masses</FormLabel>
-                      <Textarea {...data("gregorianIntentionField")} />
-                      {errors.gregorianIntentionField && (
-                        <FormHelperText color="red">
-                          {errors.gregorianIntentionField.message}
-                        </FormHelperText>
-                      )}
-                    </FormControl>
+                    <>
+                      <FormLabel>GREGORIAN SOULS MASSES</FormLabel>
+                      <Stack direction={{ base: "column", lg: "row" }}>
+                        <Box>
+                          <FormLabel>First Name</FormLabel>
+                          <Input
+                            {...data("gregorianIntentionField")}
+                            type="text"
+                            placeholder="Enter First Name"
+                            width="300px"
+                          />
+                          {errors.gregorianIntentionField && (
+                            <FormHelperText color="red">
+                              {errors.gregorianIntentionField.message}
+                            </FormHelperText>
+                          )}
+                        </Box>
+                        <Box>
+                          <FormLabel>Last Name</FormLabel>
+
+                          <Input
+                            {...data("gregorianIntentionField1")}
+                            type="text"
+                            placeholder="Enter Last Name"
+                            width="300px"
+                          />
+                          {errors.gregorianIntentionField1 && (
+                            <FormHelperText color="red">
+                              {errors.gregorianIntentionField1.message}
+                            </FormHelperText>
+                          )}
+                        </Box>
+                      </Stack>
+                    </>
                   )}
                 </Box>
                 {/* </Box> */}
