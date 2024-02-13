@@ -84,7 +84,6 @@ const YourBookings = () => {
         mt={{ base: 5, lg: "20px" }}
       >
         {yourBookings.map((item) => {
-          console.log(item);
           return (
             <Card p={5}>
               <Stack>

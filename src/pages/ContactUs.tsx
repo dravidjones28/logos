@@ -1,7 +1,7 @@
 import LGBox from "../components/common/LGBox";
 import {
   Box,
-  // Button,
+  Button,
   Center,
   FormControl,
   FormLabel,
@@ -15,7 +15,8 @@ import {
   Textarea,
   Text,
   FormHelperText,
-  // Spinner,
+  useToast,
+  Spinner,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -23,10 +24,11 @@ import { BsPerson } from "react-icons/bs";
 import { MdOutlineEmail } from "react-icons/md";
 
 import z from "zod";
-// import useAddContactUs from "../hooks/contactUs/useAddContactUs";
+import useAddContactUs from "../hooks/contactUs/useAddContactUs";
 import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Footer from "../components/footer/Footer";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const schema = z.object({
   fullName: z
@@ -44,6 +46,12 @@ type FormData = z.infer<typeof schema>;
 
 const ContactUs = () => {
   const { pathname } = useLocation();
+  const [captachaDone, setCaptachaDone] = useState<any>(false);
+  const toast = useToast();
+
+  const handleCaptacha = (value: any) => {
+    setCaptachaDone(value);
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -53,15 +61,15 @@ const ContactUs = () => {
     register,
     handleSubmit,
     formState: { errors },
-    // reset,
+    reset,
     setValue,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
-  // const addContectUs = useAddContactUs(() => {
-  //   reset();
-  // });
+  const addContectUs = useAddContactUs(() => {
+    reset();
+  });
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
@@ -70,8 +78,18 @@ const ContactUs = () => {
   };
 
   const onSubmit = (data: FormData) => {
-    // addContectUs.mutate(data);
-    console.log(data);
+    if (!captachaDone) {
+      return toast({
+        title: "Failed",
+        description: `Please complete the reCAPTCHA`,
+        position: "top",
+        status: "error",
+        isClosable: true,
+        duration: 3000,
+      });
+    } else {
+      addContectUs.mutate(data);
+    }
   };
 
   return (
@@ -192,7 +210,11 @@ const ContactUs = () => {
                   )}
                 </FormControl>
                 <FormControl>
-                  {/* <Button
+                  <ReCAPTCHA
+                    sitekey="6LelIHEpAAAAAH_8c0NNAEn-yHMQ6UkAM08tqWC6"
+                    onChange={handleCaptacha}
+                  />
+                  <Button
                     variant="solid"
                     bg="#0D74FF"
                     color="white"
@@ -203,7 +225,7 @@ const ContactUs = () => {
                     disabled={addContectUs.isPending ? true : false}
                   >
                     {addContectUs.isPending ? <Spinner /> : "send messages"}
-                  </Button> */}
+                  </Button>
                 </FormControl>
               </Box>
             </form>

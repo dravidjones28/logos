@@ -124,14 +124,12 @@ function MassBooking() {
     setRadioValue(e);
     setOpenTable(false);
   };
-  console.log(errors);
 
   const handleDate = () => {
     setOpenTable(true);
   };
 
   const handleMassTypeChange = (value: string) => {
-    console.log(value);
     setValue("massType", value);
     if (value === "Normal Intention") {
       // Unregister fields for Gregorian Intention
@@ -207,7 +205,6 @@ function MassBooking() {
     "Thanksgiving Mass on religious vocation",
   ];
 
-  console.log(radioValue);
   return (
     <LGBox>
       <Box height="100%" bg="#eef0f3">
@@ -481,7 +478,7 @@ function MassBooking() {
               </Box>
               {(selectedMassType === "Normal Intention" ? radioValue : true) &&
                 dateValue &&
-                (isDateValueNotEmpty || radioValue === "1") &&
+                (isDateValueNotEmpty || dateValue.toString().length) &&
                 !openTable && (
                   <Button colorScheme="blue" onClick={handleDate}>
                     Confirm Date
@@ -494,14 +491,16 @@ function MassBooking() {
                   : true) &&
                   dateValue &&
                   openTable && (
-                    <Button
-                      isDisabled={massPayment.isPending ? true : false}
-                      // isDisabled={true}
-                      colorScheme="blue"
-                      type="submit"
-                    >
-                      {massPayment.isPending ? <Spinner /> : "Confirm"}
-                    </Button>
+                    <>
+                      <Button
+                        isDisabled={massPayment.isPending ? true : false}
+                        // isDisabled={true}
+                        colorScheme="blue"
+                        type="submit"
+                      >
+                        {massPayment.isPending ? <Spinner /> : "Confirm"}
+                      </Button>
+                    </>
                   )}
               </Box>
             </form>

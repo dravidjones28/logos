@@ -15,6 +15,9 @@ import {
   Textarea,
   Text,
   FormHelperText,
+  useToast,
+  Button,
+  Spinner,
   // Spinner,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,10 +26,12 @@ import { BsPerson } from "react-icons/bs";
 import { MdOutlineEmail } from "react-icons/md";
 
 import z from "zod";
-// import useAddPrayerRequest from "../hooks/prayerRequest/useAddPrayerRequest";
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Footer from "../components/footer/Footer";
+import useAuth from "../hooks/useAuth";
+import useAddPrayerRequest from "../hooks/prayerRequest/useAddPrayerRequest";
+import ReCAPTCHA from "react-google-recaptcha";
 const schema = z.object({
   fullName: z
     .string()
@@ -43,6 +48,13 @@ type FormData = z.infer<typeof schema>;
 
 const PrayerRequest = () => {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const toast = useToast();
+  const [captachaDone, setCaptachaDone] = useState<any>(false);
+
+  const handleCaptacha = (value: any) => {
+    setCaptachaDone(value);
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -51,15 +63,17 @@ const PrayerRequest = () => {
     register,
     handleSubmit,
     formState: { errors },
-    // reset,
+    reset,
     setValue,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
-  // const addPrayerRequest = useAddPrayerRequest(() => {
-  //   reset();
-  // });
+  const addPrayerRequest = useAddPrayerRequest(() => {
+    reset();
+  });
+
+  const auth = useAuth();
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
@@ -68,8 +82,28 @@ const PrayerRequest = () => {
   };
 
   const onSubmit = (data: FormData) => {
-    // addPrayerRequest.mutate(data);
-    console.log(data);
+    if (!captachaDone) {
+      return toast({
+        title: "Failed",
+        description: `Please complete the reCAPTCHA`,
+        position: "top",
+        status: "error",
+        isClosable: true,
+        duration: 3000,
+      });
+    } else if (auth) {
+      addPrayerRequest.mutate(data);
+    } else {
+      toast({
+        title: "Please Login In",
+        description: "To offer your prayer request",
+        position: "top",
+        status: "error",
+        isClosable: true,
+        duration: 3000,
+      });
+      navigate("/login");
+    }
   };
 
   return (
@@ -191,7 +225,11 @@ const PrayerRequest = () => {
                   )}
                 </FormControl>
                 <FormControl>
-                  {/* <Button
+                  <ReCAPTCHA
+                    sitekey="6LelIHEpAAAAAH_8c0NNAEn-yHMQ6UkAM08tqWC6"
+                    onChange={handleCaptacha}
+                  />
+                  <Button
                     variant="solid"
                     bg="#0D74FF"
                     color="white"
@@ -202,7 +240,7 @@ const PrayerRequest = () => {
                     textTransform="uppercase"
                   >
                     {addPrayerRequest.isPending ? <Spinner /> : "pray for me"}
-                  </Button> */}
+                  </Button>
                 </FormControl>
               </Box>
             </form>
