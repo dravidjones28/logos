@@ -70,7 +70,7 @@ const ContactUs = () => {
   };
 
   const onSubmit = (data: FormData) => {
-    addContectUs.mutate(data);
+    // addContectUs.mutate(data);
   };
 
   return (
