@@ -147,11 +147,9 @@ function MassBooking() {
 
   const massPayment = useMassBooking();
   const isDateValueArray = Array.isArray(dateValue);
+
   const isDateValueNotEmpty = isDateValueArray && dateValue.length > 0;
 
-  console.log(isDateValueNotEmpty);
-
-  console.log(dateValue);
   const onSubmit = (data: MassData) => {
     let temp: any = [];
 
@@ -209,6 +207,7 @@ function MassBooking() {
     "Thanksgiving Mass on religious vocation",
   ];
 
+  console.log(radioValue);
   return (
     <LGBox>
       <Box height="100%" bg="#eef0f3">
@@ -482,7 +481,7 @@ function MassBooking() {
               </Box>
               {(selectedMassType === "Normal Intention" ? radioValue : true) &&
                 dateValue &&
-                isDateValueNotEmpty &&
+                (isDateValueNotEmpty || radioValue === "1") &&
                 !openTable && (
                   <Button colorScheme="blue" onClick={handleDate}>
                     Confirm Date
