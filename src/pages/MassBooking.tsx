@@ -245,6 +245,7 @@ function MassBooking() {
                       </FormHelperText>
                     )}
                   </FormControl>
+
                   <FormControl isInvalid={errors.phoneNumber ? true : false}>
                     <FormLabel>Phone Number</FormLabel>
                     <Input {...data("phoneNumber")} type="number" />
@@ -386,7 +387,6 @@ function MassBooking() {
                     </>
                   )}
                 </Box>
-                {/* </Box> */}
               </Box>
               <Box>
                 {selectedMassType === "Gregorian Intention" ? (
@@ -478,7 +478,7 @@ function MassBooking() {
               </Box>
               {(selectedMassType === "Normal Intention" ? radioValue : true) &&
                 dateValue &&
-                (isDateValueNotEmpty || dateValue.toString().length) &&
+                (isDateValueNotEmpty || dateValue.toString().length > 0) &&
                 !openTable && (
                   <Button colorScheme="blue" onClick={handleDate}>
                     Confirm Date
