@@ -68,7 +68,7 @@ const PrayerRequest = () => {
   };
 
   const onSubmit = (data: FormData) => {
-    addPrayerRequest.mutate(data);
+    // addPrayerRequest.mutate(data);
   };
 
   return (

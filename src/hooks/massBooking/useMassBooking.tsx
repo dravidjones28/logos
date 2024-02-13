@@ -34,6 +34,7 @@ const useMassBooking = () => {
     onSuccess: async (res, _massBooking) => {
       try {
         const url = res;
+        console.log(url);
         window.open(url);
         navigate("/", { replace: true });
         return query.clear();
