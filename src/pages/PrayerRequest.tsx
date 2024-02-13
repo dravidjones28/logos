@@ -1,7 +1,7 @@
 import LGBox from "../components/common/LGBox";
 import {
   Box,
-  Button,
+  // Button,
   Center,
   FormControl,
   FormLabel,
@@ -15,7 +15,7 @@ import {
   Textarea,
   Text,
   FormHelperText,
-  Spinner,
+  // Spinner,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -23,7 +23,7 @@ import { BsPerson } from "react-icons/bs";
 import { MdOutlineEmail } from "react-icons/md";
 
 import z from "zod";
-import useAddPrayerRequest from "../hooks/prayerRequest/useAddPrayerRequest";
+// import useAddPrayerRequest from "../hooks/prayerRequest/useAddPrayerRequest";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import Footer from "../components/footer/Footer";
@@ -51,15 +51,15 @@ const PrayerRequest = () => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
+    // reset,
     setValue,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
-  const addPrayerRequest = useAddPrayerRequest(() => {
-    reset();
-  });
+  // const addPrayerRequest = useAddPrayerRequest(() => {
+  //   reset();
+  // });
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
@@ -69,6 +69,7 @@ const PrayerRequest = () => {
 
   const onSubmit = (data: FormData) => {
     // addPrayerRequest.mutate(data);
+    console.log(data);
   };
 
   return (
@@ -190,7 +191,7 @@ const PrayerRequest = () => {
                   )}
                 </FormControl>
                 <FormControl>
-                  <Button
+                  {/* <Button
                     variant="solid"
                     bg="#0D74FF"
                     color="white"
@@ -201,7 +202,7 @@ const PrayerRequest = () => {
                     textTransform="uppercase"
                   >
                     {addPrayerRequest.isPending ? <Spinner /> : "pray for me"}
-                  </Button>
+                  </Button> */}
                 </FormControl>
               </Box>
             </form>

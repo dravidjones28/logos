@@ -1,7 +1,7 @@
 import LGBox from "../components/common/LGBox";
 import {
   Box,
-  Button,
+  // Button,
   Center,
   FormControl,
   FormLabel,
@@ -15,7 +15,7 @@ import {
   Textarea,
   Text,
   FormHelperText,
-  Spinner,
+  // Spinner,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -23,7 +23,7 @@ import { BsPerson } from "react-icons/bs";
 import { MdOutlineEmail } from "react-icons/md";
 
 import z from "zod";
-import useAddContactUs from "../hooks/contactUs/useAddContactUs";
+// import useAddContactUs from "../hooks/contactUs/useAddContactUs";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import Footer from "../components/footer/Footer";
@@ -53,15 +53,15 @@ const ContactUs = () => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
+    // reset,
     setValue,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
-  const addContectUs = useAddContactUs(() => {
-    reset();
-  });
+  // const addContectUs = useAddContactUs(() => {
+  //   reset();
+  // });
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
@@ -71,6 +71,7 @@ const ContactUs = () => {
 
   const onSubmit = (data: FormData) => {
     // addContectUs.mutate(data);
+    console.log(data);
   };
 
   return (
@@ -191,7 +192,7 @@ const ContactUs = () => {
                   )}
                 </FormControl>
                 <FormControl>
-                  <Button
+                  {/* <Button
                     variant="solid"
                     bg="#0D74FF"
                     color="white"
@@ -202,7 +203,7 @@ const ContactUs = () => {
                     disabled={addContectUs.isPending ? true : false}
                   >
                     {addContectUs.isPending ? <Spinner /> : "send messages"}
-                  </Button>
+                  </Button> */}
                 </FormControl>
               </Box>
             </form>
