@@ -226,7 +226,7 @@ const PrayerRequest = () => {
                 </FormControl>
                 <FormControl>
                   <ReCAPTCHA
-                    sitekey="6LelIHEpAAAAAH_8c0NNAEn-yHMQ6UkAM08tqWC6"
+                    sitekey="6LeuPXEpAAAAAA8MJFkwEvP-XwR4uLqNQlpAiIyI"
                     onChange={handleCaptacha}
                   />
                   <Button

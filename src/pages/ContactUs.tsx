@@ -25,10 +25,11 @@ import { MdOutlineEmail } from "react-icons/md";
 
 import z from "zod";
 import useAddContactUs from "../hooks/contactUs/useAddContactUs";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Footer from "../components/footer/Footer";
 import ReCAPTCHA from "react-google-recaptcha";
+import useAuth from "../hooks/useAuth";
 
 const schema = z.object({
   fullName: z
@@ -57,6 +58,8 @@ const ContactUs = () => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
+  const auth = useAuth();
+
   let {
     register,
     handleSubmit,
@@ -70,6 +73,8 @@ const ContactUs = () => {
   const addContectUs = useAddContactUs(() => {
     reset();
   });
+
+  const navigate = useNavigate();
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
@@ -87,8 +92,18 @@ const ContactUs = () => {
         isClosable: true,
         duration: 3000,
       });
-    } else {
+    } else if (auth) {
       addContectUs.mutate(data);
+    } else {
+      toast({
+        title: "Please Login In",
+        description: "To offer your prayer request",
+        position: "top",
+        status: "error",
+        isClosable: true,
+        duration: 3000,
+      });
+      navigate("/login");
     }
   };
 
@@ -211,7 +226,7 @@ const ContactUs = () => {
                 </FormControl>
                 <FormControl>
                   <ReCAPTCHA
-                    sitekey="6LelIHEpAAAAAH_8c0NNAEn-yHMQ6UkAM08tqWC6"
+                    sitekey="6LeuPXEpAAAAAA8MJFkwEvP-XwR4uLqNQlpAiIyI"
                     onChange={handleCaptacha}
                   />
                   <Button
