@@ -18,8 +18,6 @@ const Testimonial = () => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  console.log(testimonails);
-
   if (isLoading)
     return (
       <LGBox>

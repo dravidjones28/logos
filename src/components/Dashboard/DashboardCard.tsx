@@ -5,9 +5,9 @@ import {
   StatNumber,
   StatHelpText,
   Flex,
-  StatArrow,
+  // StatArrow,
   Box,
-  Text,
+  // Text,
   IconProps as ChakraIconProps,
 } from "@chakra-ui/react";
 import { ReactElement } from "react";
@@ -25,8 +25,8 @@ const DashboardCard = ({
   title,
   icon,
   stats,
-  statArrow,
-  statValue,
+  // statArrow,
+  // statValue,
   costName,
 }: CardDetails) => {
   return (
@@ -68,8 +68,8 @@ const DashboardCard = ({
         </Box>
         <StatHelpText mt={6}>
           <Flex>
-            <StatArrow type={statArrow} alignSelf="center" />
-            <Text fontWeight={500}>{statValue}% Since last month</Text>
+            {/* <StatArrow type={statArrow} alignSelf="center" /> */}
+            {/* <Text fontWeight={500}>{statValue}% Since last month</Text> */}
           </Flex>
         </StatHelpText>
       </Stat>
