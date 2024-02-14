@@ -7,23 +7,14 @@ export interface ChartProps {
 }
 
 interface Dashboard {
-  usersToday: { count: number; stats: number };
+  usersToday: { count: number };
   retreatBookingToday: {
     count: number;
-    stats: number;
-    cost: number;
-    monthCost: number;
-    totalYearCost: number;
-    graph: ChartProps[];
   };
   massBookingToday: {
     count: number;
-    stats: number;
-    cost: number;
-    monthCost: number;
-    totalYearCost: number;
   };
-  prayerRequestToday: { count: number; stats: number };
+  prayerRequestToday: { count: number };
 }
 const apiClient = new APIClient<Dashboard, Dashboard>("/stats");
 

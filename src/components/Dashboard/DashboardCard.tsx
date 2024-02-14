@@ -5,9 +5,7 @@ import {
   StatNumber,
   StatHelpText,
   Flex,
-  // StatArrow,
   Box,
-  // Text,
   IconProps as ChakraIconProps,
 } from "@chakra-ui/react";
 import { ReactElement } from "react";
@@ -17,18 +15,11 @@ interface CardDetails {
   title: string;
   icon: ReactElement<ChakraIconProps>;
   stats: number;
-  statArrow: "increase" | "decrease";
-  statValue: number;
+  // statArrow: "increase" | "decrease";
+  // statValue: number;
 }
 
-const DashboardCard = ({
-  title,
-  icon,
-  stats,
-  // statArrow,
-  // statValue,
-  costName,
-}: CardDetails) => {
+const DashboardCard = ({ title, icon, stats, costName }: CardDetails) => {
   return (
     <Card
       py={4}

@@ -36,7 +36,6 @@ const DashboardStats = () => {
 
   if (error || !stats) throw error;
 
-
   return (
     <>
       <SimpleGrid columns={{ base: 1, lg: 2, xl: 4 }} spacing={5} gap={10}>
@@ -44,33 +43,33 @@ const DashboardStats = () => {
           title=" Today's Retreat Booking"
           stats={stats.retreatBookingToday.count}
           icon={<Icon boxSize={6} as={GiTicket} color="#fff" />}
-          statArrow={
-            stats.retreatBookingToday.stats < 3 ? "decrease" : "increase"
-          }
-          statValue={stats.retreatBookingToday.stats}
+          // statArrow={
+          //   stats.retreatBookingToday.stats < 3 ? "decrease" : "increase"
+          // }
+          // statValue={stats.retreatBookingToday.stats}
         />
         <DashboardCard
           title=" Today's Mass Booking"
           stats={stats.massBookingToday.count}
           icon={<Icon boxSize={6} as={BiSolidChurch} color="#fff" />}
-          statArrow={stats.massBookingToday.stats < 3 ? "decrease" : "increase"}
-          statValue={stats.massBookingToday.stats}
+          // statArrow={stats.massBookingToday.stats < 3 ? "decrease" : "increase"}
+          // statValue={stats.massBookingToday.stats}
         />
         <DashboardCard
           title=" Today's User"
           stats={stats.usersToday.count}
           icon={<Icon boxSize={6} as={BiSolidUser} color="#fff" />}
-          statArrow={stats.usersToday.stats < 3 ? "decrease" : "increase"}
-          statValue={stats.usersToday.stats}
+          // statArrow={stats.usersToday.stats < 3 ? "decrease" : "increase"}
+          // statValue={stats.usersToday.stats}
         />
         <DashboardCard
           title=" Today's Prayer Request"
           stats={stats.prayerRequestToday.count}
           icon={<Icon boxSize={6} as={PiHandsPrayingLight} color="#fff" />}
-          statArrow={
-            stats.prayerRequestToday.stats < 3 ? "decrease" : "increase"
-          }
-          statValue={stats.prayerRequestToday.stats}
+          // statArrow={
+          // stats.prayerRequestToday.stats < 3 ? "decrease" : "increase"
+          // }
+          // statValue={stats.prayerRequestToday.stats}
         />
       </SimpleGrid>
       {/* <Grid
