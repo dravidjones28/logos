@@ -45,6 +45,7 @@ import YoutubeAdminPrivateRoute from "./components/YoutubeAdminPrivateRoute";
 import ForgotPassword from "./pages/ForgotPassword";
 import EmailSent from "./pages/EmailSent";
 import VerifyPassword from "./pages/VerifyPassword";
+import VerifyEmail from "./pages/VerifyEmail";
 
 const router = createBrowserRouter([
   // For All Users
@@ -93,14 +94,7 @@ const router = createBrowserRouter([
         path: "testimonials/:slug",
         element: <SingleTestimonial />,
       },
-      {
-        path: "prayer-request",
-        element: <PrayerRequest />,
-      },
-      {
-        path: "contact-us",
-        element: <ContactUs />,
-      },
+
       {
         path: "book-a-retreat",
         element: <BookRetreat />,
@@ -110,10 +104,7 @@ const router = createBrowserRouter([
         path: "facilities",
         element: <Facilities />,
       },
-      {
-        path: "mass-offering",
-        element: <MassBooking />,
-      },
+
       {
         path: "types-of-mass-offerings",
         element: <TypesOfMass />,
@@ -170,6 +161,10 @@ const router = createBrowserRouter([
         path: "passwordreset/:userId/:resetString",
         element: <VerifyPassword />,
       },
+      {
+        path: "verifyEmail/:userId/:email",
+        element: <VerifyEmail />,
+      },
 
       // {
       //   path: "playground/:slog",
@@ -190,12 +185,24 @@ const router = createBrowserRouter([
             element: <YourBookings />,
           },
           {
+            path: "mass-offering",
+            element: <MassBooking />,
+          },
+          {
+            path: "prayer-request",
+            element: <PrayerRequest />,
+          },
+          {
             path: "your-mass-offering",
             element: <YourMassOffering />,
           },
           {
             path: "book-a-retreat/booking/:slug",
             element: <Bookings />,
+          },
+          {
+            path: "contact-us",
+            element: <ContactUs />,
           },
         ],
       },

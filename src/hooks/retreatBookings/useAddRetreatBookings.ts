@@ -3,7 +3,7 @@ import { useToast } from "@chakra-ui/react";
 import APIClient from "../../services/apiClient";
 import { useNavigate } from "react-router-dom";
 
-interface FamilyMembers {
+export interface FamilyMembers {
   firstName?: string;
   lastName?: string;
   age?: number;
@@ -11,8 +11,9 @@ interface FamilyMembers {
   religion?: string;
 }
 
-interface AllRetreatBookings {
+export interface AllRetreatBookings {
   email?: string;
+  bookingName?: string;
   firstName?: string;
   lastName?: string;
   familyMembers?: FamilyMembers[] | [];

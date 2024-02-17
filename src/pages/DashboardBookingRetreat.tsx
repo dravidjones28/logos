@@ -1,271 +1,343 @@
-// import {
-//   Box,
-//   Card,
-//   Heading,
-//   Spinner,
-//   Table,
-//   Tbody,
-//   Td,
-//   Th,
-//   Thead,
-//   Tr,
-//   Text,
-//   Button,
-//   Input,
-//   Icon,
-//   Select,
-//   InputGroup,
-//   InputLeftElement,
-//   Flex,
-//   IconButton,
-//   Tooltip,
-//   Center,
-// } from "@chakra-ui/react";
-// import useRetreatBookingAll from "./../hooks/dashboard/retreatBookings/useRetreatBookingAll";
-// import useRetreatBookingQuery from "../store";
-// import { useRef, useState } from "react";
-// import { DownloadTableExcel } from "react-export-table-to-excel";
-// import { IoMdCloudDownload } from "react-icons/io";
-// import { CiSearch } from "react-icons/ci";
-// import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import {
+  Text,
+  Heading,
+  Button,
+  Flex,
+  Icon,
+  IconButton,
+  Input,
+  Select,
+  Tooltip,
+  Spinner,
+  Box,
+  Card,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  useDisclosure,
+} from "@chakra-ui/react";
+import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { FaDownload } from "react-icons/fa";
+import useRetreatBookingsAll from "../hooks/dashboard/retreatBookings/useRetreatBookingAll";
+import useRetreatQuery from "../store";
+import { useRef, useState } from "react";
+import { downloadExcel } from "react-export-table-to-excel";
+import { MdOutlinePrint } from "react-icons/md";
+import ReactToPrint from "react-to-print";
+import store from "../store";
+import { RetreatBooking } from "../hooks/retreatBookings/useYourBookings";
+import DashboardRetreatModal from "../components/Dashboard/DashboardRetreatModal";
 
 const DashboardBookingRetreat = () => {
-  // const { data: retreatBookingData, error, isLoading } = useRetreatBookingAll();
+  const {
+    data: retreatBookingData,
+    error,
+    isLoading,
+  } = useRetreatBookingsAll();
 
-  // const setPage = useRetreatBookingQuery((s) => s.setPage);
-  // const setPageSize1 = useRetreatBookingQuery((s) => s.setPageSize);
-  // const setSearchQuery = useRetreatBookingQuery((s) => s.setSearchQuery);
-  // const setTitle = useRetreatBookingQuery((s) => s.setTitle);
+  const retreatBookings = useRetreatQuery((s) => s.retreatBookings);
+  const setRetreatBookingDate = useRetreatQuery((s) => s.setRetreatBookingDate);
 
-  // const retreatBookingsStore = useRetreatBookingQuery((s) => s.retreatBookings);
+  const setNextPage = useRetreatQuery((s) => s.setRetreatBookingPage);
+  const setRetreatBookingLimit = useRetreatQuery(
+    (s) => s.setRetreatBookingPageSize
+  );
+  const setRetreatBookingPage = useRetreatQuery((s) => s.setRetreatBookingPage);
 
-  // const [titleTemp, setTitleTemp] = useState("");
-  // const [searchName, setSearchName] = useState("");
-  // const [limitTemp, setLimitTemp] = useState(10);
+  const isPrevButtonDisabled = (page: number) => page === 1;
+  const isNextButtonDisabled = (page: number, totalCount: number) =>
+    retreatBookings.pageSize
+      ? page * retreatBookings?.pageSize >= totalCount
+      : false;
 
-  // const handleBooking = (value: string, type: string) => {
-  //   if (type === "title") {
-  //     setTitleTemp(value);
-  //     setSearchName("");
-  //   } else if (type === "searchQuery") {
-  //     setTitleTemp("");
-  //     setSearchName(value);
-  //   } else if (type === "limit") {
-  //     setLimitTemp(Number(value));
-  //   }
-  // };
+  const header = [
+    "Booking Name",
+    "Email",
+    "Room Preference",
+    "Phone Number",
+    "Family or Individual",
+    "Event Title",
+    "Event Date",
+  ];
 
-  // const handleSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
-  //   e.preventDefault();
-  //   // if (searchName) {
-  //   setSearchQuery(searchName);
-  //   setTitle("all");
-  //   // }
-  //   if (limitTemp > 0) {
-  //     setPageSize1(limitTemp);
-  //   }
-  //   if (titleTemp.length > 0) {
-  //     setTitle(titleTemp);
-  //   }
-  // };
+  function handleDownloadExcel() {
+    const transformedBody = (retreatBookingData?.results || []).map((item) => ({
+      bookingName: item.bookingName ?? "",
+      email: item.email ?? "",
+      bookingForFamilyOrIndividual: item.bookingForFamilyOrIndividual ?? "",
+      phoneNumber: item.contactNumber ?? "",
 
-  // const tableRef = useRef(null);
-  // const uniqueEvents = Array.from(new Set(retreatBookingData?.events));
+      // Add other properties as needed
+    }));
+    downloadExcel({
+      fileName: "Retreat Bookings",
+      sheet: "Pr",
+      tablePayload: {
+        header,
+        body: transformedBody,
+      },
+    });
+  }
 
-  // const handleNext = (value: number, totalPages: number | undefined) => {
-  //   const nextPage = Math.min(value + 1, totalPages ? totalPages : 0);
-  //   setPage(nextPage);
-  // };
+  const tableRef = useRef<HTMLTableElement>(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  // const handlePrev = (value: number) => {
-  //   const prevPage = Math.max(value - 1, 1);
-  //   setPage(prevPage);
-  // };
-  // const isPrevButtonDisabled = (page: number) => page === 1;
-  // const isNextButtonDisabled = (page: number, totalCount: number) =>
-  //   page * limitTemp >= totalCount;
+  const setRetreatBooking = store((s) => s.setRetreatBookingsDashboard);
+  const [modalEvent, setModalEvent] = useState("");
 
-  // if (error) throw error;
+  const handleView = (booking: RetreatBooking) => {
+    onOpen();
+    setModalEvent(booking.events.title);
+    if (booking.bookingForFamilyOrIndividual === "individual") {
+      let temp = {
+        firstName: booking.firstName,
+        lastName: booking.lastName,
+        age: booking.age,
+        sex: booking.sex,
+        religion: booking.religion,
+      };
+
+      return setRetreatBooking([temp]);
+    } else {
+      if (booking.familyMembers) {
+        setRetreatBooking([...booking.familyMembers]);
+      }
+    }
+  };
+
+  if (isLoading) return <Spinner />;
+  if (error) throw error;
 
   return (
-    <p>Under testing process</p>
-    // <>
-    //   <Heading
-    //     fontSize={{ base: "1xl", lg: "2xl" }}
-    //     mb={{ base: 15, lg: 5 }}
-    //     mt={{ base: 5, lg: 0 }}
-    //   >
-    //     Retreat Booking
-    //   </Heading>
-    //   <Card mb={20}>
-    //     <Box
-    //       p={5}
-    //       display={{ base: "block", lg: "flex" }}
-    //       justifyContent="space-between"
-    //     >
-    //       <Select
-    //         // placeholder="Retreat Name"
-    //         width={{ base: "100%", md: "200px" }}
-    //         value={titleTemp}
-    //         onChange={(e) => handleBooking(e.target.value, "title")}
-    //         isDisabled={isLoading ? true : false}
-    //       >
-    //         {!uniqueEvents.includes("Retreat Name") && (
-    //           <option value="all">All</option>
-    //         )}
-    //         {uniqueEvents
-    //           .filter((item) => item !== "Retreat Name")
-    //           .map((item, index) => (
-    //             <option value={item} key={index}>
-    //               {item}
-    //             </option>
-    //           ))}
-    //       </Select>
-    //       <InputGroup width={{ base: "100%", md: "300px" }}>
-    //         <InputLeftElement>
-    //           <Icon as={CiSearch} color="#5664d2" />
-    //         </InputLeftElement>
-    //         <Input
-    //           onChange={(e) => handleBooking(e.target.value, "searchQuery")}
-    //           type="text"
-    //           size="md"
-    //           value={searchName}
-    //           _placeholder={{
-    //             opacity: 1,
-    //             color: "gray.500",
-    //             fontSize: "15px",
-    //           }}
-    //           placeholder="Search by Name"
-    //         />
-    //       </InputGroup>
-    //       <Select
-    //         // placeholder="Retreat Name"
-    //         width={{ base: "100%", md: "200px" }}
-    //         value={limitTemp}
-    //         onChange={(e) => handleBooking(e.target.value, "limit")}
-    //         isDisabled={isLoading ? true : false}
-    //       >
-    //         <option value={10}>Show 10</option>
-    //         <option value={20}>Show 20</option>
-    //         <option value={50}>Show 50</option>
-    //       </Select>
-    //       <Button onClick={handleSearch}>Search </Button>
-    //       <DownloadTableExcel
-    //         filename="Retreat Bookings"
-    //         sheet="users"
-    //         currentTableRef={tableRef.current}
-    //       >
-    //         <Icon
-    //           as={IoMdCloudDownload}
-    //           boxSize={7}
-    //           cursor="pointer"
-    //           _hover={{ color: "#ccc" }}
-    //         />
-    //       </DownloadTableExcel>
-    //     </Box>
-    //     <Box height="350px" overflowY="auto">
-    //       <Table variant="simple" size={{ base: "sm" }} ref={tableRef}>
-    //         <Thead>
-    //           <Tr>
-    //             <Th>No</Th>
-    //             <Th>Booking Person Name</Th>
-    //             <Th>Retreat Name</Th>
-    //             <Th>Persons</Th>
-    //             <Th>Date</Th>
-    //             <Th isNumeric>Amount</Th>
-    //           </Tr>
-    //         </Thead>
-    //         {isLoading ? (
-    //           <Box>
-    //             <Spinner />
-    //           </Box>
-    //         ) : retreatBookingData?.result.length === 0 ? (
-    //           <Center>
-    //             <Text fontWeight={500}>There are no retreat bookings</Text>
-    //           </Center>
-    //         ) : (
-    //           <Tbody>
-    //             {retreatBookingData?.result.map((item, index) => {
-    //               const persons = Object.keys(item.persons).map(
-    //                 (i) => item.persons[i]
-    //               );
+    <>
+      <Heading
+        fontSize={{ base: "1xl", lg: "2xl" }}
+        mb={{ base: 15, lg: 5 }}
+        mt={{ base: 5, lg: 0 }}
+      >
+        Retreat Bookings
+      </Heading>
 
-    //               return (
-    //                 <>
-    //                   <Tr key={index}>
-    //                     <Td fontWeight={500}>{index + 1}</Td>
-    //                     {/* <Td fontWeight={500}>{item.firstname}</Td> */}
-    //                     <Td color="grey">{item.events.title}</Td>
-    //                     <Td>
-    //                       {persons.map((per) => (
-    //                         <Text color="grey">{per}</Text>
-    //                       ))}
-    //                     </Td>
-    //                     <Td color="grey">{item.events.start}</Td>
-    //                     <Td color="#3182CE" isNumeric>
-    //                       {item.amount}
-    //                     </Td>
-    //                   </Tr>
-    //                 </>
-    //               );
-    //             })}
-    //           </Tbody>
-    //         )}
-    //       </Table>
-    //     </Box>
-    //     <Flex justifyContent="space-between" m={4} alignItems="center">
-    //       <Flex>
-    //         <Tooltip label="Previous Page">
-    //           <IconButton
-    //             bg="#fff"
-    //             _hover={{ bg: "#fff" }}
-    //             onClick={() => {
-    //               if (retreatBookingsStore.page) {
-    //                 handlePrev(retreatBookingsStore.page);
-    //               } else {
-    //                 handlePrev(1);
-    //               }
-    //             }}
-    //             isDisabled={isPrevButtonDisabled(
-    //               retreatBookingsStore.page || 1
-    //             )}
-    //             aria-label="Pagination prev"
-    //             icon={<ChevronLeftIcon h={6} w={6} />}
-    //             mr={4}
-    //           />
-    //         </Tooltip>
-    //         <Box display="flex" justifyContent="center" alignItems="center">
-    //           <Text mr={3}>
-    //             {retreatBookingsStore.page ? retreatBookingsStore.page : 1}
-    //           </Text>
-    //         </Box>
-    //         <Tooltip label="Next Page">
-    //           <IconButton
-    //             bg="#fff"
-    //             _hover={{ bg: "#fff" }}
-    //             aria-label="Pagination next"
-    //             onClick={() => {
-    //               if (retreatBookingsStore.page) {
-    //                 handleNext(
-    //                   retreatBookingsStore.page,
-    //                   retreatBookingData?.totalCount
-    //                 );
-    //               } else {
-    //                 handleNext(1, retreatBookingData?.totalCount);
-    //               }
-    //             }}
-    //             isDisabled={isNextButtonDisabled(
-    //               retreatBookingsStore?.page || 1,
-    //               retreatBookingData?.totalCount || 1
-    //             )}
-    //             // isDisabled={!canNextPage}
-    //             icon={<ChevronRightIcon h={6} w={6} />}
-    //           />
-    //         </Tooltip>
-    //       </Flex>
-    //     </Flex>
-    //   </Card>
-    // </>
+      <Box
+        display="flex"
+        gap={4}
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <Flex gap={4}>
+          <Select
+            // placeholder="Retreat Name"
+            width={{ base: "100%", md: "200px" }}
+            value={retreatBookings.pageSize}
+            onChange={(e) => {
+              setRetreatBookingLimit(Number(e.target.value));
+            }}
+            size="sm"
+            isDisabled={isLoading || retreatBookings.searchDate ? true : false}
+          >
+            <option value={10}>Show 10</option>
+            <option value={20}>Show 20</option>
+            <option value={50}>Show 50</option>
+            <option value={100}>Show 100</option>
+            <option value={200}>Show 200</option>
+          </Select>
+          <Input
+            value={retreatBookings.searchDate}
+            type="date"
+            width="200px"
+            onChange={(e) => setRetreatBookingDate(e.target.value)}
+            size="sm"
+            mb={{ base: "15px", lg: "0" }}
+          />
+          <Button
+            size="sm"
+            onClick={() => {
+              setRetreatBookingDate("");
+              setRetreatBookingPage(0, retreatBookingData?.count, "next");
+              setRetreatBookingLimit(10);
+            }}
+          >
+            All
+          </Button>
+          <Tooltip label="Download as excel">
+            <Box>
+              <Icon
+                as={FaDownload}
+                boxSize={4}
+                color="#666"
+                cursor="pointer"
+                _hover={{ color: "#ccc" }}
+                marginTop={2}
+                onClick={handleDownloadExcel}
+              />
+            </Box>
+          </Tooltip>
+          <Tooltip label="Print">
+            <Box>
+              <ReactToPrint
+                trigger={() => (
+                  <Icon
+                    as={MdOutlinePrint}
+                    boxSize={5}
+                    color="#666"
+                    cursor="pointer"
+                    _hover={{ color: "#ccc" }}
+                    marginTop={2}
+                  />
+                )}
+                content={() => tableRef?.current}
+              />
+            </Box>
+          </Tooltip>
+        </Flex>
+        <Flex gap={1} alignItems="center">
+          {retreatBookingData?.searchDateValuesLength && (
+            <Text>
+              {retreatBookingData?.searchDateValuesLength} of{" "}
+              {retreatBookingData?.count}
+            </Text>
+          )}
+          <Text color="grey">
+            {retreatBookingData?.next?.limit &&
+              `${retreatBookings.page}-${retreatBookingData?.next?.limit} of
+            ${retreatBookingData?.count}`}
+          </Text>
+          <Tooltip label="Previous Page">
+            <IconButton
+              bg="#fff"
+              _hover={{ bg: "#fff" }}
+              onClick={() => {
+                if (retreatBookings.page) {
+                  setNextPage(
+                    retreatBookings.page,
+                    retreatBookingData?.count,
+                    "prev"
+                  );
+                } else {
+                  setNextPage(1, retreatBookingData?.count, "prev");
+                }
+              }}
+              isDisabled={
+                retreatBookings.searchDate
+                  ? true
+                  : isPrevButtonDisabled(retreatBookings.page || 1)
+              }
+              aria-label="Pagination prev"
+              icon={<ChevronLeftIcon h={6} w={6} />}
+            />
+          </Tooltip>
+          <Text>{retreatBookings.page ? retreatBookings.page : 1}</Text>
+          <Tooltip label="Next Page">
+            <IconButton
+              bg="#fff"
+              _hover={{ bg: "#fff" }}
+              aria-label="Pagination next"
+              onClick={() => {
+                if (retreatBookings.page)
+                  setNextPage(
+                    retreatBookings.page,
+                    retreatBookingData?.count,
+                    "next"
+                  );
+                else {
+                  setNextPage(1, retreatBookingData?.count, "next");
+                }
+              }}
+              isDisabled={
+                retreatBookings.searchDate
+                  ? true
+                  : isNextButtonDisabled(
+                      retreatBookings?.page || 1,
+                      retreatBookingData?.count || 1
+                    )
+              }
+              icon={<ChevronRightIcon h={6} w={6} />}
+            />
+          </Tooltip>
+        </Flex>
+      </Box>
+      {isOpen && (
+        <DashboardRetreatModal onClose={onClose} modalEvent={modalEvent} />
+      )}
+      {retreatBookingData?.results.length === 0 ? (
+        <Text fontWeight={500}>Sorry, No bookings</Text>
+      ) : (
+        <Card mx={5} p={2}>
+          <Box
+            maxHeight="550px"
+            overflowY="auto"
+            width={{ base: "300px", md: "500px", lg: "1000px" }}
+          >
+            <TableContainer>
+              <Table variant="simple" size="sm" ref={tableRef}>
+                <Thead>
+                  <Tr>
+                    {header.map((item) => (
+                      <Th key={item}>{item}</Th>
+                    ))}
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {retreatBookingData?.results.map((item) => (
+                    <Tr>
+                      <Td
+                        _hover={{
+                          textDecoration: "underline",
+                        }}
+                        cursor="pointer"
+                        onClick={() => handleView(item)}
+                      >
+                        {item.bookingName}
+                      </Td>
+                      <Td
+                        cursor="pointer"
+                        // onClick={() => handleView(item)}
+                      >
+                        {item.email}
+                      </Td>
+                      <Td
+                        cursor="pointer"
+                        // onClick={() => handleView(item)}
+                      >
+                        {item.roomPreference}
+                      </Td>
+                      <Td
+                        cursor="pointer"
+                        // onClick={() => handleView(item)}
+                      >
+                        {item.contactNumber}
+                      </Td>
+                      <Td
+                        cursor="pointer"
+                        // onClick={() => handleView(item)}
+                      >
+                        {item.bookingForFamilyOrIndividual}
+                      </Td>
+                      <Td
+                        cursor="pointer"
+                        // onClick={() => handleView(item)}
+                      >
+                        {item.events.title}
+                      </Td>
+                      <Td
+                        cursor="pointer"
+                        // onClick={() => handleView(item)}
+                      >
+                        {item.events.start}
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </TableContainer>
+          </Box>
+        </Card>
+      )}
+    </>
   );
 };
 

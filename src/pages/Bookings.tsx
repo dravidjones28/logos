@@ -22,6 +22,7 @@ import {
   FormHelperText,
   Textarea,
   Tooltip,
+  useToast,
 } from "@chakra-ui/react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -33,22 +34,29 @@ import { BsFillPersonPlusFill } from "react-icons/bs";
 import { FaPhone, FaRegQuestionCircle } from "react-icons/fa";
 import { MdEmail, MdConfirmationNumber } from "react-icons/md";
 import useAddRetreatBooking from "../hooks/retreatBookings/useAddRetreatBookings";
+import ReCAPTCHA from "react-google-recaptcha";
+import captchaKey from "../components/common/captcha";
 
 const schema = z.object({
   email: z
     .string()
     .min(3, "Email must be contain minimum of 3 Characters")
-    .email(),
+    .email()
+    .optional(),
+
   contactNumber: z
     .string()
-    .min(10, "contactNumber must be contain minimum of 10 Characters"),
+    .min(10, "contactNumber must be contain minimum of 10")
+    .max(10, "contactNumber must be contain maximum of 10"),
+
   bookingForFamilyOrIndividual: z
     .enum(["individual", "family"])
     .refine((data) => data.length > 0),
 
   address: z
     .string()
-    .min(1, "address must be contain minimum of 10 Characters "),
+    .min(1, "address must be contain minimum of 1 Characters "),
+
   roomPreference: z
     .enum([
       "Deluxe Ac room",
@@ -58,25 +66,37 @@ const schema = z.object({
     ])
     .refine((data) => data.length > 0),
 
-  familyMembers: z.array(
-    z.object({
-      firstName: z
-        .string()
-        .min(2, "First Name should be minimum of 2 characters"),
-      lastName: z
-        .string()
-        .min(2, "last Name should be minimum of 2 characters"),
-      age: z
-        .string({
-          required_error: "Age is required",
-          invalid_type_error: "Age must be a number",
-        })
-        .min(1),
+  familyMembers: z
+    .array(
+      z.object({
+        firstName: z
+          .string()
+          .min(2, "First Name should be minimum of 2 characters"),
+        lastName: z
+          .string()
+          .min(2, "last Name should be minimum of 2 characters"),
+        age: z
+          .string({
+            required_error: "Age is required",
+            invalid_type_error: "Age must be a number",
+          })
+          .min(1),
 
-      sex: z.enum(["male", "female"]),
-      religion: z.enum(["roman catholic", "non catholic", "others"]),
-    })
-  ),
+        sex: z.enum(["male", "female"]),
+        religion: z.enum(["roman catholic", "non catholic", "others"]),
+      })
+    )
+    .refine((data) => {
+      // Check if all forms in the array have all fields filled
+      return data.every(
+        (formData) =>
+          formData.firstName &&
+          formData.lastName &&
+          formData.age &&
+          formData.sex &&
+          formData.religion
+      );
+    }),
 });
 
 type RetreatFormData = z.infer<typeof schema>;
@@ -96,6 +116,13 @@ const Bookings = () => {
   const { data: events, isLoading, error } = useRetreatEvent(slug ?? "");
   const navigate = useNavigate();
   const [count, setCount] = useState(1);
+  const [captachaDone, setCaptachaDone] = useState<any>(false);
+
+  const handleCaptacha = (value: any) => {
+    setCaptachaDone(value);
+  };
+
+  const toast = useToast();
 
   const valuesOfFormData = watch("bookingForFamilyOrIndividual");
 
@@ -192,20 +219,35 @@ const Bookings = () => {
 
     console.log(convertAgeToNumber);
 
+    if (!captachaDone) {
+      return toast({
+        title: "Failed",
+        description: `Please complete the reCAPTCHA`,
+        position: "top",
+        status: "error",
+        isClosable: true,
+        duration: 3000,
+      });
+    }
+
     if (data.bookingForFamilyOrIndividual === "family")
       temp = {
-        email: data.email,
+        email: session?.email,
+        bookingName: session?.name,
         bookingForFamilyOrIndividual: data.bookingForFamilyOrIndividual,
         familyMembers: data.familyMembers,
-        address: data.address,
+        address: data.address.trim(),
         roomPreference: data.roomPreference,
-        contactNumber: data.contactNumber,
+        contactNumber: data.contactNumber.trim(),
         author: session?._id,
         eventId: events?._id,
       };
     else if (data.bookingForFamilyOrIndividual === "individual")
       temp = {
-        email: data.email,
+        email: session?.email,
+        bookingName: session?.name,
+
+        bookingForFamilyOrIndividual: data.bookingForFamilyOrIndividual,
         firstName: data.familyMembers[0].firstName,
         lastName: data.familyMembers[0].lastName,
         familyMembers: [],
@@ -216,7 +258,7 @@ const Bookings = () => {
         roomPreference: data.roomPreference,
         contactNumber: data.contactNumber,
         author: session?._id,
-        eventId: session?._id,
+        eventId: events?._id,
       };
 
     addRetreatBooking.mutate(temp);
@@ -297,6 +339,8 @@ const Bookings = () => {
                       fontSize: "14px",
                     }}
                     {...register("email")}
+                    value={session?.email}
+                    disabled={true}
                     defaultValue={session?.email}
                     placeholder={`Enter Your email`}
                   />
@@ -568,23 +612,27 @@ const Bookings = () => {
               </Text>
             )}
             {valuesOfFormData && (
-              <Button
-                fontSize={{ base: "10px", lg: "15px" }}
-                fontWeight={500}
-                height="20px"
-                borderRadius="7px"
-                ml={{ base: "10px", lg: "10px" }}
-                bg="#348ded"
-                mt="30px"
-                padding={{ base: "15px", lg: "20px" }}
-                color="#fff"
-                cursor="pointer"
-                _hover={{ bg: "#70b7ff" }}
-                type="submit"
-                isDisabled={addRetreatBooking.isPending ? true : false}
-              >
-                {addRetreatBooking.isPending ? <Spinner /> : "Submit"}
-              </Button>
+              <>
+                <ReCAPTCHA sitekey={captchaKey} onChange={handleCaptacha} />
+
+                <Button
+                  fontSize={{ base: "10px", lg: "15px" }}
+                  fontWeight={500}
+                  height="20px"
+                  borderRadius="7px"
+                  ml={{ base: "10px", lg: "10px" }}
+                  bg="#348ded"
+                  mt="30px"
+                  padding={{ base: "15px", lg: "20px" }}
+                  color="#fff"
+                  cursor="pointer"
+                  _hover={{ bg: "#70b7ff" }}
+                  type="submit"
+                  isDisabled={addRetreatBooking.isPending ? true : false}
+                >
+                  {addRetreatBooking.isPending ? <Spinner /> : "Submit"}
+                </Button>
+              </>
             )}
           </form>
         </Card>

@@ -1,50 +1,39 @@
-import { useMutation } from "@tanstack/react-query";
-import { useToast } from "@chakra-ui/react";
 import APIClient from "../../services/apiClient";
-import { useNavigate } from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 
-export interface Register {
-  name: string;
+interface ResendEmailVerify {
+  userId: string;
   email: string;
-  password: string;
-  verified?: boolean;
-  isAdmin?: boolean;
-  profilePic?: string;
-  isEditor?: boolean;
 }
 
-interface FetchResponse1 {
+interface FetchRespose {
   status: string;
   message: string;
-  data: {
-    userId: string;
-    email: string;
-  };
 }
 
-const apiClient = new APIClient<FetchResponse1, Register>("/users");
+const apiClient = new APIClient<FetchRespose, ResendEmailVerify>(
+  "/users/resendOTPVerification"
+);
 
-const useAddRegister = () => {
+const useResendEmail = () => {
   const toast = useToast();
 
-  const navigate = useNavigate();
+  return useMutation<FetchRespose, Error, ResendEmailVerify>({
+    mutationFn: (verifyEmail: ResendEmailVerify) =>
+      apiClient.register(verifyEmail),
 
-  return useMutation<FetchResponse1, Error, Register>({
-    mutationFn: (registerValues: Register) =>
-      apiClient.register(registerValues),
-
-    onSuccess: (res, register) => {
+    onSuccess: (res, _verify) => {
       toast({
-        title: "Please Verify your Email",
-        description: `An email with a verification code was just sent to ${register.email}
+        title: "Success",
+        description: `${res.message}
         `,
         position: "top",
         status: "success",
         isClosable: true,
         duration: 3000,
       });
-
-      return navigate(`/verifyEmail/${res.data.userId}/${res.data.email}`);
     },
     onError: (error) => {
       if (error instanceof Error && "response" in error) {
@@ -54,6 +43,7 @@ const useAddRegister = () => {
           // Check if error.response exists before accessing .data
           if (axiosError.response) {
             const errorMessage = axiosError.response.data;
+            console.log(errorMessage);
             toast({
               title: "Failed",
               description: `${errorMessage}`,
@@ -82,14 +72,4 @@ function isAxiosError(error: any): error is AxiosError {
   return error.isAxiosError === true;
 }
 
-export default useAddRegister;
-
-// Define the AxiosError type to ensure type safety
-type AxiosError = {
-  isAxiosError: true;
-  response: {
-    data: {
-      message: string;
-    };
-  };
-};
+export default useResendEmail;

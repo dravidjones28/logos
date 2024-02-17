@@ -1,6 +1,7 @@
 import { IconType } from "react-icons";
 import { create } from "zustand";
 import { BlogData } from "./hooks/blogs/useBlogs";
+import { FamilyMembers } from "./hooks/retreatBookings/useAddRetreatBookings";
 export interface ModalContainer {
   icon: IconType | null;
   name: string;
@@ -9,10 +10,7 @@ export interface ModalContainer {
 interface RetreatBookings {
   pageSize?: number;
   page?: number;
-  startDate?: string;
-  title?: string;
-  searchQuery?: string;
-  orderId?: string;
+  searchDate?: string;
 }
 
 interface MassBookings {
@@ -48,12 +46,13 @@ interface Props {
   setIsNavIconOpen: () => void;
 
   retreatBookings: RetreatBookings;
-  setPageSize: (pageSize: number) => void;
-  setPage: (page: number) => void;
-  setStartDate: (startDate: string) => void;
-  setTitle: (title: string) => void;
-  setSearchQuery: (searchQuery: string) => void;
-  setOrderId: (orderId: string) => void;
+  setRetreatBookingPageSize: (pageSize: number) => void;
+  setRetreatBookingPage: (
+    page: number,
+    totalPages: number | undefined,
+    prevOrNext: string
+  ) => void;
+  setRetreatBookingDate: (searchDate: string) => void;
 
   massBookings: MassBookings;
   setMassPageSize: (pageSize: number) => void;
@@ -82,7 +81,11 @@ interface Props {
   ) => void;
   setUsersDataDate: (searchDate: string) => void;
   setUsersEmail: (searchEmail: string) => void;
+
+  retreatBookingsDashboard: FamilyMembers[];
+  setRetreatBookingsDashboard: (booking: FamilyMembers[]) => void;
 }
+
 const store = create<Props>((set) => ({
   isNavBarOpen: false,
   setIsNavBarOpen: () => set(() => ({ isNavBarOpen: true })),
@@ -102,30 +105,29 @@ const store = create<Props>((set) => ({
   setIsNavIconOpen: () => set(() => ({ isNavIcon: true })),
 
   // Retreat Bookings
-  retreatBookings: {},
-  setPageSize: (pageSize) =>
-    set((state) => ({
+  retreatBookings: { page: 1, pageSize: 10 },
+  setRetreatBookingPageSize: (pageSize) => {
+    return set((state) => ({
       retreatBookings: { ...state.retreatBookings, pageSize },
-    })),
-  setPage: (page) =>
-    set((state) => ({
-      retreatBookings: { ...state.retreatBookings, page },
-    })),
-  setStartDate: (startDate) =>
-    set((state) => ({
-      retreatBookings: { ...state.retreatBookings, startDate },
-    })),
-  setTitle: (title) =>
-    set((state) => ({
-      retreatBookings: { ...state.retreatBookings, title },
-    })),
-  setSearchQuery: (searchQuery) =>
-    set((state) => ({
-      retreatBookings: { ...state.retreatBookings, searchQuery },
-    })),
-  setOrderId: (orderId) =>
-    set((state) => ({
-      retreatBookings: { ...state.retreatBookings, orderId },
+      ...(({ searchDate, ...rest }) => rest)(state.retreatBookings),
+    }));
+  },
+  setRetreatBookingPage: (page, totalPages, prevOrNext) => {
+    let result = 0;
+
+    if (prevOrNext === "next")
+      result = Math.min(page + 1, totalPages ? totalPages : 0);
+    if (prevOrNext === "prev") result = Math.max(page - 1, 1);
+
+    return set((state) => ({
+      retreatBookings: { ...state.retreatBookings, page: result },
+      ...(({ searchDate, ...rest }) => rest)(state.retreatBookings),
+    }));
+  },
+
+  setRetreatBookingDate: (searchDate) =>
+    set(() => ({
+      retreatBookings: { searchDate },
     })),
 
   massBookings: { page: 1, limit: 10 },
@@ -205,6 +207,13 @@ const store = create<Props>((set) => ({
   setUsersEmail: (searchEmail) =>
     set(() => ({
       usersData: { searchEmail },
+    })),
+
+  retreatBookingsDashboard: [],
+
+  setRetreatBookingsDashboard: (booking) =>
+    set(() => ({
+      retreatBookingsDashboard: [...booking],
     })),
 }));
 

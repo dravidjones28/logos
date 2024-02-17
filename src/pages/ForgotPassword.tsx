@@ -11,8 +11,9 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,6 +22,8 @@ import { Link, useLocation } from "react-router-dom";
 import { Spinner } from "@chakra-ui/react";
 import Footer from "../components/footer/Footer";
 import useForgotPassword from "../hooks/forgotpassword/useForgotPassword";
+import ReCAPTCHA from "react-google-recaptcha";
+import captchaKey from "../components/common/captcha";
 
 const schema = z.object({
   email: z.string().min(4, "Minimum of 4 Characters").email(),
@@ -43,12 +46,30 @@ const ForgotPassword = () => {
     formState: { errors },
   } = useForm<ForgotPasswordData>({ resolver: zodResolver(schema) });
 
+  const [captachaDone, setCaptachaDone] = useState<any>(false);
+  const handleCaptacha = (value: any) => {
+    setCaptachaDone(value);
+  };
+
+  const toast = useToast();
+
   const onSubmit = (data: ForgotPasswordData) => {
-    const temp = {
-      ...data,
-      redirectUrl: "https://logosretreatcentre.com/passwordReset",
-    };
-    forgotPassword.mutate(temp);
+    if (!captachaDone) {
+      return toast({
+        title: "Failed",
+        description: `Please complete the reCAPTCHA`,
+        position: "top",
+        status: "error",
+        isClosable: true,
+        duration: 3000,
+      });
+    } else {
+      const temp = {
+        ...data,
+        redirectUrl: "https://logosretreatcentre.com/passwordReset",
+      };
+      forgotPassword.mutate(temp);
+    }
   };
 
   return (
@@ -92,6 +113,12 @@ const ForgotPassword = () => {
                     mt="3px"
                   ></Stack>
                   <Stack spacing={10} pt={2}>
+                    <Box>
+                      <ReCAPTCHA
+                        sitekey={captchaKey}
+                        onChange={handleCaptacha}
+                      />
+                    </Box>
                     <Button
                       //   loadingText="Submitting"
                       type="submit"

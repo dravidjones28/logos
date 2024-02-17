@@ -15,6 +15,7 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { z } from "zod";
@@ -25,6 +26,8 @@ import { Link, useLocation } from "react-router-dom";
 import useLogin from "../hooks/login/useLogin";
 import { Spinner } from "@chakra-ui/react";
 import Footer from "../components/footer/Footer";
+import ReCAPTCHA from "react-google-recaptcha";
+import captchaKey from "../components/common/captcha";
 
 const schema = z.object({
   email: z.string().min(4, "Minimum of 4 Characters").email(),
@@ -49,8 +52,27 @@ const RegisterPage = () => {
   } = useForm<RegisterData>({ resolver: zodResolver(schema) });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [captachaDone, setCaptachaDone] = useState<any>(false);
+
+  const handleCaptacha = (value: any) => {
+    setCaptachaDone(value);
+  };
+
+  const toast = useToast();
+
   const onSubmit = (data: RegisterData) => {
-    login.mutate(data);
+    if (!captachaDone) {
+      return toast({
+        title: "Failed",
+        description: `Please complete the reCAPTCHA`,
+        position: "top",
+        status: "error",
+        isClosable: true,
+        duration: 3000,
+      });
+    } else {
+      login.mutate(data);
+    }
   };
 
   return (
@@ -118,6 +140,7 @@ const RegisterPage = () => {
                     mt="3px"
                   ></Stack>
                   <Stack spacing={10} pt={2}>
+                    <ReCAPTCHA sitekey={captchaKey} onChange={handleCaptacha} />
                     <Button
                       //   loadingText="Submitting"
                       type="submit"

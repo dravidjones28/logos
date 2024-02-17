@@ -117,15 +117,22 @@ const YourBookings = () => {
                 <Text fontWeight={700} fontSize="18px" color="#2d3748" mt={2}>
                   List of people
                 </Text>
-                {item.persons.map((item1: any) => (
+                {item.bookingForFamilyOrIndividual === "individual" ? (
                   <Text fontWeight={500} fontSize="14px" color="#2d3748">
-                    {item1.name}
+                    {item.firstName} {item.lastName}
                   </Text>
-                ))}
+                ) : (
+                  item.familyMembers &&
+                  item.familyMembers.map((item1: any) => (
+                    <Text fontWeight={500} fontSize="14px" color="#2d3748">
+                      {item1.firstName} {item1.lastName}
+                    </Text>
+                  ))
+                )}
 
-                {/* <Text fontWeight={700} fontSize="16px" color="#2d3748" mt={3}>
+                <Text fontWeight={700} fontSize="16px" color="#2d3748" mt={3}>
                   Total {item.amount}
-                </Text> */}
+                </Text>
               </Stack>
             </Card>
           );

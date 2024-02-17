@@ -32,6 +32,7 @@ import Footer from "../components/footer/Footer";
 import useAuth from "../hooks/useAuth";
 import useAddPrayerRequest from "../hooks/prayerRequest/useAddPrayerRequest";
 import ReCAPTCHA from "react-google-recaptcha";
+import captchaKey from "../components/common/captcha";
 const schema = z.object({
   fullName: z
     .string()
@@ -40,7 +41,8 @@ const schema = z.object({
   email: z
     .string()
     .min(2, "Email must be contain minimum of 2 Characters")
-    .email(),
+    .email()
+    .optional(),
   message: z.string().min(2, "Message must be contain minimum of 2 Characters"),
 });
 
@@ -92,7 +94,11 @@ const PrayerRequest = () => {
         duration: 3000,
       });
     } else if (auth) {
-      addPrayerRequest.mutate(data);
+      const prayerRequestData = {
+        ...data,
+        email: auth ? auth.email : "",
+      };
+      addPrayerRequest.mutate(prayerRequestData);
     } else {
       toast({
         title: "Please Login In",
@@ -105,6 +111,8 @@ const PrayerRequest = () => {
       navigate("/login");
     }
   };
+
+  console.log(auth ? auth.email : "");
 
   return (
     <LGBox>
@@ -194,6 +202,9 @@ const PrayerRequest = () => {
                       {...register("email", {
                         required: true,
                       })}
+                      value={auth ? auth.email : ""}
+                      defaultValue={auth ? auth.email : ""}
+                      disabled={true}
                       type="text"
                       size="md"
                       placeholder="Your Email"
@@ -225,10 +236,7 @@ const PrayerRequest = () => {
                   )}
                 </FormControl>
                 <FormControl>
-                  <ReCAPTCHA
-                    sitekey="6LeuPXEpAAAAAA8MJFkwEvP-XwR4uLqNQlpAiIyI"
-                    onChange={handleCaptacha}
-                  />
+                  <ReCAPTCHA sitekey={captchaKey} onChange={handleCaptacha} />
                   <Button
                     variant="solid"
                     bg="#0D74FF"

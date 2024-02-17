@@ -32,6 +32,8 @@ import db from "../components/common/db";
 import { addDays } from "date-fns";
 import ThirtyDaysDate from "../components/Dates/ThirtyDaysDate";
 import { format } from "date-fns";
+import ReCAPTCHA from "react-google-recaptcha";
+import captchaKey from "../components/common/captcha";
 
 export interface Value {
   dates: Date[] | Date | undefined | DateRange;
@@ -45,10 +47,13 @@ const schema = z.object({
       message: "Only characters and spaces are allowed for fullName",
     }),
 
-  email: z.string().min(4, "Minimum of 4 Characters").email(),
+  email: z.string().min(4, "Minimum of 4 Characters").email().optional(),
   massType: z.string().min(1, "Please Select MassType"),
   time: z.string().min(1, "Please select time slot"),
-  phoneNumber: z.string().min(10, "Please Enter 10 digits").max(10),
+  phoneNumber: z
+    .string()
+    .min(10, "Please Enter 10 digits")
+    .max(10, "Please Enter 10 digits"),
   normalIntentionTypes: z
     .enum([
       "Thanksgiving Mass",
@@ -103,6 +108,11 @@ function MassBooking() {
   const [dateValue, setDateValue] = useState<Date[] | Date>([]);
   const [tableValues, setTableValues] = useState<DateValues>();
   const [openTable, setOpenTable] = useState<boolean>(false);
+  const [captachaDone, setCaptachaDone] = useState<any>(false);
+
+  const handleCaptacha = (value: any) => {
+    setCaptachaDone(value);
+  };
 
   const {
     register: data,
@@ -152,18 +162,26 @@ function MassBooking() {
     let temp: any = [];
 
     const formatDate = (date: Date): string => format(date, "yyyy-MM-dd");
-
     if (Array.isArray(dateValue)) {
       temp = dateValue.map((item) => formatDate(item));
     } else {
       temp = [formatDate(dateValue)];
     }
 
-    if (auth) {
+    if (!captachaDone) {
+      return toast({
+        title: "Failed",
+        description: `Please complete the reCAPTCHA`,
+        position: "top",
+        status: "error",
+        isClosable: true,
+        duration: 3000,
+      });
+    } else if (auth) {
       let field = {
         bookingName: data.fullName,
         // amount: Number(tableValues?.totalCost),
-        email: data.email,
+        email: auth ? auth.email : "",
         massType: data.massType,
         time: data.time,
         normalIntentionField: data.normalIntentionField
@@ -238,7 +256,13 @@ function MassBooking() {
                   </FormControl>
                   <FormControl isInvalid={errors.email ? true : false}>
                     <FormLabel>Email address</FormLabel>
-                    <Input {...data("email")} type="email" />
+                    <Input
+                      {...data("email")}
+                      disabled={true}
+                      value={auth ? auth.email : ""}
+                      defaultValue={auth ? auth.email : ""}
+                      type="email"
+                    />
                     {errors.email && (
                       <FormHelperText color="red">
                         {errors.email.message}
@@ -492,6 +516,10 @@ function MassBooking() {
                   dateValue &&
                   openTable && (
                     <>
+                      <ReCAPTCHA
+                        sitekey={captchaKey}
+                        onChange={handleCaptacha}
+                      />
                       <Button
                         isDisabled={massPayment.isPending ? true : false}
                         // isDisabled={true}

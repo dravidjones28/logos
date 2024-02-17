@@ -30,6 +30,7 @@ import { useEffect, useState } from "react";
 import Footer from "../components/footer/Footer";
 import ReCAPTCHA from "react-google-recaptcha";
 import useAuth from "../hooks/useAuth";
+import captchaKey from "../components/common/captcha";
 
 const schema = z.object({
   fullName: z
@@ -39,7 +40,8 @@ const schema = z.object({
   email: z
     .string()
     .min(2, "Email must be contain minimum of 2 Characters")
-    .email(),
+    .email()
+    .optional(),
   message: z.string().min(2, "Message must be contain minimum of 2 Characters"),
 });
 
@@ -93,7 +95,8 @@ const ContactUs = () => {
         duration: 3000,
       });
     } else if (auth) {
-      addContectUs.mutate(data);
+      const contactusData = { ...data, email: auth ? auth.email : "" };
+      addContectUs.mutate(contactusData);
     } else {
       toast({
         title: "Please Login In",
@@ -191,9 +194,10 @@ const ContactUs = () => {
                       <MdOutlineEmail color="gray.800" />
                     </InputLeftElement>
                     <Input
-                      {...register("email", {
-                        required: true,
-                      })}
+                      {...register("email")}
+                      disabled={true}
+                      defaultValue={auth ? auth.email : ""}
+                      value={auth ? auth.email : ""}
                       type="text"
                       size="md"
                       placeholder="Your Email"
@@ -225,10 +229,7 @@ const ContactUs = () => {
                   )}
                 </FormControl>
                 <FormControl>
-                  <ReCAPTCHA
-                    sitekey="6LeuPXEpAAAAAA8MJFkwEvP-XwR4uLqNQlpAiIyI"
-                    onChange={handleCaptacha}
-                  />
+                  <ReCAPTCHA sitekey={captchaKey} onChange={handleCaptacha} />
                   <Button
                     variant="solid"
                     bg="#0D74FF"

@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@chakra-ui/react";
 import { ContactUsData } from "./useContactUs";
 import APIClient from "../../services/apiClient";
+import { useNavigate } from "react-router-dom";
 
 export interface AddContentUsContext {
   previousContactUs: ContactUsData[];
@@ -11,6 +12,7 @@ const apiClient = new APIClient<ContactUsData, ContactUsData>("/contactUs");
 const useAddContactUs = (onAdd: () => void) => {
   const toast = useToast();
   const query = useQueryClient();
+  const navigate = useNavigate();
 
   return useMutation<ContactUsData, Error, ContactUsData, AddContentUsContext>({
     mutationFn: (data: ContactUsData) => apiClient.postData(data),
@@ -36,6 +38,7 @@ const useAddContactUs = (onAdd: () => void) => {
         return [{ ...contactUs, _id: res._id }, ...contactUss];
       });
       onAdd();
+      navigate("/");
     },
 
     onError: (error, _blog, context) => {
