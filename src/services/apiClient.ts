@@ -35,7 +35,7 @@ class APIClient<T, K> {
 
   getAll = (config: AxiosRequestConfig) => {
     const headers: AxiosRequestConfig["headers"] = {
-      Authorization: "Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh",
+      Authorization: "Basic bG9nb3NyZXRyZWF0OkJyZWFkb2ZsaWZlcXcxIQ==",
     };
     return axiosInstance
       .get<T>(this.endpoint, { ...config, headers })
@@ -58,7 +58,7 @@ class APIClient<T, K> {
     const headers: AxiosRequestConfig["headers"] = {
       "x-auth-token": database?.accesstoken,
 
-      Authorization: "Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh",
+      Authorization: "Basic bG9nb3NyZXRyZWF0OkJyZWFkb2ZsaWZlcXcxIQ==",
     };
     return axiosInstance
       .get<T>(this.endpoint, { ...config, headers })
@@ -81,7 +81,7 @@ class APIClient<T, K> {
     const headers: AxiosRequestConfig["headers"] = {
       "x-auth-token": database?.accesstoken,
 
-      Authorization: "Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh",
+      Authorization: "Basic bG9nb3NyZXRyZWF0OkJyZWFkb2ZsaWZlcXcxIQ==",
     };
     return axiosInstance
       .get<T>(this.endpoint, { headers })
@@ -105,7 +105,7 @@ class APIClient<T, K> {
 
     const headers: AxiosRequestConfig["headers"] = {
       "x-auth-token": database?.accesstoken,
-      Authorization: "Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh",
+      Authorization: "Basic bG9nb3NyZXRyZWF0OkJyZWFkb2ZsaWZlcXcxIQ==",
       // Provide a default value if session?.accesstoken is undefined
     };
     return axiosInstance
@@ -136,7 +136,7 @@ class APIClient<T, K> {
     const headers: AxiosRequestConfig["headers"] = {
       "x-auth-token": database?.accesstoken,
 
-      Authorization: "Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh",
+      Authorization: "Basic bG9nb3NyZXRyZWF0OkJyZWFkb2ZsaWZlcXcxIQ==",
     };
     return axiosInstance
       .post<T>(this.endpoint, data, {
@@ -197,7 +197,7 @@ class APIClient<T, K> {
 
     const headers: AxiosRequestConfig["headers"] = {
       "x-auth-token": database?.accesstoken,
-      Authorization: "Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh",
+      Authorization: "Basic bG9nb3NyZXRyZWF0OkJyZWFkb2ZsaWZlcXcxIQ==",
       // Provide a default value if session?.accesstoken is undefined
     };
 
@@ -214,7 +214,7 @@ class APIClient<T, K> {
     return axiosInstance
       .post<T>(this.endpoint, data, {
         headers: {
-          Authorization: "Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh",
+          Authorization: "Basic bG9nb3NyZXRyZWF0OkJyZWFkb2ZsaWZlcXcxIQ==",
         },
       })
       .then((res) => {
@@ -237,7 +237,7 @@ class APIClient<T, K> {
     const database = session();
     const headers: AxiosRequestConfig["headers"] = {
       "x-auth-token": database?.accesstoken,
-      Authorization: "Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh",
+      Authorization: "Basic bG9nb3NyZXRyZWF0OkJyZWFkb2ZsaWZlcXcxIQ==",
     };
     return axiosInstance
       .post<T>(this.endpoint, data, { headers })
@@ -262,7 +262,7 @@ class APIClient<T, K> {
     const database = session();
     const headers: AxiosRequestConfig["headers"] = {
       "x-auth-token": database?.accesstoken,
-      Authorization: "Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh",
+      Authorization: "Basic bG9nb3NyZXRyZWF0OkJyZWFkb2ZsaWZlcXcxIQ==",
       // Provide a default value if session?.accesstoken is undefined
     };
     return axiosInstance
@@ -273,7 +273,7 @@ class APIClient<T, K> {
   getWithAccess = (token: string) => {
     const headers: AxiosRequestConfig["headers"] = {
       "x-auth-token": token,
-      Authorization: "Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh",
+      Authorization: "Basic bG9nb3NyZXRyZWF0OkJyZWFkb2ZsaWZlcXcxIQ==",
     };
     return axiosInstance
       .get<T>(this.endpoint, { headers })
