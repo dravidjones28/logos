@@ -308,10 +308,7 @@ const RegisterPage = () => {
                       <FormControl>
                         <Checkbox {...data("isChecked")}>
                           I agree to the{" "}
-                          <Link
-                            style={{ fontWeight: 500 }}
-                            to="/termsAndCondition"
-                          >
+                          <Link style={{ fontWeight: 500 }} to="/register">
                             Terms and Conditions
                           </Link>
                         </Checkbox>

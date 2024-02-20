@@ -29,6 +29,7 @@ interface Item {
   normalIntentionField: string;
   normalIntentionTypes: string;
   gregorianIntentionField: string;
+  // phone: string;
 }
 const DashboardMassBooking = () => {
   const { data: massBookingData, error, isLoading } = useMassBooking();
@@ -108,6 +109,11 @@ const DashboardMassBooking = () => {
         accessorKey: "amount",
       },
       {
+        header: "Phone Number",
+        cell: (row) => row.renderValue(),
+        accessorKey: "phone",
+      },
+      {
         header: "Intention received on",
         cell: (row) => row.renderValue(),
         accessorKey: "date",
@@ -124,8 +130,10 @@ const DashboardMassBooking = () => {
     "Type",
     "Dates",
     "Time",
-    "Intention received on",
+    "Mass Date",
     "Amount",
+    "Phone",
+    "Intention received on",
   ];
 
   function handleDownloadExcel() {
@@ -138,6 +146,7 @@ const DashboardMassBooking = () => {
       massDate: item.massDate.join(", "),
       time: item.time,
       dateReceived: item.date,
+      phone: item.phone,
       amount: item.amount ?? "none",
     }));
     downloadExcel({

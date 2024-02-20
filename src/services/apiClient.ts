@@ -7,11 +7,11 @@ export interface FetchResponse<T> {
 }
 
 // Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh
-let mainAPI = "https://sleepy-gold-pumps.cyclic.app/api";
-// let localAPI = "http://localhost:3005/api";
+let apiLink = "https://sleepy-gold-pumps.cyclic.app/api";
+// let apiLink = "http://localhost:3000/api";
 
 const axiosInstance = axios.create({
-  baseURL: mainAPI,
+  baseURL: apiLink,
 });
 
 export interface PaymentReceive {
