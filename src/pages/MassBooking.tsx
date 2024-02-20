@@ -521,8 +521,8 @@ function MassBooking() {
                         onChange={handleCaptacha}
                       />
                       <Button
-                        disabled={massPayment.isPending ? true : false}
-                        isDisabled={true}
+                        isDisabled={massPayment.isPending ? true : false}
+                        // isDisabled={true}
                         colorScheme="blue"
                         type="submit"
                       >

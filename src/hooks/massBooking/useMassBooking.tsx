@@ -1,10 +1,7 @@
-import {
-  useMutation,
-  // useQueryClient
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@chakra-ui/react";
 import APIClient from "../../services/apiClient";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface MassBooking {
   bookingName: string;
@@ -29,8 +26,8 @@ const apiClient = new APIClient<string, MassBooking>("/massVerifyPayment");
 
 const useMassBooking = () => {
   const toast = useToast();
-  // const navigate = useNavigate();
-  // const query = useQueryClient();
+  const navigate = useNavigate();
+  const query = useQueryClient();
 
   return useMutation<string, Error, MassBooking>({
     mutationFn: (data: MassBooking) => apiClient.payment(data),
@@ -38,8 +35,8 @@ const useMassBooking = () => {
       try {
         const url = res;
         window.open(url);
-        // navigate("/", { replace: true });
-        // return query.clear();
+        navigate("/", { replace: true });
+        return query.clear();
       } catch (error) {
         toast({
           title: "Failed",
