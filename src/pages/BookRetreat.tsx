@@ -153,7 +153,6 @@ const BookRetreat: React.FC = () => {
 
     if (calendarRef && calendarRef.current) {
       const calendarApi = calendarRef.current.getApi();
-      console.log(data.end.toISOString().replace(/T.*$/, ""));
 
       calendarApi.unselect();
       const tempData = {
@@ -193,7 +192,6 @@ const BookRetreat: React.FC = () => {
     };
     const formattedDate = originalDate.toLocaleDateString(undefined, options);
     const formattedDate1 = originalDate1.toLocaleDateString(undefined, options);
-    console.log(clickInfo.event.extendedProps._id);
     // confirm(`${clickInfo.event.title} ${clickInfo.event.extendedProps.ledBy}`);
     setSingleEvent({
       eventName: clickInfo.event.title,
@@ -225,8 +223,6 @@ const BookRetreat: React.FC = () => {
   };
   const session = db();
   const auth = useAuth();
-
-  // console.log(Number(singleEvent?.slots) === 0 ? true : false);
 
   const handleEditEvents = () => {
     handleShowEvent();
