@@ -17,7 +17,7 @@ const useUsersEdit = (id: string, onClose: () => void) => {
     mutationFn: (data: UsersData) => apiClient.putData(data, id),
     onMutate: (newUsersData: UsersData) => {
       const previousUsersData =
-        queryClient.getQueryData<UsersDataAll>(["users", usersData]) ||
+        queryClient.getQueryData<UsersDataAll>(["retreat", usersData]) ||
         {
           // results: [],
           // next: undefined,

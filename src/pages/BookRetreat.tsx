@@ -42,6 +42,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import styled from "styled-components";
 import Footer from "../components/footer/Footer";
+import EditRetreatEvents from "../components/RetreatEvents/EditRetreatEvents";
+import DeleteRetreatEvent from "../components/RetreatEvents/DeleteRetreatEvent";
 
 const schema = z
   .object({
@@ -69,11 +71,12 @@ const schema = z
     path: ["end"],
   });
 
-interface SingleEvent {
+export interface SingleEvent {
   _id: string;
   eventName: string;
   ledBy: string;
   start: string;
+  end: string;
   days: number;
   cost: string;
   slots: string;
@@ -113,6 +116,17 @@ const BookRetreat: React.FC = () => {
   });
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isEditOpen,
+    onOpen: onEditOpen,
+    onClose: onEditClose,
+  } = useDisclosure();
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onClose: onDeleteClose,
+  } = useDisclosure();
+
   const [desktopWidth] = useMediaQuery("(min-width: 991px)");
   const [tabWidth] = useMediaQuery("(min-width: 768px)");
   const calendarRef = useRef<FullCalendar | null>(null);
@@ -167,26 +181,9 @@ const BookRetreat: React.FC = () => {
     }
   };
 
-  // const handleDateSelect = (selectInfo: any) => {
-  //   onOpen();
-
-  //   let calendarApi = selectInfo.view.calendar;
-  //   console.log(calendarApi);
-  //   // onOpen();
-  //   // let title = prompt("Please enter a new title for your event");
-  //   // let calendarApi = selectInfo.view.calendar;
-  //   // calendarApi.unselect(); // clear date selection
-  //   // calendarApi.addEvent({
-  //   //   id: createEventId(),
-  //   //   title,
-  //   //   start: selectInfo.startStr,
-  //   //   end: selectInfo.endStr,
-  //   //   allDay: selectInfo.allDay,
-  //   // });
-  // };
-
   const handleBookEvent = (clickInfo: any) => {
     const originalDate = new Date(clickInfo.event.start);
+    const originalDate1 = new Date(clickInfo.event.end);
 
     const options: Intl.DateTimeFormatOptions = {
       weekday: "long",
@@ -195,6 +192,7 @@ const BookRetreat: React.FC = () => {
       year: "numeric",
     };
     const formattedDate = originalDate.toLocaleDateString(undefined, options);
+    const formattedDate1 = originalDate1.toLocaleDateString(undefined, options);
     console.log(clickInfo.event.extendedProps._id);
     // confirm(`${clickInfo.event.title} ${clickInfo.event.extendedProps.ledBy}`);
     setSingleEvent({
@@ -205,6 +203,7 @@ const BookRetreat: React.FC = () => {
       cost: clickInfo.event.extendedProps.cost,
       _id: clickInfo.event.extendedProps._id,
       slots: clickInfo.event.extendedProps.slots,
+      end: formattedDate1,
     });
     handleShowEvent();
 
@@ -217,39 +216,7 @@ const BookRetreat: React.FC = () => {
     // }
   };
 
-  // const [currentEvents, setCurrentEvents] = useState<Event[]>([]);
-
   const isEndDateDisabled = !register("start");
-
-  // const handleEventDrop = (eventDropInfo: any) => {
-  //   const updatedEvent: Event = {
-  //     ...(eventDropInfo.event.toPlainObject() as Event),
-  //     start: eventDropInfo.event.start.toISOString(),
-  //     end: eventDropInfo.event.end?.toISOString(),
-  //   };
-
-  // const updatedEvents: Event[] = currentEvents.map((event) =>
-  //   event.id === updatedEvent.id ? updatedEvent : event
-  // );
-
-  // console.log(updatedEvent);
-
-  // setCurrentEvents(updatedEvents);
-  // };
-
-  // const handleEventResize = (eventResizeInfo: any) => {
-  // const updatedEvent: Event = {
-  //   ...(eventResizeInfo.event.toPlainObject() as Event),
-  //   start: eventResizeInfo.event.start.toISOString(),
-  //   end: eventResizeInfo.event.end.toISOString(),
-  // };
-
-  // const updatedEvents: Event[] = currentEvents.map((event) =>
-  // event.id === updatedEvent.id ? updatedEvent : event
-  // );
-
-  // setCurrentEvents(updatedEvents);
-  // };
 
   const headerToolbarOptions = {
     right: "today prev next", // Remove "prev" from the left side
@@ -260,6 +227,16 @@ const BookRetreat: React.FC = () => {
   const auth = useAuth();
 
   // console.log(Number(singleEvent?.slots) === 0 ? true : false);
+
+  const handleEditEvents = () => {
+    handleShowEvent();
+    onEditOpen();
+  };
+
+  const handleDeleteEvents = () => {
+    handleShowEvent();
+    onDeleteOpen();
+  };
 
   if (isLoading)
     return (
@@ -541,6 +518,31 @@ const BookRetreat: React.FC = () => {
             >
               Book Retreat
             </Button>
+            {session?.isAdmin && (
+              <Button
+                onClick={() => {
+                  handleEditEvents();
+                }}
+                colorScheme="blue"
+                mr={3}
+                // isDisabled={Number(singleEvent?.slots) <= 0 ? true : false}
+                // isDisabled={true}
+              >
+                Edit
+              </Button>
+            )}
+            {session?.isAdmin && (
+              <Button
+                onClick={() => {
+                  handleDeleteEvents();
+                }}
+                colorScheme="red"
+                mr={3}
+              >
+                Delete
+              </Button>
+            )}
+
             <Button
               mr={3}
               onClick={() => {
@@ -552,6 +554,25 @@ const BookRetreat: React.FC = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      {singleEvent && (
+        <EditRetreatEvents
+          isEditOpen={isEditOpen}
+          onEditClose={onEditClose}
+          events={singleEvent}
+          onSetEvents={(item) => setSingleEvent(item)}
+          calendarRef={calendarRef}
+        />
+      )}
+
+      {singleEvent && (
+        <DeleteRetreatEvent
+          isDeleteOpen={isDeleteOpen}
+          onDeleteClose={onDeleteClose}
+          events={singleEvent}
+          calendarRef={calendarRef}
+        />
+      )}
 
       <Box
         my={5}
@@ -571,23 +592,25 @@ const BookRetreat: React.FC = () => {
         </Text>
         <Box mt="10px">
           {session?.isAdmin && (
-            <Button
-              fontSize={{ base: "10px", lg: "15px" }}
-              fontWeight={500}
-              height="20px"
-              borderRadius="7px"
-              bg="#348ded"
-              padding={{ base: "15px", lg: "20px" }}
-              color="#fff"
-              cursor="pointer"
-              _hover={{ bg: "#70b7ff" }}
-              onClick={() => {
-                onOpen();
-              }}
-              leftIcon={<AiFillFolderAdd />}
-            >
-              Create
-            </Button>
+            <>
+              <Button
+                fontSize={{ base: "10px", lg: "15px" }}
+                fontWeight={500}
+                height="20px"
+                borderRadius="7px"
+                bg="#348ded"
+                padding={{ base: "15px", lg: "20px" }}
+                color="#fff"
+                cursor="pointer"
+                _hover={{ bg: "#70b7ff" }}
+                onClick={() => {
+                  onOpen();
+                }}
+                leftIcon={<AiFillFolderAdd />}
+              >
+                Create
+              </Button>
+            </>
           )}
         </Box>
       </Box>

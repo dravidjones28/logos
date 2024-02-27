@@ -209,6 +209,35 @@ class APIClient<T, K> {
         return res.data;
       });
   }
+  delete(id: string) {
+    const session = () => {
+      if (sessionStorage.getItem("user")) {
+        const session_storage = JSON.parse(sessionStorage.user);
+        const decryptedObjectString = AES.decrypt(
+          session_storage,
+          "secretKey"
+        ).toString(CryptoJS.enc.Utf8);
+        const parse = JSON.parse(decryptedObjectString);
+        console.log(parse);
+        return parse;
+      }
+    };
+    const database = session();
+
+    const headers: AxiosRequestConfig["headers"] = {
+      "x-auth-token": database?.accesstoken,
+      Authorization: "Basic bG9nb3NyZXRyZWF0OkJyZWFkb2ZsaWZlcXcxIQ==",
+      // Provide a default value if session?.accesstoken is undefined
+    };
+
+    return axiosInstance
+      .delete<T>(`${this.endpoint}/${id}`, {
+        headers,
+      })
+      .then((res) => {
+        return res.data;
+      });
+  }
 
   register(data: K) {
     return axiosInstance
