@@ -303,10 +303,15 @@ function MassBooking() {
                       {...data("time", { required: true })}
                       // onChange={(e) => handleMassTypeChange(e.target.value)}
                     >
-                      <option value="6:00 a.m">6.00 a.m</option>
-                      <option value="6:30 a.m">6.30 a.m</option>
-                      <option value="4:30 p.m">4.30 p.m</option>
-                      <option value="others">others</option>
+                      <option value="6:00 a.m (English)">
+                        {"6 am - 6 am (English)"}
+                      </option>
+                      <option value="6:30 a.m (Malayalam)">
+                        {"6:30 am - 6:30 am (Malayalam)"}
+                      </option>
+                      <option value="4:30 p.m (English)">
+                        {"4.30 pm - 4.30 pm (English)"}
+                      </option>
                     </Select>
                     {errors.time && (
                       <FormHelperText color="red">
