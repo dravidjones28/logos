@@ -22,7 +22,15 @@ export default function MultipleDate({ onValue, onTableValue }: Value) {
 
   const isDateSelectable = (date: Date): boolean => {
     const today = new Date();
-    return date >= today;
+    // const today = new Date(2024, 2, 15, 17, 0, 0);
+    const isPastDate = date < today;
+
+    // If it's past 5 PM, skip tomorrow's date
+    if (today.getHours() >= 16 && date.getDate() === today.getDate() + 1) {
+      return false;
+    }
+
+    return !isPastDate;
   };
 
   const calculateCost = (selectedDays: Date[] | undefined): DateValues => {

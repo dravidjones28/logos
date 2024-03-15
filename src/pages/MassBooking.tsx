@@ -69,18 +69,23 @@ const schema = z.object({
   normalIntentionField: z
     .string()
     .min(2, "First Name should contain atleast 2 characters")
+    .max(10, "First Name should have maximum of 10 characters")
     .optional(),
   normalIntentionField1: z
     .string()
     .min(2, "Last Name should contain atleast 2 characters")
+    .max(10, "Last Name should have maximum of 10 characters")
     .optional(),
   gregorianIntentionField: z
     .string()
     .min(2, "First Name should contain atleast 2 characters")
+    .max(10, "First Name should have maximum of 10 characters")
+
     .optional(),
   gregorianIntentionField1: z
     .string()
     .min(2, "Last Name should contain atleast 2 characters")
+    .max(10, "Last Name should have maximum of 10 characters")
     .optional(),
 });
 
