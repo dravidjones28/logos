@@ -18,7 +18,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormCard from "../components/common/FormCard";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Spinner } from "@chakra-ui/react";
 import Footer from "../components/footer/Footer";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
@@ -41,7 +41,10 @@ const VerifyPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword1, setShowPassword1] = useState(false);
 
-  const { userId, resetString } = useParams();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const userId = searchParams.get("userId");
+  const resetString = searchParams.get("resetString");
 
   useEffect(() => {
     window.scrollTo(0, 0);

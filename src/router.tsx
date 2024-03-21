@@ -158,7 +158,7 @@ const router = createBrowserRouter([
         element: <EmailSent />,
       },
       {
-        path: "passwordreset/:userId/:resetString",
+        path: "passwordreset",
         element: <VerifyPassword />,
       },
       {
