@@ -21,7 +21,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import CostTable from "../components/Dates/CostTable";
 import MultipleDate from "../components/Dates/MultipleDate";
-import RangeDate from "../components/Dates/RangeDate";
+// import RangeDate from "../components/Dates/RangeDate";
 import SingleDate from "../components/Dates/SingleDate";
 import LGBox from "../components/common/LGBox";
 import useMassBooking from "./../hooks/massBooking/useMassBooking";
@@ -457,9 +457,9 @@ function MassBooking() {
                         mt={4}
                       >
                         <Stack direction={{ base: "column", lg: "row" }}>
-                          <Radio value="1">Single</Radio>
+                          <Radio value="1">Single </Radio>
                           <Radio value="2">Multiple</Radio>
-                          <Radio value="3">Range</Radio>
+                          {/* <Radio value="3">Range</Radio> */}
                         </Stack>
                       </RadioGroup>
                     )}
@@ -477,36 +477,37 @@ function MassBooking() {
                         }
                         onValue={(value: any) => setDateValue(value)}
                       />
-                    ) : radioValue === "3" ? (
-                      <RangeDate
-                        onTableValue={(value: DateValues) => {
-                          // for (let date = startDate; date <= endDate; date.setDate(date.getDate() + 1)) {
-                          //   // Include only Sunday and Monday
-                          //   if (date.getDay() === 0 || date.getDay() === 1) {
-                          //     dateArray.push(new Date(date));
-                          //   }
-                          // }
-                          setTableValues(value);
-                        }}
-                        onValue={(value: any) => {
-                          // console.log(value);
-                          if (value && value.to) {
-                            let newDates = [];
-                            for (
-                              let date = value.from;
-                              date <= value.to;
-                              date = addDays(date, 1)
-                            ) {
-                              newDates.push(new Date(date));
-                            }
-                            // console.log("newDates", newDates);
-                            // console.log("Value:", value);
-                            setOpenTable(false);
-                            setDateValue(newDates);
-                          }
-                        }}
-                      />
-                    ) : null}
+                    ) : //  radioValue === "3" ? (
+                    //   <RangeDate
+                    //     onTableValue={(value: DateValues) => {
+                    //       // for (let date = startDate; date <= endDate; date.setDate(date.getDate() + 1)) {
+                    //       //   // Include only Sunday and Monday
+                    //       //   if (date.getDay() === 0 || date.getDay() === 1) {
+                    //       //     dateArray.push(new Date(date));
+                    //       //   }
+                    //       // }
+                    //       setTableValues(value);
+                    //     }}
+                    //     onValue={(value: any) => {
+                    //       // console.log(value);
+                    //       if (value && value.to) {
+                    //         let newDates = [];
+                    //         for (
+                    //           let date = value.from;
+                    //           date <= value.to;
+                    //           date = addDays(date, 1)
+                    //         ) {
+                    //           newDates.push(new Date(date));
+                    //         }
+                    //         // console.log("newDates", newDates);
+                    //         // console.log("Value:", value);
+                    //         setOpenTable(false);
+                    //         setDateValue(newDates);
+                    //       }
+                    //     }}
+                    //   />
+                    // ) :
+                    null}
                   </Box>
                 )}
               </Box>

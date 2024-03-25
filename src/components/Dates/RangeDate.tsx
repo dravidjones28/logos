@@ -13,17 +13,60 @@ export default function RangeDate({ onValue, onTableValue }: Value) {
   const [range, setRange] = useState<DateRange | undefined>();
 
   const isDateSelectable = (date: Date): boolean => {
+    // const today = new Date();
+    // // const today = new Date(2024, 2, 15, 17, 0, 0);
+
+    // const isPastDate = date < today;
+
+    // // If it's past 5 PM, skip tomorrow's date
+    // if (today.getHours() >= 16 && date.getDate() === today.getDate() + 1) {
+    //   return false;
+    // }
+
+    // const disabledDates = [
+    //   new Date(2024, 2, 28), // March 28, 2023
+    //   new Date(2024, 2, 29), // March 29, 2024
+    //   new Date(2024, 2, 30),
+    // ];
+
+    // if (
+    //   disabledDates.some(
+    //     (disabledDate) => date.getTime() === disabledDate.getTime()
+    //   )
+    // ) {
+    //   return false;
+    // }
+
+    // return !isPastDate;
     const today = new Date();
-    // const today = new Date(2024, 2, 15, 17, 0, 0);
 
-    const isPastDate = date < today;
+    // Check if it's a past date
+    if (date < today) {
+      return false;
+    }
 
-    // If it's past 5 PM, skip tomorrow's date
+    // Check if it's past 5 PM for tomorrow's date
     if (today.getHours() >= 16 && date.getDate() === today.getDate() + 1) {
       return false;
     }
 
-    return !isPastDate;
+    // Define disabled dates
+    const disabledDates = [
+      new Date(2024, 2, 28), // March 28, 2024
+      new Date(2024, 2, 29), // March 29, 2024
+      new Date(2024, 2, 30), // March 30, 2024
+    ];
+
+    // Check if the date is disabled
+    if (
+      disabledDates.some(
+        (disabledDate) => date.getTime() === disabledDate.getTime()
+      )
+    ) {
+      return false;
+    }
+
+    return true;
   };
 
   const formatDate = (date: Date): string => {

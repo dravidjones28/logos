@@ -22,6 +22,20 @@ export default function SingleDate({ onValue, onTableValue }: Value) {
       return false;
     }
 
+    const disabledDates = [
+      new Date(2024, 2, 28), // March 28, 2023
+      new Date(2024, 2, 29), // March 29, 2024
+      new Date(2024, 2, 30),
+    ];
+
+    if (
+      disabledDates.some(
+        (disabledDate) => date.getTime() === disabledDate.getTime()
+      )
+    ) {
+      return false;
+    }
+
     return !isPastDate;
   };
 
