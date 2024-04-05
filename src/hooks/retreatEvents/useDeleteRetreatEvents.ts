@@ -26,13 +26,11 @@ const useDeleteRetreatEvents = (
         query.getQueryData<RetreatEvents[]>(["retreatEvents"]) || [];
 
       query.setQueryData<RetreatEvents[]>(["retreatEvents"], (events) => {
-        console.log(events);
         if (!events) return undefined;
 
-        return {
-          ...events,
-          results: events?.map((event) => event._id === retreatEventId),
-        };
+        const random = events?.filter((event) => event._id !== retreatEventId);
+
+        return random;
       });
 
       const updatedEvents =

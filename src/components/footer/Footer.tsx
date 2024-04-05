@@ -169,7 +169,7 @@ const Footer = () => {
           mt={20}
         >
           <Text fontSize={"sm"} fontWeight={500} textAlign="center" mb={5}>
-            All rights reserved © 2023 Logos Retreat Centre
+            All rights reserved © 2024 Logos Retreat Centre
           </Text>
           <Text fontSize={"sm"} textAlign="center">
             Made with ❤ by
