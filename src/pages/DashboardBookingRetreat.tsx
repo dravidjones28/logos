@@ -1,36 +1,35 @@
+import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import {
-  Text,
-  Heading,
+  Box,
   Button,
+  Card,
   Flex,
+  Heading,
   Icon,
   IconButton,
   Input,
   Select,
-  Tooltip,
   Spinner,
-  Box,
-  Card,
   Table,
   TableContainer,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
+  Tooltip,
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
-import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import { FaDownload } from "react-icons/fa";
-import useRetreatBookingsAll from "../hooks/dashboard/retreatBookings/useRetreatBookingAll";
-import useRetreatQuery from "../store";
 import { useRef, useState } from "react";
 import { downloadExcel } from "react-export-table-to-excel";
+import { FaDownload } from "react-icons/fa";
 import { MdOutlinePrint } from "react-icons/md";
 import ReactToPrint from "react-to-print";
-import store from "../store";
-import { RetreatBooking } from "../hooks/retreatBookings/useYourBookings";
 import DashboardRetreatModal from "../components/Dashboard/DashboardRetreatModal";
+import useRetreatBookingsAll from "../hooks/dashboard/retreatBookings/useRetreatBookingAll";
+import { RetreatBooking } from "../hooks/retreatBookings/useYourBookings";
+import { default as store, default as useRetreatQuery } from "../store";
 
 const DashboardBookingRetreat = () => {
   const {
@@ -59,9 +58,9 @@ const DashboardBookingRetreat = () => {
     "Email",
     "Room Preference",
     "Phone Number",
-    "Family or Individual",
-    "Event Title",
-    "Event Date",
+    "Family Members",
+    // "Event Title",
+    // "Event Date",
   ];
 
   function handleDownloadExcel() {
@@ -70,6 +69,18 @@ const DashboardBookingRetreat = () => {
       email: item.email ?? "",
       bookingForFamilyOrIndividual: item.bookingForFamilyOrIndividual ?? "",
       phoneNumber: item.contactNumber ?? "",
+      familyMembers: (item.familyMembers ?? [])
+        .map(
+          (member, index) =>
+            `
+            id: ${index}, 
+            First Name: ${member.firstName},
+          Last Name: ${member.lastName},
+          Religion: ${member.religion},
+          sex: ${member.sex}.
+          age: (${member.age})`
+        )
+        .join(", "),
 
       // Add other properties as needed
     }));

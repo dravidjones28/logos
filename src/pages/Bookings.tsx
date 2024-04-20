@@ -21,7 +21,6 @@ import {
   useColorModeValue,
   FormHelperText,
   Textarea,
-  Tooltip,
   useToast,
 } from "@chakra-ui/react";
 import { z } from "zod";
@@ -31,7 +30,7 @@ import { useEffect, useState } from "react";
 import { MinusIcon, AddIcon } from "@chakra-ui/icons";
 import db from "../components/common/db";
 import { BsFillPersonPlusFill } from "react-icons/bs";
-import { FaPhone, FaRegQuestionCircle } from "react-icons/fa";
+import { FaPhone } from "react-icons/fa";
 import { MdEmail, MdConfirmationNumber } from "react-icons/md";
 import useAddRetreatBooking from "../hooks/retreatBookings/useAddRetreatBookings";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -57,14 +56,14 @@ const schema = z.object({
     .string()
     .min(1, "address must be contain minimum of 1 Characters "),
 
-  roomPreference: z
-    .enum([
-      "Deluxe Ac room",
-      "Normal room",
-      "Standard Ac room",
-      "Deluxe Non-Ac room",
-    ])
-    .refine((data) => data.length > 0),
+  // roomPreference: z
+  //   .enum([
+  //     "Deluxe Ac room",
+  //     "Normal room",
+  //     "Standard Ac room",
+  //     "Deluxe Non-Ac room",
+  //   ])
+  //   .refine((data) => data.length > 0),
 
   familyMembers: z
     .array(
@@ -237,7 +236,7 @@ const Bookings = () => {
         bookingForFamilyOrIndividual: data.bookingForFamilyOrIndividual,
         familyMembers: data.familyMembers,
         address: data.address.trim(),
-        roomPreference: data.roomPreference,
+        // roomPreference: data.roomPreference,
         contactNumber: data.contactNumber.trim(),
         author: session?._id,
         eventId: events?._id,
@@ -255,7 +254,7 @@ const Bookings = () => {
         sex: data.familyMembers[0].sex,
         religion: data.familyMembers[0].religion,
         address: data.address,
-        roomPreference: data.roomPreference,
+        // roomPreference: data.roomPreference,
         contactNumber: data.contactNumber,
         author: session?._id,
         eventId: events?._id,
@@ -412,7 +411,7 @@ const Bookings = () => {
                   </FormHelperText>
                 )}
               </FormControl>
-              <FormControl isInvalid={errors.roomPreference ? true : false}>
+              {/* <FormControl isInvalid={errors.roomPreference ? true : false}>
                 <Box display="flex">
                   <FormLabel>Booking For</FormLabel>
                   <Box position="relative" top="-3px">
@@ -442,7 +441,7 @@ const Bookings = () => {
                     {errors.roomPreference.message}
                   </FormHelperText>
                 )}
-              </FormControl>
+              </FormControl> */}
             </SimpleGrid>
             {valuesOfFormData === "family" && (
               <HStack mt={2}>
