@@ -69,6 +69,8 @@ const DashboardBookingRetreat = () => {
       email: item.email ?? "",
       bookingForFamilyOrIndividual: item.bookingForFamilyOrIndividual ?? "",
       phoneNumber: item.contactNumber ?? "",
+      dateOfRetreat: item.events.start ?? "",
+      address: item.address ?? "",
       familyMembers: (item.familyMembers ?? [])
         .map(
           (member, index) =>

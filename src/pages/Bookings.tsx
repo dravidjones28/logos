@@ -211,12 +211,10 @@ const Bookings = () => {
 
     let temp = {};
 
-    const convertAgeToNumber = data?.familyMembers.map((person) => ({
-      ...person,
-      age: parseInt(person.age, 10),
-    }));
-
-    console.log(convertAgeToNumber);
+    // const convertAgeToNumber = data?.familyMembers.map((person) => ({
+    //   ...person,
+    //   age: parseInt(person.age, 10),
+    // }));
 
     if (!captachaDone) {
       return toast({
