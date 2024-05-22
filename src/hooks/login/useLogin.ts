@@ -93,6 +93,15 @@ const useLogin = () => {
             });
           }
         }
+      } else {
+        toast({
+          title: "Failed",
+          description: `If you are unable to login, please try again after an hour`,
+          position: "top",
+          status: "error",
+          isClosable: true,
+          duration: 3000,
+        });
       }
     },
   });
