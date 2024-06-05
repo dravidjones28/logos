@@ -8,7 +8,7 @@ export interface FetchResponse<T> {
 
 // Basic bG9nb3NyZXRyZWF0OlF3ZXIxMjMh
 let apiLink = "https://logos-api-1.onrender.com/api";
-// let apiLink = "http://localhost:3000/api";
+// let apiLink = "http://localhost:4000/api";
 
 const axiosInstance = axios.create({
   baseURL: apiLink,

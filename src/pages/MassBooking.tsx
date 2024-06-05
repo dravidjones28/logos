@@ -69,23 +69,33 @@ const schema = z.object({
   normalIntentionField: z
     .string()
     .min(2, "First Name should contain atleast 2 characters")
-    .max(10, "First Name should have maximum of 10 characters")
+    .max(50, "First Name should have maximum of 50 characters")
     .optional(),
   normalIntentionField1: z
     .string()
     .min(2, "Last Name should contain atleast 2 characters")
-    .max(10, "Last Name should have maximum of 10 characters")
+    .max(50, "Last Name should have maximum of 50 characters")
     .optional(),
   gregorianIntentionField: z
     .string()
     .min(2, "First Name should contain atleast 2 characters")
-    .max(10, "First Name should have maximum of 10 characters")
+    .max(50, "First Name should have maximum of 50 characters")
 
     .optional(),
   gregorianIntentionField1: z
     .string()
     .min(2, "Last Name should contain atleast 2 characters")
-    .max(10, "Last Name should have maximum of 10 characters")
+    .max(50, "Last Name should have maximum of 50 characters")
+    .optional(),
+
+  husbandFullName: z
+    .string()
+    .min(2, "It should contain minimum of 2 characters")
+    .optional(),
+
+  wifeFullName: z
+    .string()
+    .min(2, "It should contain minimum of 2 characters")
     .optional(),
 });
 
@@ -129,6 +139,7 @@ function MassBooking() {
   } = useForm<MassData>({ resolver: zodResolver(schema) });
 
   const selectedMassType = watch("massType");
+  const selectedIntention = watch("normalIntentionTypes");
   const auth = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
@@ -153,6 +164,24 @@ function MassBooking() {
     } else if (value === "Gregorian Intention") {
       // Unregister fields for Normal Intention
       unregister("normalIntentionTypes");
+      unregister("normalIntentionField");
+      unregister("normalIntentionField1");
+    }
+  };
+
+  const handleIntentionField = (
+    value:
+      | "Thanksgiving Mass"
+      | "Mass for Special Intention"
+      | "Mass for the soul"
+      | "Thanksgiving Mass on birthday"
+      | "Thanksgiving Mass on wedding anniversary"
+      | "Thanksgiving Mass on priestly ordination"
+      | "Thanksgiving Mass on religious vocation"
+  ) => {
+    setValue("normalIntentionTypes", value);
+
+    if (value === "Thanksgiving Mass on wedding anniversary") {
       unregister("normalIntentionField");
       unregister("normalIntentionField1");
     }
@@ -189,9 +218,13 @@ function MassBooking() {
         email: auth ? auth.email : "",
         massType: data.massType,
         time: data.time,
-        normalIntentionField: data.normalIntentionField
-          ? `${data.normalIntentionField} ${data.normalIntentionField1}`
-          : "None",
+        normalIntentionField:
+          data.normalIntentionTypes ===
+          "Thanksgiving Mass on wedding anniversary"
+            ? `${data.husbandFullName} & ${data.wifeFullName}`
+            : data.normalIntentionField
+            ? `${data.normalIntentionField} ${data.normalIntentionField1}`
+            : "None",
         normalIntentionTypes: data.normalIntentionTypes
           ? data.normalIntentionTypes
           : "None",
@@ -227,6 +260,8 @@ function MassBooking() {
     "Thanksgiving Mass on priestly ordination",
     "Thanksgiving Mass on religious vocation",
   ];
+
+  console.log(errors);
 
   return (
     <LGBox>
@@ -337,7 +372,10 @@ function MassBooking() {
                           <Select
                             my={3}
                             placeholder="Select Intention"
-                            {...data("normalIntentionTypes")}
+                            // {...data("normalIntentionTypes")}
+                            onChange={(e: any) =>
+                              handleIntentionField(e.target.value)
+                            }
                             width="500px"
                           >
                             {intetionTypes.map((item, index) => (
@@ -352,34 +390,72 @@ function MassBooking() {
                             </FormHelperText>
                           )}
                         </Box>
-                        <Box>
-                          <FormLabel>First Name</FormLabel>
 
-                          <Input
-                            {...data("normalIntentionField")}
-                            type="text"
-                            placeholder="Enter First Name"
-                          />
-                          {errors.normalIntentionField && (
-                            <FormHelperText color="red">
-                              {errors.normalIntentionField.message}
-                            </FormHelperText>
-                          )}
-                        </Box>
-                        <Box>
-                          <FormLabel>Last Name</FormLabel>
+                        {selectedIntention ===
+                        "Thanksgiving Mass on wedding anniversary" ? (
+                          <>
+                            <Box>
+                              <FormLabel>Husband's Full Name</FormLabel>
 
-                          <Input
-                            {...data("normalIntentionField1")}
-                            type="text"
-                            placeholder="Enter Last Name"
-                          />
-                          {errors.normalIntentionField1 && (
-                            <FormHelperText color="red">
-                              {errors.normalIntentionField1.message}
-                            </FormHelperText>
-                          )}
-                        </Box>
+                              <Input
+                                {...data("husbandFullName")}
+                                type="text"
+                                placeholder="Husband's Full Name"
+                              />
+                              {errors.husbandFullName && (
+                                <FormHelperText color="red">
+                                  {errors.husbandFullName.message}
+                                </FormHelperText>
+                              )}
+                            </Box>
+                            <Box>
+                              <FormLabel>Wife's Full Name</FormLabel>
+
+                              <Input
+                                {...data("wifeFullName")}
+                                type="text"
+                                placeholder="Wife's Full Name"
+                              />
+                              {errors.wifeFullName && (
+                                <FormHelperText color="red">
+                                  {errors.wifeFullName.message}
+                                </FormHelperText>
+                              )}
+                            </Box>
+                          </>
+                        ) : (
+                          <>
+                            {/* First and last */}
+                            <Box>
+                              <FormLabel>First Name</FormLabel>
+
+                              <Input
+                                {...data("normalIntentionField")}
+                                type="text"
+                                placeholder="Enter First Name"
+                              />
+                              {errors.normalIntentionField && (
+                                <FormHelperText color="red">
+                                  {errors.normalIntentionField.message}
+                                </FormHelperText>
+                              )}
+                            </Box>
+                            <Box>
+                              <FormLabel>Last Name</FormLabel>
+
+                              <Input
+                                {...data("normalIntentionField1")}
+                                type="text"
+                                placeholder="Enter Last Name"
+                              />
+                              {errors.normalIntentionField1 && (
+                                <FormHelperText color="red">
+                                  {errors.normalIntentionField1.message}
+                                </FormHelperText>
+                              )}
+                            </Box>
+                          </>
+                        )}
                       </Stack>
                     </FormControl>
                   )}
