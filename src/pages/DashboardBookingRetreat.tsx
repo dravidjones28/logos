@@ -22,7 +22,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
-import { downloadExcel } from "react-export-table-to-excel";
+// import { downloadExcel } from "react-export-table-to-excel";
 import { FaDownload } from "react-icons/fa";
 import { MdOutlinePrint } from "react-icons/md";
 import ReactToPrint from "react-to-print";
@@ -30,6 +30,31 @@ import DashboardRetreatModal from "../components/Dashboard/DashboardRetreatModal
 import useRetreatBookingsAll from "../hooks/dashboard/retreatBookings/useRetreatBookingAll";
 import { RetreatBooking } from "../hooks/retreatBookings/useYourBookings";
 import { default as store, default as useRetreatQuery } from "../store";
+import * as XLSX from "xlsx";
+
+// interface Member {
+//   firstName: string;
+//   lastName: string;
+//   religion: string;
+//   sex: string;
+//   age: number;
+// }
+
+// interface Booking {
+//   bookingName: string;
+//   email: string;
+//   bookingForFamilyOrIndividual: string;
+//   contactNumber: string;
+//   events: { start: string };
+//   address: string;
+//   familyMembers: Member[];
+//   firstName?: string; // Add this if the booking for individual contains these fields
+//   lastName?: string; // Add this if the booking for individual contains these fields
+// }
+
+// interface RetreatBookingData {
+//   results: Booking[];
+// }
 
 const DashboardBookingRetreat = () => {
   const {
@@ -58,42 +83,59 @@ const DashboardBookingRetreat = () => {
     "Email",
     "Room Preference",
     "Phone Number",
+    "Date of Retreat",
+    "Address",
     "Family Members",
     // "Event Title",
     // "Event Date",
   ];
 
   function handleDownloadExcel() {
-    const transformedBody = (retreatBookingData?.results || []).map((item) => ({
-      bookingName: item.bookingName ?? "",
-      email: item.email ?? "",
-      bookingForFamilyOrIndividual: item.bookingForFamilyOrIndividual ?? "",
-      phoneNumber: item.contactNumber ?? "",
-      dateOfRetreat: item.events.start ?? "",
-      address: item.address ?? "",
-      familyMembers: (item.familyMembers ?? [])
-        .map(
-          (member, index) =>
-            `
-            id: ${index}, 
-            First Name: ${member.firstName},
-          Last Name: ${member.lastName},
-          Religion: ${member.religion},
-          sex: ${member.sex}.
-          age: (${member.age})`
-        )
-        .join(", "),
+    const data = retreatBookingData?.results;
 
-      // Add other properties as needed
-    }));
-    downloadExcel({
-      fileName: "Retreat Bookings",
-      sheet: "Pr",
-      tablePayload: {
-        header,
-        body: transformedBody,
-      },
+    const transformedBody = (data || []).flatMap((item) => {
+      const mainBooking: any = {
+        ["Booking Name"]: item.bookingName ?? "",
+        ["Email"]: item.email ?? "",
+        ["Booking For Family Or Individual"]:
+          item.bookingForFamilyOrIndividual ?? "",
+        ["Contact Number"]: item.contactNumber ?? "",
+        ["Date Of Retreat"]: item.events.start ?? "",
+        ["Address"]: item.address ?? "",
+      };
+
+      if (item.bookingForFamilyOrIndividual === "individual") {
+        mainBooking["First Name"] = item.firstName ?? "";
+        mainBooking["Last Name"] = item.lastName ?? "";
+        mainBooking["Age"] = item.age;
+        mainBooking["Religion"] = item.religion;
+        mainBooking["Sex"] = item.sex;
+        return [mainBooking];
+      }
+
+      const familyMembers = (item.familyMembers ?? []).map((member, index) => ({
+        ["Booking Name"]: index === 0 ? item.bookingName ?? "" : "",
+        ["Email"]: index === 0 ? item.email ?? "" : "",
+        ["Booking For Family Or Individual"]:
+          index === 0 ? item.bookingForFamilyOrIndividual ?? "" : "",
+        ["Contact Number"]: index === 0 ? item.contactNumber ?? "" : "",
+        ["Date Of Retreat"]: index === 0 ? item.events.start ?? "" : "",
+        ["Address"]: index === 0 ? item.address ?? "" : "",
+        ["Family Member Id"]: index,
+        ["Family Member First Name"]: member.firstName,
+        ["Family Member Last Name"]: member.lastName,
+        ["Family Member Religion"]: member.religion,
+        ["Family Member Sex"]: member.sex,
+        ["Family Member Age"]: member.age,
+      }));
+
+      return familyMembers;
     });
+
+    const worksheet = XLSX.utils.json_to_sheet(transformedBody);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Retreat Bookings");
+    XLSX.writeFile(workbook, "RetreatBookings.xlsx");
   }
 
   const tableRef = useRef<HTMLTableElement>(null);
